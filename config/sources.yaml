@@ -1,0 +1,447 @@
+rss:
+  - id: openai-blog
+    name: OpenAI Blog
+    url: https://openai.com/news/rss.xml
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: anthropic-news
+    name: Anthropic News
+    url: https://www.anthropic.com/news/rss.xml
+    enabled: false
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+    note: Disabled until an official RSS/Atom feed is verified; use official_pages.anthropic-news-page.
+
+  - id: google-deepmind-blog
+    name: Google DeepMind Blog
+    url: https://deepmind.google/blog/rss.xml
+    enabled: true
+    priority: true
+    topics: [llm, infra]
+
+  - id: huggingface-blog
+    name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    enabled: true
+    priority: true
+    topics: [llm, infra]
+
+  - id: simonwillison
+    name: Simon Willison
+    url: https://simonwillison.net/atom/everything/
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: lilian-weng
+    name: Lilian Weng
+    url: https://lilianweng.github.io/index.xml
+    enabled: true
+    priority: false
+    topics: [llm, ai-agent]
+
+  - id: jeff-geerling
+    name: Jeff Geerling
+    url: https://www.jeffgeerling.com/blog.xml
+    enabled: true
+    priority: false
+    topics: [infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad infra signal.
+
+  - id: sean-goedecke
+    name: Sean Goedecke
+    url: https://www.seangoedecke.com/rss.xml
+    enabled: true
+    priority: true
+    topics: [ai-coding, infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: krebs-on-security
+    name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    enabled: true
+    priority: true
+    topics: [infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad infra/security signal.
+
+  - id: antirez
+    name: antirez
+    url: http://antirez.com/rss
+    enabled: true
+    priority: true
+    topics: [llm, infra, ai-coding]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: mitchellh
+    name: Mitchell Hashimoto
+    url: https://mitchellh.com/feed.xml
+    enabled: true
+    priority: true
+    topics: [ai-coding, infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: xeiaso
+    name: Xe Iaso
+    url: https://xeiaso.net/blog.rss
+    enabled: true
+    priority: false
+    topics: [infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad systems/infra signal.
+
+  - id: lucumr
+    name: Armin Ronacher
+    url: https://lucumr.pocoo.org/feed.atom
+    enabled: true
+    priority: true
+    topics: [ai-coding, infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: rachel-by-the-bay
+    name: Rachel by the Bay
+    url: https://rachelbythebay.com/w/atom.xml
+    enabled: true
+    priority: false
+    topics: [infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad ops/infra signal.
+
+  - id: matklad
+    name: matklad
+    url: https://matklad.github.io/feed.xml
+    enabled: true
+    priority: true
+    topics: [ai-coding, infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: dwarkesh-patel
+    name: Dwarkesh Patel
+    url: https://www.dwarkeshpatel.com/feed
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: minimaxir
+    name: Max Woolf
+    url: https://minimaxir.com/index.xml
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: geohot
+    name: George Hotz
+    url: https://geohot.github.io/blog/feed.xml
+    enabled: true
+    priority: true
+    topics: [llm, ai-coding, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: gwern
+    name: Gwern
+    url: https://gwern.substack.com/feed
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: steve-blank
+    name: Steve Blank
+    url: https://steveblank.com/feed/
+    enabled: true
+    priority: false
+    topics: [indie-founder, product-growth]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: troy-hunt
+    name: Troy Hunt
+    url: https://www.troyhunt.com/rss/
+    enabled: true
+    priority: true
+    topics: [infra, ai-systems]
+    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad infra/security signal.
+
+  - id: keygen
+    name: Keygen
+    url: https://keygen.sh/blog/feed.xml
+    enabled: true
+    priority: false
+    topics: [indie-founder, infra, product-growth]
+    note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+github_repos:
+  - id: openai-codex
+    name: OpenAI Codex
+    repo: openai/codex
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent]
+
+  - id: anthropics-claude-code
+    name: Claude Code
+    repo: anthropics/claude-code
+    enabled: false
+    priority: true
+    topics: [ai-coding, ai-agent]
+    note: Enable only if the repository path is confirmed.
+
+  - id: modelcontextprotocol-servers
+    name: MCP Servers
+    repo: modelcontextprotocol/servers
+    enabled: true
+    priority: true
+    topics: [ai-agent, infra]
+
+  - id: langchain
+    name: LangChain
+    repo: langchain-ai/langchain
+    enabled: true
+    priority: false
+    topics: [ai-agent, infra]
+
+  - id: llamaindex
+    name: LlamaIndex
+    repo: run-llama/llama_index
+    enabled: true
+    priority: false
+    topics: [ai-agent, infra]
+
+  - id: vllm
+    name: vLLM
+    repo: vllm-project/vllm
+    enabled: true
+    priority: true
+    topics: [llm, infra]
+
+  - id: vllm-ascend
+    name: vLLM Ascend
+    repo: vllm-project/vllm-ascend
+    enabled: true
+    priority: true
+    topics: [llm, infra]
+
+official_pages:
+  - id: openai-news
+    name: OpenAI News
+    url: https://openai.com/news/
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: anthropic-news-page
+    name: Anthropic News
+    url: https://www.anthropic.com/news
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: claude-docs-release-notes
+    name: Claude Docs Release Notes
+    url: https://docs.claude.com/en/release-notes/overview
+    enabled: true
+    priority: true
+    topics: [llm, ai-coding]
+
+  - id: claude-blog
+    name: Claude Blog
+    url: https://claude.com/blog
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+x_accounts:
+  - id: karpathy
+    name: Andrej Karpathy
+    handle: karpathy
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, llm]
+
+  - id: sama
+    name: Sam Altman
+    handle: sama
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+
+  - id: openai
+    name: OpenAI
+    handle: OpenAI
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: anthropic
+    name: Anthropic
+    handle: AnthropicAI
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: simonwillison
+    name: Simon Willison
+    handle: simonw
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-coding]
+
+  - id: hesamation
+    name: Hesamation
+    handle: Hesamation
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+
+  - id: gregisenberg
+    name: Greg Isenberg
+    handle: gregisenberg
+    enabled: true
+    priority: true
+    topics: [indie-founder, product-growth, ai-agent]
+
+  - id: levelsio
+    name: Pieter Levels
+    handle: levelsio
+    enabled: true
+    priority: true
+    topics: [indie-founder, product-growth, ai-coding]
+
+  - id: marclou
+    name: Marc Lou
+    handle: marclou
+    enabled: true
+    priority: true
+    topics: [indie-founder, product-growth, ai-coding]
+
+  - id: jackfriks
+    name: Jack Friks
+    handle: jackfriks
+    enabled: true
+    priority: true
+    topics: [indie-founder, product-growth, ai-coding]
+
+  - id: steipete
+    name: Peter Steinberger
+    handle: steipete
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, ai-systems]
+
+  - id: corbin_braun
+    name: Corbin Braun
+    handle: corbin_braun
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent]
+
+  - id: rileybrown
+    name: Riley Brown
+    handle: rileybrown
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, product-growth]
+
+  - id: exm7777
+    name: EXM7777
+    handle: EXM7777
+    enabled: true
+    priority: true
+    topics: [ai-agent, ai-systems, product-growth]
+
+  - id: rryssf
+    name: rryssf
+    handle: rryssf_
+    enabled: true
+    priority: true
+    topics: [ai-agent, ai-systems, ai-coding]
+
+  - id: kloss_xyz
+    name: kloss
+    handle: kloss_xyz
+    enabled: true
+    priority: true
+    topics: [ai-systems, ai-agent, ai-coding]
+
+  - id: frxiaobei
+    name: 凡人小北
+    handle: frxiaobei
+    enabled: true
+    priority: true
+    topics: [ai-agent, product-growth, indie-founder]
+
+  - id: oviswang
+    name: Wang xin
+    handle: oviswang
+    enabled: true
+    priority: true
+    topics: [product-growth, ai-agent]
+
+  - id: yangyi
+    name: Yangyi
+    handle: Yangyixxxx
+    enabled: true
+    priority: true
+    topics: [ai-agent, product-growth, ai-systems]
+
+  - id: pangyusio
+    name: Pangyu
+    handle: pangyusio
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+
+  - id: genspark_ai
+    name: Genspark
+    handle: genspark_ai
+    enabled: true
+    priority: true
+    topics: [ai-agent, product-growth]
+
+  - id: zhaogua61654931
+    name: 就这样
+    handle: zhaogua61654931
+    enabled: true
+    priority: false
+    topics: [ai-agent, ai-systems]
+    note: Added from screenshot; handle was partially visible but appears complete.
+
+  - id: lidang
+    name: lidang
+    handle: lidang
+    enabled: true
+    priority: true
+    topics: [ai-agent, ai-coding, product-growth]
+
+  - id: cellinlab
+    name: cellinlab
+    handle: cellinlab
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent, ai-systems]
+
+  - id: cnyzgkc
+    name: cnyzgkc
+    handle: cnyzgkc
+    enabled: true
+    priority: true
+    topics: [ai-agent, ai-systems, product-growth]
+
+  - id: luofuli
+    name: Luo Fuli
+    handle: _LuoFuli
+    enabled: true
+    priority: true
+    topics: [llm, ai-agent]
+
+twitterapi_io:
+  enabled: true
+  env_key: TWITTERAPI_IO_KEY
+  base_url: https://api.twitterapi.io
+  mode: user_last_tweets
+  include_replies: false
+  window_hours: 36
+  max_workers: 5
+  request_interval_seconds: 0
+  output: twitterapi-io-results.json
+  note: If TWITTERAPI_IO_KEY is not set, skip this provider and do not treat it as "no tweets".

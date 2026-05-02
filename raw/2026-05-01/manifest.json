@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "run_date": "2026-05-01",
+  "collected_at": "2026-05-01T20:52:35+08:00",
+  "timezone": "Asia/Shanghai",
+  "mode": "manual_or_automation",
+  "network_mode": "script_default_proxy_or_existing_env",
+  "proxy": {
+    "http_proxy": "http://127.0.0.1:7890",
+    "https_proxy": "http://127.0.0.1:7890",
+    "all_proxy": "socks5://127.0.0.1:7890"
+  },
+  "window": {
+    "primary": "2026-05-01 daily run with source-specific recency windows",
+    "fallback": "recent feed entries when source does not expose exact 24h filtering"
+  },
+  "outputs": {
+    "rss_items": "daily-source-intelligence/raw/2026-05-01/rss-items.json",
+    "github_items": "daily-source-intelligence/raw/2026-05-01/github-items.json",
+    "official_pages": "daily-source-intelligence/raw/2026-05-01/official-pages.json",
+    "twitterapi_io_results": "daily-source-intelligence/raw/2026-05-01/twitterapi-io-results.json",
+    "exa_results": "daily-source-intelligence/raw/2026-05-01/exa-results.json",
+    "daily_report": "daily-source-intelligence/docs/2026-05-01-daily-intel.md"
+  },
+  "summary": {
+    "rss_sources_ok": 20,
+    "rss_sources_failed": 1,
+    "github_sources_ok_via_atom": 4,
+    "github_api_status": "skipped",
+    "official_pages_ok": 2,
+    "official_pages_limited": 2,
+    "official_pages_failed": 0,
+    "twitterapi_io_used": true,
+    "twitterapi_io_status": "ok",
+    "x_twitter_direct_count": 141,
+    "exa_used": false,
+    "x_twitter_used": true
+  },
+  "notable_limitations": [
+    "openai-news limited: HTML page did not return a usable title/content snapshot in this environment; RSS source was successful.",
+    "claude-docs-release-notes limited: Redirected to platform.claude.com and returned region-unavailable HTML in this environment.",
+    "RSS failed sources: rachel-by-the-bay.",
+    "Exa discovery was skipped or not collected; direct RSS/GitHub/official/Twitter sources were used."
+  ]
+}

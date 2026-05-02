@@ -1,0 +1,107 @@
+topics:
+  - id: llm
+    label: LLM / Frontier Models
+    keywords:
+      - LLM
+      - large language model
+      - foundation model
+      - GPT
+      - Claude
+      - Gemini
+      - model release
+      - benchmark
+    exclude:
+      - beginner tutorial
+      - prompt list
+
+  - id: ai-agent
+    label: AI Agent / Agentic Workflow
+    keywords:
+      - AI agent
+      - agentic
+      - autonomous agent
+      - multi-agent
+      - tool use
+      - memory
+      - evaluation
+      - MCP
+    exclude:
+      - travel agent
+      - game agent
+
+  - id: ai-coding
+    label: AI Coding / Developer Tools
+    keywords:
+      - AI coding
+      - coding agent
+      - Claude Code
+      - Codex
+      - Cursor
+      - IDE
+      - code review
+      - SWE-bench
+    exclude:
+      - coupon
+      - course discount
+
+  - id: infra
+    label: AI Infrastructure / Open Source
+    keywords:
+      - inference
+      - serving
+      - GPU
+      - eval
+      - observability
+      - LangChain
+      - LlamaIndex
+      - vLLM
+      - Ollama
+      - Dify
+    exclude:
+      - job posting
+      - hiring only
+
+  - id: indie-founder
+    label: Indie Hacking / Solo Founder
+    keywords:
+      - indie hacking
+      - solo founder
+      - bootstrapped
+      - SaaS
+      - product idea
+      - revenue
+      - launch
+      - build in public
+    exclude:
+      - generic motivation
+      - lifestyle only
+
+  - id: product-growth
+    label: Product / Growth / GTM
+    keywords:
+      - product
+      - growth
+      - go to market
+      - marketing
+      - distribution
+      - content strategy
+      - vibe marketing
+      - operations
+    exclude:
+      - generic marketing slogan
+      - ad only
+
+  - id: ai-systems
+    label: AI Systems / Automation
+    keywords:
+      - automation
+      - workflow
+      - AI ops
+      - system architecture
+      - agent system
+      - OpenClaw
+      - integration
+      - internal tool
+    exclude:
+      - no implementation detail
+      - pure showcase

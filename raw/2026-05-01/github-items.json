@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-05-01T20:52:35+08:00",
+  "api_status": {
+    "status": "skipped",
+    "url_example": "https://api.github.com/repos/openai/codex/releases?per_page=5",
+    "http_status": 200,
+    "reason": "Atom feed used directly",
+    "x_ratelimit_remaining": null,
+    "fallback": "GitHub releases Atom feeds"
+  },
+  "sources": [
+    {
+      "source_id": "openai-codex",
+      "source_name": "OpenAI Codex",
+      "repo": "openai/codex",
+      "url": "https://github.com/openai/codex/releases.atom",
+      "status": "ok",
+      "items": [
+        {
+          "title": "rust-v0.129.0-alpha.2",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.2",
+          "summary": "Release 0.129.0-alpha.2",
+          "author": "github-actions[bot]",
+          "updated": "2026-05-01T12:44:14Z"
+        },
+        {
+          "title": "0.129.0-alpha.1",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.1",
+          "summary": "Release 0.129.0-alpha.1",
+          "author": "github-actions[bot]",
+          "updated": "2026-04-30T22:11:14Z"
+        },
+        {
+          "title": "0.128.0",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.128.0",
+          "summary": "New feature: persisted /goal workflows with app-server APIs, model tools, runtime continuation, and TUI controls for create, pause, resume, and clear.",
+          "author": "",
+          "updated": "2026-04-30T16:41:30Z"
+        },
+        {
+          "title": "0.128.0-alpha.1",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.128.0-alpha.1",
+          "summary": "Release 0.128.0-alpha.1",
+          "author": "github-actions[bot]",
+          "updated": "2026-04-30T07:47:03Z"
+        },
+        {
+          "title": "rust-v0.127.0",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.127.0",
+          "summary": "Release 0.127.0",
+          "author": "",
+          "updated": "2026-04-30T05:11:17Z"
+        }
+      ]
+    },
+    {
+      "source_id": "modelcontextprotocol-servers",
+      "source_name": "MCP Servers",
+      "repo": "modelcontextprotocol/servers",
+      "url": "https://github.com/modelcontextprotocol/servers/releases.atom",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Release 2026.1.26",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/2026.1.26",
+          "summary": "Release : v2026.1.26 Updated packages @modelcontextprotocol/server-everything@2026.1.26 @modelcontextprotocol/server-memory@2026.1.26 mcp-server-time@2026.1.26",
+          "author": "",
+          "updated": "2026-01-27T12:11:26Z"
+        },
+        {
+          "title": "Release 2026.1.14",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/2026.1.14",
+          "summary": "Release : v2026.1.14 Updated packages @modelcontextprotocol/server-everything@2026.1.14 @modelcontextprotocol/server-filesystem@2026.1.14 mcp-server-git@2026.1.14",
+          "author": "",
+          "updated": "2026-01-14T16:35:35Z"
+        },
+        {
+          "title": "Release 2025.12.18",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/2025.12.18",
+          "summary": "Release : v2025.12.18 Updated packages @modelcontextprotocol/server-sequential-thinking@2025.12.18 @modelcontextprotocol/server-everything@2025.12.18 @modelcontextprotocol/server-filesystem@2025.12.18 mcp-server-git@2025.12.18",
+          "author": "",
+          "updated": "2025-12-18T16:33:28Z"
+        },
+        {
+          "title": "Release 2025.11.25",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/2025.11.25",
+          "summary": "Release : v2025.11.25 Updated packages @modelcontextprotocol/server-sequential-thinking@2025.11.25 @modelcontextprotocol/server-everything@2025.11.25 @modelcontextprotocol/server-filesystem@2025.11.25 @modelcontextprotocol/server-memory@202",
+          "author": "",
+          "updated": "2025-11-25T19:03:57Z"
+        },
+        {
+          "title": "Release 2025.9.25",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/2025.9.25",
+          "summary": "Release : v2025.9.25 Updated packages @modelcontextprotocol/server-everything@2025.9.25 @modelcontextprotocol/server-memory@2025.9.25 mcp-server-git@2025.9.25 mcp-server-time@2025.9.25",
+          "author": "",
+          "updated": "2025-09-25T21:26:20Z"
+        }
+      ]
+    },
+    {
+      "source_id": "langchain",
+      "source_name": "LangChain",
+      "repo": "langchain-ai/langchain",
+      "url": "https://github.com/langchain-ai/langchain/releases.atom",
+      "status": "ok",
+      "items": [
+        {
+          "title": "langchain-fireworks==1.2.1",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-fireworks%3D%3D1.2.1",
+          "summary": "Changes since langchain-fireworks==1.2.0 release(fireworks): 1.2.1 ( #37113 ) fix(fireworks): translate canonical multimodal content blocks for chat completions ( #37090 ) chore: bump aiohttp from 3.13.4 to 3.13.5 in /libs/partners/firework",
+          "author": "",
+          "updated": "2026-04-30T21:52:20Z"
+        },
+        {
+          "title": "langchain==1.2.17",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain%3D%3D1.2.17",
+          "summary": "Changes since langchain==1.2.16 release(langchain): 1.2.17 ( #37110 ) feat(langchain): add respond decision to HITL middleware ( #37095 )",
+          "author": "",
+          "updated": "2026-04-30T20:25:53Z"
+        },
+        {
+          "title": "langchain-tests==1.1.7",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-tests%3D%3D1.1.7",
+          "summary": "Changes since langchain-tests==1.1.6 release(standard-tests): 1.1.7 ( #37067 ) hotfix: bump min core versions ( #36996 ) feat(core): add content-block-centric streaming (v2) ( #36834 ) chore: bump langsmith from 0.6.3 to 0.7.31 in /libs/sta",
+          "author": "",
+          "updated": "2026-04-29T01:10:21Z"
+        },
+        {
+          "title": "langchain-perplexity==1.2.0",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-perplexity%3D%3D1.2.0",
+          "summary": "Changes since langchain-perplexity==1.1.0 release(perplexity): 1.2.0 ( #37091 ) feat(perplexity): add PerplexityEmbeddings ( #37082 ) chore(docs): update x handle references ( #37081 ) hotfix: bump min core versions ( #36996 ) feat(core): a",
+          "author": "",
+          "updated": "2026-04-29T21:58:15Z"
+        },
+        {
+          "title": "langchain==1.2.16",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain%3D%3D1.2.16",
+          "summary": "Changes since langchain==1.2.15 release(langchain): 1.2.16 ( #37085 ) chore(docs): update x handle references ( #37081 ) release(anthropic): 1.4.2 ( #37061 ) perf(langchain): stop inlining agent state into tool-dispatch Send s ( #36960 ) do",
+          "author": "",
+          "updated": "2026-04-29T21:03:06Z"
+        }
+      ]
+    },
+    {
+      "source_id": "llamaindex",
+      "source_name": "LlamaIndex",
+      "repo": "run-llama/llama_index",
+      "url": "https://github.com/run-llama/llama_index/releases.atom",
+      "status": "ok",
+      "items": [
+        {
+          "title": "v0.14.21",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.21",
+          "summary": "Release Notes [2026-04-21] llama-index-callbacks-honeyhive [0.5.0] chore(deps): bump the pip group across 87 directories with 2 updates ( #21382 ) chore(deps): bump the pip group across 68 directories with 2 updates ( #21394 ) llama-index-c",
+          "author": "",
+          "updated": "2026-04-21T00:18:51Z"
+        },
+        {
+          "title": "v0.14.20",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.20",
+          "summary": "Release Notes [2026-04-03] llama-index-agent-agentmesh [0.2.0] fix vulnerability with nltk ( #21275 ) llama-index-callbacks-agentops [0.5.0] chore(deps): bump the uv group across 50 directories with 2 updates ( #21164 ) chore(deps): bump th",
+          "author": "",
+          "updated": "2026-04-03T19:55:51Z"
+        },
+        {
+          "title": "v0.14.19",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.19",
+          "summary": "Release Notes [2026-03-25] llama-index-agent-agentmesh [0.2.0] chore(deps): bump the uv group across 49 directories with 1 update ( #21083 ) llama-index-callbacks-argilla [0.5.0] chore(deps): bump the uv group across 3 directories with 1 up",
+          "author": "",
+          "updated": "2026-03-25T20:59:15Z"
+        },
+        {
+          "title": "v0.14.18",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.18",
+          "summary": "Release Notes [2026-03-16] llama-index-agent-agentmesh [0.2.0] chore: deprecate python 3.9 once and for all ( #20956 ) llama-index-agent-azure [0.3.0] chore: deprecate python 3.9 once and for all ( #20956 ) llama-index-callbacks-agentops [0",
+          "author": "",
+          "updated": "2026-03-16T19:42:07Z"
+        },
+        {
+          "title": "v0.14.16",
+          "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.16",
+          "summary": "Release Notes [2026-03-10] llama-index-core [0.14.16] Add token-bucket rate limiter for LLM and embedding API calls ( #20712 ) Fix/20706 chonkie init doc ( #20713 ) fix: pass tool_choice through FunctionCallingProgram ( #20740 ) feat: Multi",
+          "author": "",
+          "updated": "2026-03-10T19:20:35Z"
+        }
+      ]
+    }
+  ]
+}

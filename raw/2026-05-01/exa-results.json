@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-05-01T17:39:48+08:00",
+  "status": "skipped",
+  "reason": "Operator requested to avoid Exa while resolving the local network/proxy path.",
+  "x_twitter": {
+    "status": "not_collected",
+    "reason": "No X API configured and Exa was intentionally skipped in this manual run.",
+    "direct_x_count": 0,
+    "secondary_source_count": 0,
+    "search_lead_count": 0
+  }
+}
