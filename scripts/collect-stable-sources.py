@@ -18,6 +18,14 @@ CONFIG_PATH = ROOT / "config" / "sources.yaml"
 RAW_ROOT = ROOT / "raw"
 
 MAX_ITEMS_PER_SOURCE = 5
+MAX_TRENDING_REPOS_PER_SOURCE = 10
+README_CANDIDATES = [
+    "README.md",
+    "README.MD",
+    "readme.md",
+    "README.rst",
+    "README.txt",
+]
 DEFAULT_PROXY_ENV = {
     "http_proxy": "http://127.0.0.1:7890",
     "https_proxy": "http://127.0.0.1:7890",
@@ -95,6 +103,16 @@ def strip_html(text):
     text = re.sub(r"<[^>]+>", " ", text)
     text = unescape(text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def strip_markdown(text):
+    text = re.sub(r"```.*?```", " ", text, flags=re.DOTALL)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"^[#>*_\-\s]+", "", text, flags=re.MULTILINE)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 def first_text(node, names):
@@ -265,6 +283,121 @@ def collect_github(github_sources):
     return api_status, results
 
 
+def parse_github_trending_items(html_text, limit=MAX_TRENDING_REPOS_PER_SOURCE):
+    items = []
+    for match in re.finditer(r'<article class="Box-row">(?P<body>.*?)</article>', html_text, re.DOTALL):
+        body = match.group("body")
+        repo_match = re.search(r'<h2[^>]*>.*?<a\b[^>]*href="/(?P<repo>[^"]+)"[^>]*>.*?</h2>', body, re.DOTALL)
+        if not repo_match:
+            continue
+        repo = re.sub(r"\s+", "", strip_html(repo_match.group("repo")))
+        if "/" not in repo:
+            continue
+        description_match = re.search(r'<p[^>]*class="[^"]*col-9[^"]*"[^>]*>(?P<description>.*?)</p>', body, re.DOTALL)
+        language_match = re.search(r'<span itemprop="programmingLanguage">(?P<language>[^<]+)</span>', body)
+        stars_match = re.search(r'<a[^>]+href="/%s/stargazers"[^>]*>(?P<stars>.*?)</a>' % re.escape(repo), body, re.DOTALL)
+        forks_match = re.search(r'<a[^>]+href="/%s/forks"[^>]*>(?P<forks>.*?)</a>' % re.escape(repo), body, re.DOTALL)
+        today_match = re.search(r'(?P<stars_today>[\d,]+)\s+stars?\s+today', strip_html(body), re.IGNORECASE)
+        description = strip_html(description_match.group("description")) if description_match else ""
+        items.append(
+            {
+                "repo": repo,
+                "url": f"https://github.com/{repo}",
+                "description": description,
+                "trending_description": description,
+                "language": strip_html(language_match.group("language")) if language_match else "",
+                "stars": strip_html(stars_match.group("stars")) if stars_match else "",
+                "forks": strip_html(forks_match.group("forks")) if forks_match else "",
+                "stars_today": strip_html(today_match.group("stars_today")) if today_match else "",
+            }
+        )
+        if len(items) >= limit:
+            break
+    return items
+
+
+def safe_repo_filename(repo):
+    return repo.replace("/", "__")
+
+
+def readme_title(readme_text):
+    for line in readme_text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            title = stripped.lstrip("#").strip()
+            if title:
+                return title[:160]
+    return ""
+
+
+def readme_excerpt(readme_text, limit=900):
+    cleaned = strip_markdown(readme_text)
+    if len(cleaned) <= limit:
+        return cleaned
+    return cleaned[:limit].rsplit(" ", 1)[0]
+
+
+def collect_repo_readme(repo, output_dir):
+    readme_dir = output_dir / "github-trending-readmes"
+    readme_dir.mkdir(parents=True, exist_ok=True)
+    for candidate in README_CANDIDATES:
+        url = f"https://raw.githubusercontent.com/{repo}/HEAD/{candidate}"
+        fetched = curl_text(url)
+        if not fetched["ok"]:
+            continue
+        body = fetched["body"].strip()
+        if not body or body.startswith("404: Not Found"):
+            continue
+        suffix = Path(candidate).suffix or ".txt"
+        local_path = readme_dir / f"{safe_repo_filename(repo)}{suffix}"
+        local_path.write_text(body + "\n")
+        return {
+            "readme_status": "ok",
+            "readme_url": url,
+            "readme_path": str(local_path.relative_to(ROOT)),
+            "readme_title": readme_title(body),
+            "readme_excerpt": readme_excerpt(body),
+        }
+    return {
+        "readme_status": "missing",
+        "readme_error": "No README candidate fetched from raw.githubusercontent.com HEAD branch.",
+    }
+
+
+def collect_github_trending(trending_sources, output_dir):
+    results = []
+    for source in trending_sources:
+        fetched = curl_text(source["url"])
+        if not fetched["ok"]:
+            results.append(
+                {
+                    "source_id": source["id"],
+                    "source_name": source["name"],
+                    "url": source["url"],
+                    "status": "failed",
+                    "error": fetched["stderr"] or f"curl exit {fetched['status']}",
+                }
+            )
+            continue
+        items = parse_github_trending_items(fetched["body"])
+        for item in items:
+            item.update(collect_repo_readme(item["repo"], output_dir))
+        record = {
+            "source_id": source["id"],
+            "source_name": source["name"],
+            "url": source["url"],
+            "status": "ok" if items else "limited",
+            "items": items,
+            "note": "GitHub Trending is a discovery source; repo popularity is not evidence of project quality or release significance.",
+        }
+        if not items:
+            record["reason"] = "GitHub Trending HTML fetched but no repository cards were parsed."
+        elif any(item.get("readme_status") != "ok" for item in items):
+            record["readme_limited_count"] = sum(1 for item in items if item.get("readme_status") != "ok")
+        results.append(record)
+    return results
+
+
 def parse_html_title(html_text):
     match = re.search(r"<title[^>]*>(.*?)</title>", html_text, re.IGNORECASE | re.DOTALL)
     if not match:
@@ -366,6 +499,7 @@ def load_sources():
     return (
         [item for item in config.get("rss", []) if item.get("enabled")],
         [item for item in config.get("github_repos", []) if item.get("enabled")],
+        [item for item in config.get("github_trending", []) if item.get("enabled")],
         [item for item in config.get("official_pages", []) if item.get("enabled")],
     )
 
@@ -376,9 +510,10 @@ def main():
     output_dir = RAW_ROOT / run_date
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    rss_sources, github_sources, official_sources = load_sources()
+    rss_sources, github_sources, trending_sources, official_sources = load_sources()
     rss_results = collect_rss(rss_sources)
     github_api_status, github_results = collect_github(github_sources)
+    trending_results = collect_github_trending(trending_sources, output_dir)
     official_results = collect_official_pages(official_sources)
 
     rss_payload = {
@@ -397,9 +532,15 @@ def main():
         "collected_at": now_local().isoformat(timespec="seconds"),
         "sources": official_results,
     }
+    trending_payload = {
+        "schema_version": 1,
+        "collected_at": now_local().isoformat(timespec="seconds"),
+        "sources": trending_results,
+    }
 
     (output_dir / "rss-items.json").write_text(json.dumps(rss_payload, ensure_ascii=False, indent=2) + "\n")
     (output_dir / "github-items.json").write_text(json.dumps(github_payload, ensure_ascii=False, indent=2) + "\n")
+    (output_dir / "github-trending.json").write_text(json.dumps(trending_payload, ensure_ascii=False, indent=2) + "\n")
     (output_dir / "official-pages.json").write_text(json.dumps(official_payload, ensure_ascii=False, indent=2) + "\n")
 
     summary = {
@@ -408,6 +549,8 @@ def main():
         "rss_ok": sum(1 for item in rss_results if item["status"] == "ok"),
         "github_sources": len(github_results),
         "github_ok": sum(1 for item in github_results if item["status"] == "ok"),
+        "github_trending_sources": len(trending_results),
+        "github_trending_ok": sum(1 for item in trending_results if item["status"] == "ok"),
         "official_sources": len(official_results),
         "official_ok": sum(1 for item in official_results if item["status"] == "ok"),
         "official_limited": sum(1 for item in official_results if item["status"] == "limited"),

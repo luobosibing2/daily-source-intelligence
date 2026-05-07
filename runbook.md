@@ -2,7 +2,7 @@
 
 ## 目标
 
-每天收集过去 24 小时内与 `config/watch.md` 相关的公开资讯，优先覆盖官方博客、RSS、GitHub 发布，以及 `twitterapi.io` 能返回的结构化 X/Twitter 数据。第一版不使用官方 X API，不使用 Exa MCP，不承诺完整抓取某个 X 账号的所有推文。
+每天收集过去 24 小时内与 `config/watch.md` 相关的公开资讯，优先覆盖官方博客、RSS、GitHub 发布、GitHub 每日热门项目，以及 `twitterapi.io` 能返回的结构化 X/Twitter 数据。第一版不使用官方 X API，不使用 Exa MCP，不承诺完整抓取某个 X 账号的所有推文。
 
 输出必须符合本仓库的主题归档规则：
 
@@ -15,14 +15,15 @@
 1. 读取配置
    - 读取 `config/watch.md` 理解关注方向和高信号定义。
    - 读取 `config/topics.yaml` 获取主题、关键词、排除词和输出分组。
-   - 读取 `config/sources.yaml` 获取 RSS、GitHub、官方页面、`twitterapi_io` 配置和 X/Twitter handles。
+   - 读取 `config/sources.yaml` 获取 RSS、GitHub releases、GitHub Trending、官方页面、`twitterapi_io` 配置和 X/Twitter handles。
    - 读取 `state/seen.json`，避免重复记录已经处理过的 URL、tweet id 或 GitHub release id。
 
 2. 采集稳定来源
-   - 优先运行 `daily-source-intelligence/scripts/collect-stable-sources.py`，统一写出 `rss-items.json`、`github-items.json`、`official-pages.json`。
+   - 优先运行 `daily-source-intelligence/scripts/collect-stable-sources.py`，统一写出 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
    - 脚本会在代理环境变量缺失时默认补上 `http_proxy=http://127.0.0.1:7890`、`https_proxy=http://127.0.0.1:7890`、`all_proxy=socks5://127.0.0.1:7890`；如需临时禁用，设置 `DAILY_INTEL_DISABLE_DEFAULT_PROXY=1`。
    - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。
    - GitHub：第一版无 `GITHUB_TOKEN` 时优先读取 `https://github.com/{repo}/releases.atom`；REST API 只作为增强路径。若 REST API 返回 rate limit 或 403，不视为整体失败，降级到 Atom feed 并写入 `source-health.json`。
+   - GitHub Trending：读取 `github_trending` sources，默认采集 `https://github.com/trending?since=daily` 的前 10 个项目，写入 `github-trending.json`。每个 repo 必须保留 GitHub Trending 页面上的 `trending_description`，也必须继续打开并归档 README，保存到 `raw/YYYY-MM-DD/github-trending-readmes/`，并在 `github-trending.json` 中写入 `readme_status`、`readme_path`、`readme_title` 和 `readme_excerpt`。Trending 只作为发现/研究线索，证据等级默认 `secondary-source`；不要把“上榜”写成官方发布、质量背书或长期趋势。
    - 官方页面：读取 `official_pages`，优先发现新 blog、changelog、release note 或 docs update。
 
 3. 使用 twitterapi.io 采集 X/Twitter 直接证据
@@ -43,7 +44,8 @@
 5. 归档 raw
    - 当天目录：`raw/YYYY-MM-DD/`
    - 保存一份 `manifest.json`，记录采集时间、查询范围、来源、命中数量、失败来源。
-   - 保存稳定来源条目为 `rss-items.json`、`github-items.json`、`official-pages.json`。
+   - 保存稳定来源条目为 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
+   - 保存 GitHub Trending README 原文到 `github-trending-readmes/`；如果 README 缺失、raw URL 不可访问或下载失败，必须在 `github-trending.json` 和日报“不确定性与待验证项”里说明。
    - 保存 twitterapi.io 结果为 `twitterapi-io-results.json`；若没有 `TWITTERAPI_IO_KEY`，也要写入 skipped 文件。
    - 对高信号原文，尽量保存 HTML、Markdown 或文本提取文件；无法归档时在日报“不确定性与待验证项”说明。
 
@@ -72,10 +74,11 @@
    - 每条 X/Twitter 相关内容必须标注证据等级：
      - `direct-x`
      - `secondary-source`
+   - GitHub Trending 每日热门项目必须单独说明覆盖状态、解析到的 repo 数、Trending description 覆盖状态、README 归档覆盖状态，以及它只是 discovery signal 的边界。项目归纳必须把 Trending description 和 README 原文/摘录合成一段自然语言总结：先说明这个项目大概解决什么问题，再交代 README 中能确认的功能边界、使用场景或机制。不要写成固定字段列表，也不要把两份来源割裂成两段。若 README 缺失，不能写机制总结，只能写“待读 README 的候选项目”。
 
 8. 更新状态
    - 优先运行 `daily-source-intelligence/scripts/update-state.py`，根据当天 raw 文件生成/更新 `manifest.json`、`state/source-health.json` 和 `state/seen.json`。
-   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
+   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
 
 9. 自动化结果摘要
    - 输出短摘要即可：新增条目数、高信号条目数、失败来源、生成的日报路径。
