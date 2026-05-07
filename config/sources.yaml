@@ -101,10 +101,10 @@ rss:
   - id: rachel-by-the-bay
     name: Rachel by the Bay
     url: https://rachelbythebay.com/w/atom.xml
-    enabled: true
+    enabled: false
     priority: false
     topics: [infra, ai-systems]
-    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad ops/infra signal.
+    note: "Disabled after repeated SSL fetch failure in automation: curl (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL."
 
   - id: matklad
     name: matklad
@@ -220,6 +220,15 @@ github_repos:
     enabled: true
     priority: true
     topics: [llm, infra]
+
+github_trending:
+  - id: github-trending-daily
+    name: GitHub Trending Daily
+    url: https://github.com/trending?since=daily
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, infra, ai-systems, indie-founder]
+    note: Daily all-language GitHub trending page; use as discovery signal, not official project endorsement.
 
 official_pages:
   - id: openai-news
