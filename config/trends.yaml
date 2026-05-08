@@ -1,0 +1,115 @@
+schema_version: 1
+description: >
+  Long-term trend watch configuration for Daily Source Intelligence. Enabled
+  trends must be checked after the daily report is written. Trend analysis
+  does not add a section to the daily report; it writes separate files under
+  trend/.
+
+defaults:
+  candidate_scope: daily_report_and_raw
+  enrichment_mode: high_signal_only
+  enrichment_sources:
+    - official_pages
+    - official_docs
+    - github_repo
+    - github_release_body
+    - github_readme
+    - web_search_for_official_source_location_only
+  prohibited_sources:
+    - logged_in_browser
+    - twitter_write_endpoints
+    - posting
+    - liking
+    - following
+    - direct_messages
+    - twitterapi_io_rerun_for_trend
+  evidence_levels:
+    - official-source
+    - direct-x
+    - secondary-source
+    - inference
+
+trends:
+  - id: memory-dream
+    label: Memory & Dream
+    enabled: true
+    description: >
+      Tracks how agents preserve, refine, retrieve, compress, grade, and reuse
+      context across long-running work. This includes dreaming, memory stores,
+      prompt caching, context freshness, self-refining loops, outcomes/eval,
+      multiagent traceability, and long-task reliability.
+    why_watch: >
+      Long-lived agents cannot rely on one prompt window. The durable advantage
+      moves toward memory lifecycle, context hygiene, quality rubrics, and
+      systems that keep agents useful across sessions.
+    include_keywords:
+      - dreaming
+      - dream
+      - memory
+      - memories
+      - prompt caching
+      - cache
+      - context
+      - context window
+      - context freshness
+      - session continuity
+      - compaction
+      - outcomes
+      - rubric
+      - grader
+      - self-improving
+      - self-refining
+      - multiagent orchestration
+      - long horizon
+      - MCP context
+    exclude_keywords:
+      - system memory allocation
+      - GPU memory
+      - operating system memory
+      - dream job
+      - memory leak unrelated to agents
+    timeline: trend/memory-dream.md
+    report_section: Memory & Dream
+
+  - id: financial-agents
+    label: Financial Agents
+    enabled: true
+    description: >
+      Tracks AI agents in financial services and finance-adjacent operations:
+      banking, investment research, wealth management, private equity,
+      trading research, AML, credit decisioning, risk, compliance, Treasury,
+      transaction-adjacent tools, and human sign-off boundaries.
+    why_watch: >
+      Finance is a high-value, high-constraint vertical. Strong signals here
+      reveal how agent systems package domain skills, governed data access,
+      auditability, and human approval before autonomous execution.
+    include_keywords:
+      - financial services
+      - finance
+      - banking
+      - bank
+      - banker
+      - investment banking
+      - equity research
+      - private equity
+      - wealth management
+      - portfolio
+      - trading
+      - trader
+      - market data
+      - AML
+      - credit decisioning
+      - risk
+      - compliance
+      - Treasury
+      - invoice
+      - ledger
+      - human sign-off
+      - investment advice
+    exclude_keywords:
+      - generic company finance
+      - personal budgeting without agents
+      - fundraising press release without workflow detail
+      - unrelated stock market commentary
+    timeline: trend/financial-agents.md
+    report_section: Financial Agents

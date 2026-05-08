@@ -7,3 +7,11 @@
 
 __pycache__/
 *.py[cod]
+
+# Generated trend outputs. Keep workflow/config docs tracked, but do not
+# accidentally commit daily reports, topic reports, or dated raw archives.
+trend/memory-dream.md
+trend/financial-agents.md
+trend/reports/*.md
+!trend/reports/README.md
+trend/raw/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/

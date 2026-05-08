@@ -61,7 +61,11 @@
      - strong match to `watch.md`: +3
      - secondary-source only: -1
 
-7. 生成日报
+7. 更新状态
+   - 优先运行 `daily-source-intelligence/scripts/update-state.py`，根据当天 raw 文件生成/更新 `manifest.json`、`state/source-health.json` 和 `state/seen.json`。
+   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
+
+8. 生成日报
    - 写入 `docs/YYYY-MM-DD-daily-intel.md`。
    - 日报语言使用中文；保留英文产品名、账号、repo、API 名称。
    - 结构必须包含：
@@ -76,13 +80,21 @@
      - `secondary-source`
    - GitHub Trending 每日热门项目必须单独说明覆盖状态、解析到的 repo 数、Trending description 覆盖状态、README 归档覆盖状态，以及它只是 discovery signal 的边界。项目归纳必须把 Trending description 和 README 原文/摘录合成一段自然语言总结：先说明这个项目大概解决什么问题，再交代 README 中能确认的功能边界、使用场景或机制。不要写成固定字段列表，也不要把两份来源割裂成两段。若 README 缺失，不能写机制总结，只能写“待读 README 的候选项目”。
 
-8. 更新状态
-   - 优先运行 `daily-source-intelligence/scripts/update-state.py`，根据当天 raw 文件生成/更新 `manifest.json`、`state/source-health.json` 和 `state/seen.json`。
-   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
+9. 更新长期 trend
+   - 日报正文不新增 trend 小节；长期趋势分析写入 `trend/`。
+   - 读取 `config/trends.yaml`，所有 `enabled: true` 的 trend 都必须在当天 trend report 中出现。
+   - 输入范围为当天日报 `docs/YYYY-MM-DD-daily-intel.md` 与当天 raw `raw/YYYY-MM-DD/`；聊天中的未归档判断不能作为 trend 证据。
+   - 只对明确命中 enabled trend 且有新信息量的高信号做扩充搜索。扩充来源优先级：官方页面、官方 docs、GitHub repo、GitHub release body、GitHub README；普通 web search 只用于定位原始官方材料。
+   - trend 扩充不得重跑 `twitterapi.io`，不得使用登录态浏览器，不得使用 X/Twitter 写操作、posting、liking、following 或 DM。
+   - 扩充得到的官方页面、docs、README、release body、摘录或 manifest 写入 `trend/raw/YYYY-MM-DD/<trend-id>/`。
+   - 写入当天趋势分析报告：`trend/reports/YYYY-MM-DD-trend-report.md`。报告必须回答“今天这些情报对长期趋势意味着什么”，不能只写 audit 表。
+   - 有新增趋势信号时，只更新对应专题报告，例如 `trend/memory-dream.md`、`trend/financial-agents.md`；无新增时，不强行改专题报告，但当天 trend report 必须标记 `no-new-signal`。
+   - `trend/` 只有两个长期议题报告：`memory-dream` 和 `financial-agents`。不要再生成跨主题总报告；跨日判断、关键转折、证据强度、不确定性和更新日志分别沉淀到两个专题报告里。
 
-9. 自动化结果摘要
-   - 输出短摘要即可：新增条目数、高信号条目数、失败来源、生成的日报路径。
+10. 自动化结果摘要
+   - 输出短摘要即可：新增条目数、高信号条目数、失败来源、生成的日报路径、trend report 路径、更新过的专题报告、无新增或 skipped 的 trend。
    - 如果没有高相关新增内容，也要生成当天日报，记录采集范围和“无高信号新增内容”。
+   - 声明完成前必须核对：日报已写入、trend report 已写入、两个 enabled trend 均已检查、对应专题报告已更新或记录无新增、扩充 raw 已归档或 skipped 原因已写清。
 
 ## 第一版边界
 
