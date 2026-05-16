@@ -1,0 +1,766 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-05-06T12:34:36+08:00",
+  "sources": [
+    {
+      "source_id": "openai-blog",
+      "source_name": "OpenAI Blog",
+      "url": "https://openai.com/news/rss.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "GPT-5.5 Instant System Card",
+          "url": "https://openai.com/index/gpt-5-5-instant-system-card",
+          "published": "Tue, 05 May 2026 10:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "GPT-5.5 Instant: smarter, clearer, and more personalized",
+          "url": "https://openai.com/index/gpt-5-5-instant",
+          "published": "Tue, 05 May 2026 10:00:00 GMT",
+          "summary": "GPT-5.5 Instant updates ChatGPT’s default model with smarter, more accurate answers, reduced hallucinations, and improved personalization controls."
+        },
+        {
+          "title": "New ways to buy ChatGPT ads",
+          "url": "https://openai.com/index/new-ways-to-buy-chatgpt-ads",
+          "published": "Tue, 05 May 2026 00:00:00 GMT",
+          "summary": "OpenAI expands ChatGPT ads with a beta self-serve Ads Manager, CPC bidding, and enhanced measurement tools—built to protect privacy and keep conversations separate from ads."
+        },
+        {
+          "title": "OpenAI and PwC collaborate to reimagine the office of the CFO",
+          "url": "https://openai.com/index/openai-pwc-finance-collaboration",
+          "published": "Mon, 04 May 2026 21:00:00 GMT",
+          "summary": "OpenAI and PwC are partnering to help enterprises use AI agents to automate finance workflows, improve forecasting, strengthen controls, and modernize the CFO function."
+        },
+        {
+          "title": "How OpenAI delivers low-latency voice AI at scale",
+          "url": "https://openai.com/index/delivering-low-latency-voice-ai-at-scale",
+          "published": "Mon, 04 May 2026 00:00:00 GMT",
+          "summary": "How OpenAI rebuilt its WebRTC stack to power real-time Voice AI with low latency, global scale, and seamless conversational turn-taking."
+        }
+      ]
+    },
+    {
+      "source_id": "google-deepmind-blog",
+      "source_name": "Google DeepMind Blog",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Enabling a new model for healthcare with AI co-clinician",
+          "url": "https://deepmind.google/blog/ai-co-clinician/",
+          "published": "Thu, 30 Apr 2026 12:14:15 +0000",
+          "summary": "Researching the path to AI-augmented care and development of an AI co-clinician."
+        },
+        {
+          "title": "Announcing our partnership with the Republic of Korea",
+          "url": "https://deepmind.google/blog/announcing-our-partnership-with-the-republic-of-korea/",
+          "published": "Mon, 27 Apr 2026 07:00:06 +0000",
+          "summary": "Google DeepMind and Korea partner to accelerate scientific breakthroughs using frontier AI models"
+        },
+        {
+          "title": "Decoupled DiLoCo: A new frontier for resilient, distributed AI training",
+          "url": "https://deepmind.google/blog/decoupled-diloco/",
+          "published": "Wed, 22 Apr 2026 10:20:03 +0000",
+          "summary": ""
+        },
+        {
+          "title": "Partnering with industry leaders to accelerate AI transformation",
+          "url": "https://deepmind.google/blog/partnering-with-industry-leaders-to-accelerate-ai-transformation/",
+          "published": "Tue, 21 Apr 2026 14:54:15 +0000",
+          "summary": "Google DeepMind partners with global consultancies to bring the power of frontier AI to organizations around the world."
+        },
+        {
+          "title": "Gemini 3.1 Flash TTS: the next generation of expressive AI speech",
+          "url": "https://deepmind.google/blog/gemini-3-1-flash-tts-the-next-generation-of-expressive-ai-speech/",
+          "published": "Wed, 15 Apr 2026 16:03:19 +0000",
+          "summary": "Our newest audio model introduces granular audio tags that give you precise control to direct AI speech for expressive audio generation."
+        }
+      ]
+    },
+    {
+      "source_id": "huggingface-blog",
+      "source_name": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Granite 4.1 LLMs: How They’re Built",
+          "url": "https://huggingface.co/blog/ibm-granite/granite-4-1",
+          "published": "Wed, 29 Apr 2026 15:01:48 GMT",
+          "summary": ""
+        },
+        {
+          "title": "DeepInfra on Hugging Face Inference Providers 🔥",
+          "url": "https://huggingface.co/blog/inference-providers-deepinfra",
+          "published": "Wed, 29 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Introducing NVIDIA Nemotron 3 Nano Omni: Long-Context Multimodal Intelligence for Documents, Audio and Video Agents",
+          "url": "https://huggingface.co/blog/nvidia/nemotron-3-nano-omni-multimodal-intelligence",
+          "published": "Tue, 28 Apr 2026 15:58:57 GMT",
+          "summary": ""
+        },
+        {
+          "title": "How to build scalable web apps with OpenAI's Privacy Filter",
+          "url": "https://huggingface.co/blog/openai-privacy-filter-web-apps",
+          "published": "Mon, 27 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "DeepSeek-V4: a million-token context that agents can actually use",
+          "url": "https://huggingface.co/blog/deepseekv4",
+          "published": "Fri, 24 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        }
+      ]
+    },
+    {
+      "source_id": "simonwillison",
+      "source_name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
+      "status": "ok",
+      "items": [
+        {
+          "title": "datasette-referrer-policy 0.1",
+          "url": "https://simonwillison.net/2026/May/5/datasette-referrer-policy/#atom-everything",
+          "published": "2026-05-05T23:44:27+00:00",
+          "summary": "Release: datasette-referrer-policy 0.1 The OpenStreetMap tiles on the Datasette global-power-plants demo weren't displaying correctly. This turned out to be caused by two bugs. The first is that the CAPTCHA I added to that site a few weeks ago was triggering for the .json fetch requests used by the map plugin, and since those weren't HTML the user was not being asked to solve them. Here's the fix . The second was that OpenStreetMap quite reasonably block tile requests from sites that use a Referrer-Policy: no-referrer header. Datasette does this by default, and I didn't want to change that default on people without warning - so I had Codex + GPT-5.5 build me a new plugin to help set that header to another value. Tags: openstreetmap , http , datasette"
+        },
+        {
+          "title": "Our AI started a cafe in Stockholm",
+          "url": "https://simonwillison.net/2026/May/5/our-ai-started-a-cafe-in-stockholm/#atom-everything",
+          "published": "2026-05-05T22:14:21+00:00",
+          "summary": "Our AI started a cafe in Stockholm Andon Labs previously started an AI-run retail store in San Francisco. Now they're running a similar experiment in Stockholm, Sweden, only this time it's a cafe. These experiments are interesting, and often throw out amusing anecdotes: During the first week of inventory, Mona ordered 120 eggs even though the café has no stove. When the staff told her they couldn’t cook them, she suggested using the high-speed oven, until they pointed out the eggs would likely explode. She also tried to solve the problem of fresh tomatoes being spoiled too fast by ordering 22.5 kg of canned tomatoes for the fresh sandwiches. The baristas eventually started a “Hall of Shame”, a shelf visible to customers with all the weird things Mona ordered, including 6,000 napkins, 3,000 nitrile gloves, 9L coconut milk, and industrial-sized trash bags. Where they lose their shine is when these AI managers start wasting the time of human beings who have not opted into the experiment: She also successfully applied for an outdoor seating permit through the Police e-service, which didn’t require BankID. Her first submission included a sketch she had generated herself, despite having never seen the street outside the café. Unsurprisingly, the Police sent it back for revision. [...] When she makes a mistake, she often sends multiple emails to suppliers with the subject “EMERGENCY” to cancel or change the order. I don't think it's ethical to run experiments like this that affect real-world systems and steal time from people. I'm reminded of the incident last year where the AI Village experiment infuriated Rob Pike by sending him unsolicited gratitude emails as an \"act of kindness\". That was just an unwanted email - asking suppliers to correct mistakes that were made without a human-in-the-loop or wasting police time with slop diagrams feels a whole lot worse to me. I think experiments like this need to keep their own human operators in-the-loop for outbound actions that affect other people. Via Hacker News Tags: ai , generative-ai , llms , ai-agents , ai-ethics"
+        },
+        {
+          "title": "datasette-llm 0.1a7",
+          "url": "https://simonwillison.net/2026/May/5/datasette-llm/#atom-everything",
+          "published": "2026-05-05T01:56:55+00:00",
+          "summary": "Release: datasette-llm 0.1a7 Mechanism for configuring default options for specific models. Part of Datasette's evolving support mechanism for plugins that use LLMs. It's now possible to configure a model with default options, e.g. to say all enrichment operations should use a specific model with temperature set to 0.5. Tags: llm , datasette"
+        },
+        {
+          "title": "llm-echo 0.5a0",
+          "url": "https://simonwillison.net/2026/May/5/llm-echo/#atom-everything",
+          "published": "2026-05-05T01:31:54+00:00",
+          "summary": "Release: llm-echo 0.5a0 New -o thinking 1 option to help test against LLM 0.32a0 and higher. This plugin provides a fake model called \"echo\" for LLM which doesn't run an LLM at all - it's useful for writing automated tests. You can now do this: uvx --with llm==0.32a1 --with llm-echo==0.5a0 llm -m echo hi -o thinking 1 This will fake a reasoning block to standard error before returning JSON echoing the prompt. Tags: llm"
+        },
+        {
+          "title": "Quoting John Gruber",
+          "url": "https://simonwillison.net/2026/May/5/john-gruber/#atom-everything",
+          "published": "2026-05-05T00:46:29+00:00",
+          "summary": "So it’s well known that Y Combinator owns some stake in OpenAI. But how big is that stake? This seems like devilishly difficult information to obtain. I asked around and a little birdie who knows several OpenAI investors came back with an answer: Y Combinator owns about 0.6 percent of OpenAI. At OpenAI’s current $852 billion valuation , that’s worth over $5 billion. — John Gruber , Y Combinator’s Stake in OpenAI Tags: openai , y-combinator , ai , john-gruber"
+        }
+      ]
+    },
+    {
+      "source_id": "lilian-weng",
+      "source_name": "Lilian Weng",
+      "url": "https://lilianweng.github.io/index.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Why We Think",
+          "url": "https://lilianweng.github.io/posts/2025-05-01-thinking/",
+          "published": "Thu, 01 May 2025 00:00:00 +0000",
+          "summary": "Special thanks to John Schulman for a lot of super valuable feedback and direct edits on this post. Test time compute ( Graves et al. 2016 , Ling, et al. 2017 , Cobbe et al. 2021 ) and Chain-of-thought (CoT) ( Wei et al. 2022 , Nye et al. 2021 ), have led to significant improvements in model performance, while raising many research questions. This post aims to review recent developments in how to effectively use test-time compute (i.e. “thinking time”) and why it helps."
+        },
+        {
+          "title": "Reward Hacking in Reinforcement Learning",
+          "url": "https://lilianweng.github.io/posts/2024-11-28-reward-hacking/",
+          "published": "Thu, 28 Nov 2024 00:00:00 +0000",
+          "summary": "Reward hacking occurs when a reinforcement learning (RL) agent exploits flaws or ambiguities in the reward function to achieve high rewards, without genuinely learning or completing the intended task. Reward hacking exists because RL environments are often imperfect, and it is fundamentally challenging to accurately specify a reward function. With the rise of language models generalizing to a broad spectrum of tasks and RLHF becomes a de facto method for alignment training, reward hacking in RL training of language models has become a critical practical challenge. Instances where the model learns to modify unit tests to pass coding tasks, or where responses contain biases that mimic a user’s preference, are pretty concerning and are likely one of the major blockers for real-world deployment of more autonomous use cases of AI models."
+        },
+        {
+          "title": "Extrinsic Hallucinations in LLMs",
+          "url": "https://lilianweng.github.io/posts/2024-07-07-hallucination/",
+          "published": "Sun, 07 Jul 2024 00:00:00 +0000",
+          "summary": "Hallucination in large language models usually refers to the model generating unfaithful, fabricated, inconsistent, or nonsensical content. As a term, hallucination has been somewhat generalized to cases when the model makes mistakes. Here, I would like to narrow down the problem of hallucination to cases where the model output is fabricated and not grounded by either the provided context or world knowledge. There are two types of hallucination: In-context hallucination: The model output should be consistent with the source content in context. Extrinsic hallucination: The model output should be grounded by the pre-training dataset. However, given the size of the pre-training dataset, it is too expensive to retrieve and identify conflicts per generation. If we consider the pre-training data corpus as a proxy for world knowledge, we essentially try to ensure the model output is factual and verifiable by external world knowledge. Equally importantly, when the model does not know about a fact, it should say so. This post focuses on extrinsic hallucination. To avoid hallucination, LLMs need to be (1) factual and (2) acknowledge not knowing the answer when applicable."
+        },
+        {
+          "title": "Diffusion Models for Video Generation",
+          "url": "https://lilianweng.github.io/posts/2024-04-12-diffusion-video/",
+          "published": "Fri, 12 Apr 2024 00:00:00 +0000",
+          "summary": "Diffusion models have demonstrated strong results on image synthesis in past years. Now the research community has started working on a harder task—using it for video generation. The task itself is a superset of the image case, since an image is a video of 1 frame, and it is much more challenging because: It has extra requirements on temporal consistency across frames in time, which naturally demands more world knowledge to be encoded into the model. In comparison to text or images, it is more difficult to collect large amounts of high-quality, high-dimensional video data, let along text-video pairs. 🥑 Required Pre-read: Please make sure you have read the previous blog on “What are Diffusion Models?” for image generation before continue here."
+        },
+        {
+          "title": "Thinking about High-Quality Human Data",
+          "url": "https://lilianweng.github.io/posts/2024-02-05-human-data-quality/",
+          "published": "Mon, 05 Feb 2024 00:00:00 +0000",
+          "summary": "[Special thank you to Ian Kivlichan for many useful pointers (E.g. the 100+ year old Nature paper “Vox populi”) and nice feedback. 🙏 ] High-quality data is the fuel for modern data deep learning model training. Most of the task-specific labeled data comes from human annotation, such as classification task or RLHF labeling (which can be constructed as classification format) for LLM alignment training. Lots of ML techniques in the post can help with data quality, but fundamentally human data collection involves attention to details and careful execution. The community knows the value of high quality data, but somehow we have this subtle impression that “Everyone wants to do the model work, not the data work” ( Sambasivan et al. 2021 )."
+        }
+      ]
+    },
+    {
+      "source_id": "jeff-geerling",
+      "source_name": "Jeff Geerling",
+      "url": "https://www.jeffgeerling.com/blog.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "SBC Clusters are a terrible value, but they're fun anyway",
+          "url": "https://www.jeffgeerling.com/blog/2026/deskpi-super4c-sbc-cluster/",
+          "published": "Fri, 01 May 2026 09:00:00 -0500",
+          "summary": "Pictured above is the new DeskPi Super4C installed in an 8U mini rack. The Super4C is a 4-node Raspberry Pi CM5 cluster board that solves two pain points I had with the older Super6C . I was testing this board around the same time I helped kick off the SBCC 2026 , the Single Board Cluster Competition for students. A dozen or so university teams squared off to run the best mini HPC cluster with a budget of $6,000, and a couple days to benchmark six HPC workloads ."
+        },
+        {
+          "title": "Raspberry Pi Connect may control Windows soon",
+          "url": "https://www.jeffgeerling.com/blog/2026/raspberry-pi-connect-may-control-windows-soon/",
+          "published": "Wed, 29 Apr 2026 12:00:00 -0500",
+          "summary": "Support for remote controlling Windows PCs may be added to Raspberry Pi Connect , Raspberry Pi's free remote access service. When they announced Pi Connect in 2024 , I speculated the service was launched in response to RealVNC's sluggish adoption of Wayland, leading to Pi users lacking a solid remote access solution after Pi OS 12 'Bookworm' was launched. The service was helpful for those who had one or more Raspberry Pis to access, but the Pi Connect daemon didn't run on Windows or macOS at the time, so a true competitor to RealVNC (at least for basic use cases) it was not."
+        },
+        {
+          "title": "New 10 GbE USB adapters are cooler, smaller, cheaper",
+          "url": "https://www.jeffgeerling.com/blog/2026/new-10-gbe-usb-adapters-cooler-smaller-cheaper/",
+          "published": "Fri, 24 Apr 2026 09:00:00 -0500",
+          "summary": "For years, the best way to get 10 gigabit networking on laptops was to buy an expensive, large, and hot 10 GbE Thunderbolt adapter. With new RTL8159-based 10G USB 3.2 adapters coming onto the market, the bulky adapters might be a thing of the past. Just look at the size of the thing in comparison to my Thunderbolt adapters: 2.5G and even 5G USB adapters have been out for a while, but sometimes you need more bandwidth."
+        },
+        {
+          "title": "An Arm Mainboard for the Framework Laptop",
+          "url": "https://www.jeffgeerling.com/blog/2026/arm-mainboard-for-framework-laptop/",
+          "published": "Wed, 15 Apr 2026 09:49:00 -0500",
+          "summary": "Using the repair-friendly Framework 13 laptop chassis, I've tested the low-end x86 option (a Ryzen AI 5 340 Mainboard ), the fastest RISC-V option ( DC-ROMA II ), and today I'm publishing results from the only Arm Mainboard, the MetaComputing AI PC , which has a 12-core Arm SoC and up to 32 GB of soldered-on RAM. My Framework 13 has run on x86, RISC-V, and now Arm, making it something of a 'Ship of Theseus'."
+        },
+        {
+          "title": "Build your own Dial-up ISP with a Raspberry Pi",
+          "url": "https://www.jeffgeerling.com/blog/2026/build-your-own-dial-up-isp-with-a-raspberry-pi/",
+          "published": "Fri, 03 Apr 2026 09:00:00 -0500",
+          "summary": "Last year my aunt let me add her original Tangerine iBook G3 clamshell to my collection of old Macs 1 . It came with an AirPort card—a $99 add-on Apple made that ushered in the Wi-Fi era. The iBook G3 was the first consumer laptop with built-in Wi-Fi antennas, and by far the cheapest way to get a computer onto an 802.11 wireless network."
+        }
+      ]
+    },
+    {
+      "source_id": "sean-goedecke",
+      "source_name": "Sean Goedecke",
+      "url": "https://www.seangoedecke.com/rss.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Why I don't like the \"staff engineer archetypes\"",
+          "url": "https://seangoedecke.com/staff-engineer-archetypes/",
+          "published": "Sun, 03 May 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Software engineering may no longer be a lifetime career",
+          "url": "https://seangoedecke.com/software-engineering-may-no-longer-be-a-lifetime-career/",
+          "published": "Fri, 24 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Luddites and burning down AI datacenters",
+          "url": "https://seangoedecke.com/luddites-and-ai-datacenters/",
+          "published": "Wed, 22 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Many anti-AI arguments are conservative arguments",
+          "url": "https://seangoedecke.com/many-anti-ai-arguments-are-conservative/",
+          "published": "Sat, 18 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Programming (with AI agents) as theory building",
+          "url": "https://seangoedecke.com/programming-with-ai-agents-as-theory-building/",
+          "published": "Fri, 03 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        }
+      ]
+    },
+    {
+      "source_id": "krebs-on-security",
+      "source_name": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Anti-DDoS Firm Heaped Attacks on Brazilian ISPs",
+          "url": "https://krebsonsecurity.com/2026/04/anti-ddos-firm-heaped-attacks-on-brazilian-isps/",
+          "published": "Thu, 30 Apr 2026 14:04:26 +0000",
+          "summary": "A Brazilian tech firm that specializes in protecting networks from distributed denial-of-service (DDoS) attacks has been enabling a botnet responsible for an extended campaign of massive DDoS attacks against other network operators in Brazil, KrebsOnSecurity has learned. The firm's chief executive says the malicious activity resulted from a security breach and was likely the work of a competitor trying to tarnish his company's public image."
+        },
+        {
+          "title": "‘Scattered Spider’ Member ‘Tylerb’ Pleads Guilty",
+          "url": "https://krebsonsecurity.com/2026/04/scattered-spider-member-tylerb-pleads-guilty/",
+          "published": "Tue, 21 Apr 2026 14:53:59 +0000",
+          "summary": "A 24-year-old British national and senior member of the cybercrime group \"Scattered Spider\" has pleaded guilty to wire fraud conspiracy and aggravated identity theft. Tyler Robert Buchanan admitted his role in a series of text-message phishing attacks in the summer of 2022 that allowed the group to hack into at least a dozen major technology companies and steal tens of millions of dollars worth of cryptocurrency from investors."
+        },
+        {
+          "title": "Patch Tuesday, April 2026 Edition",
+          "url": "https://krebsonsecurity.com/2026/04/patch-tuesday-april-2026-edition/",
+          "published": "Tue, 14 Apr 2026 21:47:59 +0000",
+          "summary": "Microsoft today pushed software updates to fix a staggering 167 security vulnerabilities in its Windows operating systems and related software, including a SharePoint Server zero-day and a publicly disclosed weakness in Windows Defender dubbed \"BlueHammer.\" Separately, Google Chrome fixed its fourth zero-day of 2026, and an emergency update for Adobe Reader nixes an actively exploited flaw that can lead to remote code execution."
+        },
+        {
+          "title": "Russia Hacked Routers to Steal Microsoft Office Tokens",
+          "url": "https://krebsonsecurity.com/2026/04/russia-hacked-routers-to-steal-microsoft-office-tokens/",
+          "published": "Tue, 07 Apr 2026 17:02:44 +0000",
+          "summary": "Hackers linked to Russia's military intelligence units are using known flaws in older Internet routers to mass harvest authentication tokens from Microsoft Office users, security experts warned today. The spying campaign allowed state-backed Russian hackers to quietly siphon authentication tokens from users on more than 18,000 networks without deploying any malicious software or code."
+        },
+        {
+          "title": "Germany Doxes “UNKN,” Head of RU Ransomware Gangs REvil, GandCrab",
+          "url": "https://krebsonsecurity.com/2026/04/germany-doxes-unkn-head-of-ru-ransomware-gangs-revil-gandcrab/",
+          "published": "Mon, 06 Apr 2026 02:07:17 +0000",
+          "summary": "An elusive hacker who went by the handle \"UNKN\" and ran the early Russian ransomware groups GandCrab and REvil now has a name and a face. Authorities in Germany say 31-year-old Russian Daniil Maksimovich Shchukin headed both cybercrime gangs and helped carry out at least 130 acts of computer sabotage and extortion against victims across the country between 2019 and 2021."
+        }
+      ]
+    },
+    {
+      "source_id": "antirez",
+      "source_name": "antirez",
+      "url": "http://antirez.com/rss",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Redis array type: short story of a long development",
+          "url": "http://antirez.com/news/164",
+          "published": "Mon, 04 May 2026 16:21:45 +0200",
+          "summary": "I started working on the new Array data type for Redis in the first days of January. The PR landed the repository only now, so this code was cooked for four months. I worked at the implementation kinda part time (kinda because many weeks were actually full time, sometimes to detach yourself from the keyboard is complicated), and even before LLMs the implementation was likely something I could do in four months. What changed is that in the same time span, I was able to do a lot more. This is the short story of what happened. In the first month I just wrote the specification document. The rationale for the new data type, the C structures, the sparse representation used, the exact semantics of the array cursor for ring buffer and ARINSERT. I started writing for days a long specification by hand, then I paired with Opus initially, then GPT 5.3 was released and I switched all the design and development with Codex. Since then I use only GPT 5.x for system programming tasks. Thanks to AI, the specification evolved a lot, via back and forth of feedback, intellectual challenges about what was the best design, what was the right compromise, what was too engineered and what not. Starting from the second month, I started the implementation using automatic programming (auto coding if you prefer), constantly reviewing the developed code. Then I realized that the level of indirection I picked was wrong. I really wanted people to be able to do ARSET myarray 293842948324 foo and everything to still work without huge allocations. The two levels of directory + slices (sparse and dense) I had were not enough. Because I had AI, I took no compromises, and I decided to go the extra mile. Once certain conditions are reached, the data structure internally changes shape, and becomes a super directory of sliced dense directories, that also point to the actual array slices (4096 elements per slice, by default). This design provided still the internal \"is actually an array\" representation I wanted, and the memory characteristics I seeked, while being able, for ARSCAN, and ARPOP, to scan the existing arrays taking a time proportional to the existing elements and not to the range span. Then, it was time to read all the code, line by line. Everything was working, and this type has massive testing, thanks, again to AI, but still things that superficially work do not mean they are optimal. I found many small inefficiencies or design errors that I didn't want, so I started a process of manual and AI-assisted rewrite of many modules. When this stage was done, I started, during the third month, to stress test the implementation in many different ways. I started to be confident that it was really solid, useful, well designed. Then… it happened. While modeling different use cases to see if the data structure was comfortable to use, I started to put markdown files into Redis arrays. Because files are a very good match for it. At this point, as I was working for other goals with agents, I realized that I could have the skills markdown files centralized knowledge base that I needed, so from a need of mine I decided to implement ARGREP. But I wanted regular expressions, too. What library to pick? I ended up picking TRE (thanks Ville Laurikari!), because when you have regexp in Redis, you want to be sure that there are no pathological patterns in time or space. But TRE was very inefficient in a specific and extremely useful case, that is matching foo|bar|zap. So with the help of GPT I optimized it, fixed a few potential security issues, and extended the test. I had everything in place. You know what was the biggest realization of all that? For high quality system programming tasks you have to still be fully involved, but I ventured to a level of complexity that I would have otherwise skipped. AI provided the safety net for two things: certain massive tasks that are very tiring (like the 32 bit support that was added and tested later), and at the same time the virtual work force required to make sure there are no obvious bugs in complicated algorithms. To write the initial huge specification was the key to the successive work, as it was the key to review each single line of sparsearray.c and t_array.c and modifying everything was not a good fit. I didn't spend any word on the use cases as I tried to document the PR itself with a message where they are detailed: https://github.com/redis/redis/pull/15162 So it was not really useful to repeat myself here. Enough to say that I really believe it is about time for Redis to have a data type where the numerical index is part of the semantics. I hope the Array PR will be accepted soon, and that we can benefit from the new use cases it opens. Of course, feedback is welcomed. Thank you. Comments"
+        },
+        {
+          "title": "AI cybersecurity is not proof of work",
+          "url": "http://antirez.com/news/163",
+          "published": "Thu, 16 Apr 2026 12:46:46 +0200",
+          "summary": "The proof of work is the wrong analogy: finding hash collisions, while exponentially harder with N, is guaranteed to find, with enough work, some S so that H(S) satisfies N, so an asymmetry of resources used will see the side with more \"work ability\" eventually winning. But bugs are different: 1. Different LLMs executions take different branches, but eventually the possible branches based on the code possible states are saturated. 2. If we imagine sampling the model for a bug in a given code M times, with M large, eventually the cap becomes not \"M\" (because of saturated state of the code AND the LLM sampler meaningful paths), but \"I\", the model intelligence level. The OpenBSD SACK bug easily shows that: you can run an inferior model for an infinite number of tokens, and it will never realize(*) that the lack of validation of the start window, if put together with the integer overflow, then put together with the fact the branch where the node should never be NULL is entered regardless, will produce the bug. So, cyber security of tomorrow will not be like proof of work in the sense of \"more GPU wins\"; instead, better models, and faster access to such models, will win. * Don't trust who says that weak models can find the OpenBSD SACK bug. I tried it myself. What happens is that weak models hallucinate (sometimes causally hitting a real problem) that there is a lack of validation of the start of the window (which is in theory harmless because of the start BTW, this is why with this bug, the stronger the model you pick (but not enough to discover the true bug), the less likely it is it will claim there is a bug. Stronger models hallucinate less, so they can't see the problem in any side of the spectrum: the hallucination side of small models, and the real understanding side of Mythos. Comments"
+        },
+        {
+          "title": "GNU and the AI reimplementations",
+          "url": "http://antirez.com/news/162",
+          "published": "Sun, 08 Mar 2026 17:08:41 +0100",
+          "summary": "Those who cannot remember the past are condemned to repeat it. A sentence that I never really liked, and what is happening with AI, about software projects reimplementations, shows all the limits of such an idea. Many people are protesting the fairness of rewriting existing projects using AI. But, a good portion of such people, during the 90s, were already in the field: they followed the final part (started in the ‘80s) of the deeds of Richard Stallman, when he and his followers were reimplementing the UNIX userspace for the GNU project. The same people that now are against AI rewrites, back then, cheered for the GNU project actions (rightly, from my point of view – I cheered too). Stallman is not just a programming genius, he is also the kind of person that has a broad vision across disciplines, and among other things he was well versed in the copyright nuances. He asked the other programmers to reimplement the UNIX userspace in a specific way. A way that would make each tool unique, recognizable, compared to the original copy. Either faster, or more feature rich, or scriptable; qualities that would serve two different goals: to make GNU Hurd better and, at the same time, to provide a protective layer against litigations. If somebody would claim that the GNU implementations were not limited to copying ideas and behaviours (which is legal), but “protected expressions” (that is, the source code verbatim), the added features and the deliberate push towards certain design directions would provide a counter argument that judges could understand. He also asked to always reimplement the behavior itself, avoiding watching the actual implementation, using specifications and the real world mechanic of the tool, as tested manually by executing it. Still, it is fair to guess that many of the people working at the GNU project likely were exposed or had access to the UNIX source code. When Linus reimplemented UNIX, writing the Linux kernel, the situation was somewhat more complicated, with an additional layer of indirection. He was exposed to UNIX just as a user, but, apparently, had no access to the source code of UNIX. On the other hand, he was massively exposed to the Minix source code (an implementation of UNIX, but using a microkernel), and to the book describing such implementation as well. But, in turn, when Tanenbaum wrote Minix, he did so after being massively exposed to the UNIX source code. So, SCO (during the IBM litigation) had a hard time trying to claim that Linux contained any protected expressions. Yet, when Linus used Minix as an inspiration, not only was he very familiar with something (Minix) implemented with knowledge of the UNIX code, but (more interestingly) the license of Minix was restrictive, it became open source only in 2000. Still, even in such a setup, Tanenbaum protested about the architecture (in the famous exchange), not about copyright infringement. So, we could reasonably assume Tanenbaum considered rewrites fair, even if Linus was exposed to Minix (and having himself followed a similar process when writing Minix). # What the copyright law really says To put all this in the right context, let’s zoom in on the copyright's actual perimeters: the law says you must not copy “protected expressions”. In the case of the software, a protected expression is the code as it is, with the same structure, variables, functions, exact mechanics of how specific things are done, unless they are known algorithms (standard quicksort or a binary search can be implemented in a very similar way and they will not be a violation). The problem is when the business logic of the programs matches perfectly, almost line by line, the original implementation. Otherwise, the copy is lawful and must not obey the original license, as long as it is pretty clear that the code is doing something similar but with code that is not cut & pasted or mechanically translated to some other language, or aesthetically modified just to look a bit different (look: this is exactly the kind of bad-faith maneuver a court will try to identify). I have the feeling that every competent programmer reading this post perfectly knows what a *reimplementation* is and how it looks. There will be inevitable similarities, but the code will be clearly not copied. If this is the legal setup, why do people care about clean room implementations? Well, the reality is: it is just an optimization in case of litigation, it makes it simpler to win in court, but being exposed to the original source code of some program, if the exposition is only used to gain knowledge about the ideas and behavior, is fine. Besides, we are all happy to have Linux today, and the GNU user space, together with many other open source projects that followed a similar path. I believe rules must be applied both when we agree with their ends, and when we don’t. # AI enters the scene So, reimplementations were always possible. What changes, now, is the fact they are brutally faster and cheaper to accomplish. In the past, you had to hire developers, or to be enthusiastic and passionate enough to create a reimplementation yourself, because of business aspirations or because you wanted to share it with the world at large. Now, you can start a coding agent and proceed in two ways: turn the implementation into a specification, and then in a new session ask the agent to reimplement it, possibly forcing specific qualities, like: make it faster, or make the implementation incredibly easy to follow and understand (that’s a good trick to end with an implementation very far from others, given the fact that a lot of code seems to be designed for the opposite goal), or more modular, or resolve this fundamental limitation of the original implementation: all hints that will make it much simpler to significantly diverge from the original design. LLMs, when used in this way, don’t produce copies of what they saw in the past, but yet at the end you can use an agent to verify carefully if there is any violation, and if any, replace the occurrences with novel code. Another, apparently less rigorous approach, but potentially very good in the real world, is to provide the source code itself, and ask the agent to reimplement it in a completely novel way, and use the source code both as specification and in order to drive the implementation as far as possible away from the code itself. Frontier LLMs are very capable, they can use something even to explicitly avoid copying it, and carefully try different implementation approaches. If you ever attempted something like the above, you know how the “uncompressed copy” really is an illusion: agents will write the software in a very “organic” way, committing errors, changing design many times because of limitations that become clear only later, starting with something small and adding features progressively, and often, during this already chaotic process, we massively steer their work with our prompts, hints, wishes. Many ideas are consolatory as they are false: the “uncompressed copy” is one of those. But still, now the process of rewriting is so simple to do, and many people are disturbed by this. There is a more fundamental truth here: the nature of software changed; the reimplementations under different licenses are just an instance of how such nature was transformed forever. Instead of combatting each manifestation of automatic programming, I believe it is better to build a new mental model, and adapt. # Beyond the law I believe that organized societies prosper if laws are followed, yet I do not blindly accept a rule just because it exists, and I question things based on my ethics: this is what allows individuals, societies, and the law itself to evolve. We must ask ourselves: is the copyright law ethically correct? Does the speed-up AI provides to an existing process, fundamentally change the process itself? One thing that allowed software to evolve much faster than most other human fields is the fact the discipline is less anchored to patents and protections (and this, in turn, is likely as it is because of a sharing culture around the software). If the copyright law were more stringent, we could likely not have what we have today. Is the protection of single individuals' interests and companies more important than the general evolution of human culture? I don’t think so, and, besides, the copyright law is a common playfield: the rules are the same for all. Moreover, it is not a stretch to say that despite a more relaxed approach, software remains one of the fields where it is simpler to make money; it does not look like the business side was impacted by the ability to reimplement things. Probably, the contrary is true: think of how many businesses were made possible by an open source software stack (not that OSS is mostly made of copies, but it definitely inherited many ideas about past systems). I believe, even with AI, those fundamental tensions remain all valid. Reimplementations are cheap to make, but this is the new playfield for all of us, and just reimplementing things in an automated fashion, without putting something novel inside, in terms of ideas, engineering, functionalities, will have modest value in the long run. What will matter is the exact way you create something: Is it well designed, interesting to use, supported, somewhat novel, fast, documented and useful? Moreover, this time the inbalance of force is in the right direction: big corporations always had the ability to spend obscene amounts of money in order to copy systems, provide them in a way that is irresistible for users (free, for many years, for instance, to later switch model) and position themselves as leaders of ideas they didn’t really invent. Now, small groups of individuals can do the same to big companies' software systems: they can compete on ideas now that a synthetic workforce is cheaper for many. # We stand on the shoulders of giants There is another fundamental idea that we all need to internalize. Software is created and evolved as an incremental continuous process, where each new innovation is building on what somebody else invented before us. We are all very quick to build something and believe we “own” it, which is correct, if we stop at the exact code we wrote. But we build things on top of work and ideas already done, and given that the current development of IT is due to the fundamental paradigm that makes ideas and behaviors not covered by copyright, we need to accept that reimplementations are a fair process. If they don’t contain any novelty, maybe they are a lazy effort? That’s possible, yet: they are fair, and nobody is violating anything. Yet, if we want to be good citizens of the ecosystem, we should try, when replicating some work, to also evolve it, invent something new: to specialize the implementation for a lower memory footprint, or to make it more useful in certain contexts, or less buggy: the Stallman way. In the case of AI, we are doing, almost collectively, the error of thinking that a technology is bad or good for software and humanity in isolation. AI can unlock a lot of good things in the field of open source software. Many passionate individuals write open source because they hate their day job, and want to make something they love, or they write open source because they want to be part of something bigger than economic interests. A lot of open source software is either written in the free time, or with severe constraints on the amount of people that are allocated for the project, or - even worse - with limiting conditions imposed by the companies paying for the developments. Now that code is every day less important than ideas, open source can be strongly accelerated by AI. The four hours allocated over the weekend will bring 10x the fruits, in the right hands (AI coding is not for everybody, as good coding and design is not for everybody). Linux device drivers can be implemented by automatically disassembling some proprietary blob, for instance. Or, what could be just a barely maintained library can turn into a project that can be well handled in a more reasonable amount of time. Before AI, we witnessed the commodification of software: less quality, focus only on the money, no care whatsoever for minimalism and respect for resources: just piles of mostly broken bloat. More hardware power, more bloat, less care. It was already going very badly. It is not obvious nor automatic that AI will make it worse, and the ability to reimplement other software systems is part of a bigger picture that may restore some interest and sanity in our field. Comments"
+        },
+        {
+          "title": "Redis patterns for coding",
+          "url": "http://antirez.com/news/161",
+          "published": "Sun, 01 Mar 2026 10:55:09 +0100",
+          "summary": "Here LLM and coding agents can find: 1. Exhaustive documentation about Redis commands and data types. 2. Patterns commonly used. 3. Configuration hints. 4. Algorithms that can be mounted using Redis commands. https://redis.antirez.com/ Some humans claim this documentation is actually useful for actual people, as well :) I'm posting this to make sure search engines will index it. Comments"
+        },
+        {
+          "title": "Implementing a clear room Z80 / ZX Spectrum emulator with Claude Code",
+          "url": "http://antirez.com/news/160",
+          "published": "Tue, 24 Feb 2026 18:58:02 +0100",
+          "summary": "Anthropic recently released a blog post with the description of an experiment in which the last version of Opus, the 4.6, was instructed to write a C compiler in Rust, in a “clean room” setup. The experiment methodology left me dubious about the kind of point they wanted to make. Why not provide the agent with the ISA documentation? Why Rust? Writing a C compiler is exactly a giant graph manipulation exercise: the kind of program that is harder to write in Rust. Also, in a clean room experiment, the agent should have access to all the information about well established computer science progresses related to optimizing compilers: there are a number of papers that could be easily synthesized in a number of markdown files. SSA, register allocation, instructions selection and scheduling. Those things needed to be researched *first*, as a prerequisite, and the implementation would still be “clean room”. Not allowing the agent to access the Internet, nor any other compiler source code, was certainly the right call. Less understandable is the almost-zero steering principle, but this is coherent with a certain kind of experiment, if the goal was showcasing the completely autonomous writing of a large project. Yet, we all know how this is not how coding agents are used in practice, most of the time. Who uses coding agents extensively knows very well how, even never touching the code, a few hits here and there completely changes the quality of the result. # The Z80 experiment I thought it was time to try a similar experiment myself, one that would take one or two hours at max, and that was compatible with my Claude Code Max plan: I decided to write a Z80 emulator, and then a ZX Spectrum emulator (and even more, a CP/M emulator, see later) in a condition that I believe makes a more sense as “clean room” setup. The result can be found here: https://github.com/antirez/ZOT. # The process I used 1. I wrote a markdown file with the specification of what I wanted to do. Just English, high level ideas about the scope of the Z80 emulator to implement. I said things like: it should execute a whole instruction at a time, not a single clock step, since this emulator must be runnable on things like an RP2350 or similarly limited hardware. The emulator should correctly track the clock cycles elapsed (and I specified we could use this feature later in order to implement the ZX Spectrum contention with ULA during memory accesses), provide memory access callbacks, and should emulate all the known official and unofficial instructions of the Z80. For the Spectrum implementation, performed as a successive step, I provided much more information in the markdown file, like, the kind of rendering I wanted in the RGB buffer, and how it needed to be optional so that embedded devices could render the scanlines directly as they transferred them to the ST77xx display (or similar), how it should be possible to interact with the I/O port to set the EAR bit to simulate cassette loading in a very authentic way, and many other desiderata I had about the emulator. This file also included the rules that the agent needed to follow, like: * Accessing the internet is prohibited, but you can use the specification and test vectors files I added inside ./z80-specs. * Code should be simple and clean, never over-complicate things. * Each solid progress should be committed in the git repository. * Before committing, you should test that what you produced is high quality and that it works. * Write a detailed test suite as you add more features. The test must be re-executed at every major change. * Code should be very well commented: things must be explained in terms that even people not well versed with certain Z80 or Spectrum internals details should understand. * Never stop for prompting, the user is away from the keyboard. * At the end of this file, create a work in progress log, where you note what you already did, what is missing. Always update this log. * Read this file again after each context compaction. 2. Then, I started a Claude Code session, and asked it to fetch all the useful documentation on the internet about the Z80 (later I did this for the Spectrum as well), and to extract only the useful factual information into markdown files. I also provided the binary files for the most ambitious test vectors for the Z80, the ZX Spectrum ROM, and a few other binaries that could be used to test if the emulator actually executed the code correctly. Once all this information was collected (it is part of the repository, so you can inspect what was produced) I completely removed the Claude Code session in order to make sure that no contamination with source code seen during the search was possible. 3. I started a new session, and asked it to check the specification markdown file, and to check all the documentation available, and start implementing the Z80 emulator. The rules were to never access the Internet for any reason (I supervised the agent while it was implementing the code, to make sure this didn’t happen), to never search the disk for similar source code, as this was a “clean room” implementation. 4. For the Z80 implementation, I did zero steering. For the Spectrum implementation I used extensive steering for implementing the TAP loading. More about my feedback to the agent later in this post. 5. As a final step, I copied the repository in /tmp, removed the “.git” repository files completely, started a new Claude Code (and Codex) session and claimed that the implementation was likely stolen or too strongly inspired from somebody else's work. The task was to check with all the major Z80 implementations if there was evidence of theft. The agents (both Codex and Claude Code), after extensive search, were not able to find any evidence of copyright issues. The only similar parts were about well established emulation patterns and things that are Z80 specific and can’t be made differently, the implementation looked distinct from all the other implementations in a significant way. # Results Claude Code worked for 20 or 30 minutes in total, and produced a Z80 emulator that was able to pass ZEXDOC and ZEXALL, in 1200 lines of very readable and well commented C code (1800 lines with comments and blank spaces). The agent was prompted zero times during the implementation, it acted absolutely alone. It never accessed the internet, and the process it used to implement the emulator was of continuous testing, interacting with the CP/M binaries implementing the ZEXDOC and ZEXALL, writing just the CP/M syscalls needed to produce the output on the screen. Multiple times it also used the Spectrum ROM and other binaries that were available, or binaries it created from scratch to see if the emulator was working correctly. In short: the implementation was performed in a very similar way to how a human programmer would do it, and not outputting a complete implementation from scratch “uncompressing” it from the weights. Instead, different classes of instructions were implemented incrementally, and there were bugs that were fixed via integration tests, debugging sessions, dumps, printf calls, and so forth. # Next step: the ZX Spectrum I repeated the process again. I instructed the documentation gathering session very accurately about the kind of details I wanted it to search on the internet, especially the ULA interactions with RAM access, the keyboard mapping, the I/O port, how the cassette tape worked and the kind of PWM encoding used, and how it was encoded into TAP or TZX files. As I said, this time the design notes were extensive since I wanted this emulator to be specifically designed for embedded systems, so only 48k emulation, optional framebuffer rendering, very little additional memory used (no big lookup tables for ULA/Z80 access contention), ROM not copied in the RAM to avoid using additional 16k of memory, but just referenced during the initialization (so we have just a copy in the executable), and so forth. The agent was able to create a very detailed documentation about the ZX Spectrum internals. I provided a few .z80 images of games, so that it could test the emulator in a real setup with real software. Again, I removed the session and started fresh. The agent started working and ended 10 minutes later, following a process that really fascinates me, and that probably you know very well: the fact is, you see the agent working using a number of diverse skills. It is expert in everything programming related, so as it was implementing the emulator, it could immediately write a detailed instrumentation code to “look” at what the Z80 was doing step by step, and how this changed the Spectrum emulation state. In this respect, I believe automatic programming to be already super-human, not in the sense it is currently capable of producing code that humans can’t produce, but in the concurrent usage of different programming languages, system programming techniques, DSP stuff, operating system tricks, math, and everything needed to reach the result in the most immediate way. When it was done, I asked it to write a simple SDL based integration example. The emulator was immediately able to run the Jetpac game without issues, with working sound, and very little CPU usage even on my slow Dell Linux machine (8% usage of a single core, including SDL rendering). Once the basic stuff was working, I wanted to load TAP files directly, simulating cassette loading. This was the first time the agent missed a few things, specifically about the timing the Spectrum loading routines expected, and here we are in the territory where LLMs start to perform less efficiently: they can’t easily run the SDL emulator and see the border changing as data is received and so forth. I asked Claude Code to do a refactoring so that zx_tick() could be called directly and was not part of zx_frame(), and to make zx_frame() a trivial wrapper. This way it was much simpler to sync EAR with what it expected, without callbacks or the wrong abstractions that it had implemented. After such change, a few minutes later the emulator could load a TAP file emulating the cassette without problems. This is how it works now: do { zx_set_ear(zx, tzx_update(&tape, zx->cpu.clocks)); } while (!zx_tick(zx, 0)); I continued prompting Claude Code in order to make the key bindings more useful and a few things more. # CP/M One thing that I found really interesting was the ability of the LLM to inspect the COM files for ZEXALL / ZEXCOM tests for the Z80, easily spot the CP/M syscalls that were used (a total of three), and implement them for the extended z80 test (executed by make fulltest). So, at this point, why not implement a full CP/M environment? Same process again, same good result in a matter of minutes. This time I interacted with it a bit more for the VT100 / ADM3 terminal escapes conversions, reported things not working in WordStar initially, and in a few minutes everything I tested was working well enough (but, there are fixes to do, like simulating a 2Mhz clock, right now it runs at full speed making CP/M games impossible to use). # What is the lesson here? The obvious lesson is: always provide your agents with design hints and extensive documentation about what they are going to do. Such documentation can be obtained by the agent itself. And, also, make sure the agent has a markdown file with the rules of how to perform the coding tasks, and a trace of what it is doing, that is updated and read again quite often. But those tricks, I believe, are quite clear to everybody that has worked extensively with automatic programming in the latest months. To think in terms of “what a human would need” is often the best bet, plus a few LLMs specific things, like the forgetting issue after context compaction, the continuous ability to verify it is on the right track, and so forth. Returning back to the Anthropic compiler attempt: one of the steps that the agent failed was the one that was more strongly related to the idea of memorization of what is in the pretraining set: the assembler. With extensive documentation, I can’t see any way Claude Code (and, even more, GPT5.3-codex, which is in my experience, for complex stuff, more capable) could fail at producing a working assembler, since it is quite a mechanical process. This is, I think, in contradiction with the idea that LLMs are memorizing the whole training set and uncompress what they have seen. LLMs can memorize certain over-represented documents and code, but while they can extract such verbatim parts of the code if prompted to do so, they don’t have a copy of everything they saw during the training set, nor they spontaneously emit copies of already seen code, in their normal operation. We mostly ask LLMs to create work that requires assembling different knowledge they possess, and the result is normally something that uses known techniques and patterns, but that is new code, not constituting a copy of some pre-existing code. It is worth noting, too, that humans often follow a less rigorous process compared to the clean room rules detailed in this blog post, that is: humans often download the code of different implementations related to what they are trying to accomplish, read them carefully, then try to avoid copying stuff verbatim but often times they take strong inspiration. This is a process that I find perfectly acceptable, but it is important to take in mind what happens in the reality of code written by humans. After all, information technology evolved so fast even thanks to this massive cross pollination effect. For all the above reasons, when I implement code using automatic programming, I don’t have problems releasing it MIT licensed, like I did with this Z80 project. In turn, this code base will constitute quality input for the next LLMs training, including open weights ones. # Next steps To make my experiment more compelling, one should try to implement a Z80 and ZX Spectrum emulator without providing any documentation to the agent, and then compare the result of the implementation. I didn’t find the time to do it, but it could be quite informative. Comments"
+        }
+      ]
+    },
+    {
+      "source_id": "mitchellh",
+      "source_name": "Mitchell Hashimoto",
+      "url": "https://mitchellh.com/feed.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Ghostty Is Leaving GitHub",
+          "url": "https://mitchellh.com/writing/ghostty-leaving-github",
+          "published": "Tue, 28 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Simdutf Can Now Be Used Without libc++ or libc++abi",
+          "url": "https://mitchellh.com/writing/simdutf-no-libcxx",
+          "published": "Wed, 15 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "The Building Block Economy",
+          "url": "https://mitchellh.com/writing/building-block-economy",
+          "published": "Tue, 07 Apr 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "My AI Adoption Journey",
+          "url": "https://mitchellh.com/writing/my-ai-adoption-journey",
+          "published": "Thu, 05 Feb 2026 00:00:00 GMT",
+          "summary": ""
+        },
+        {
+          "title": "Don't Trip[wire] Yourself: Testing Error Recovery in Zig",
+          "url": "https://mitchellh.com/writing/tripwire",
+          "published": "Wed, 21 Jan 2026 00:00:00 GMT",
+          "summary": ""
+        }
+      ]
+    },
+    {
+      "source_id": "xeiaso",
+      "source_name": "Xe Iaso",
+      "url": "https://xeiaso.net/blog.rss",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Claude Code won April Fools Day this year",
+          "url": "https://xeiaso.net/notes/2026/claude-code-wins-april-fools/",
+          "published": "Wed, 01 Apr 2026 00:00:00 GMT",
+          "summary": "They gave people a heckin tamagochi, what's not to like?"
+        },
+        {
+          "title": "Small note about AI 'GPUs'",
+          "url": "https://xeiaso.net/notes/2026/ai-gpus-cant-process-graphics/",
+          "published": "Mon, 30 Mar 2026 00:00:00 GMT",
+          "summary": "They are graphical processing units that can't process graphics."
+        },
+        {
+          "title": "Homelab downtime update: The fight for DNS supremacy",
+          "url": "https://xeiaso.net/notes/2026/dns-fight/",
+          "published": "Wed, 18 Mar 2026 00:00:00 GMT",
+          "summary": "Turns out everything DID NOT go offline somehow. Yay!"
+        },
+        {
+          "title": "My homelab will be down for at least 20 days",
+          "url": "https://xeiaso.net/notes/2026/homelab-is-down/",
+          "published": "Tue, 17 Mar 2026 00:00:00 GMT",
+          "summary": "Dang, guess I have to suffer."
+        },
+        {
+          "title": "I don't know if I like working at higher levels of abstraction",
+          "url": "https://xeiaso.net/blog/2026/ai-abstraction/",
+          "published": "Wed, 11 Mar 2026 00:00:00 GMT",
+          "summary": "AI tools push us to higher abstraction. I'm not sure I like what that costs us."
+        }
+      ]
+    },
+    {
+      "source_id": "lucumr",
+      "source_name": "Armin Ronacher",
+      "url": "https://lucumr.pocoo.org/feed.atom",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Content for Content’s Sake",
+          "url": "https://lucumr.pocoo.org/2026/5/4/content-for-contents-sake/",
+          "published": "2026-05-04T00:00:00+00:00",
+          "summary": "Language is constantly evolving, particularly in some communities. Not everybody is ready for it at all times. I, for instance, cannot stand that my community is now constantly “cooking” or “cooked”, that people in it are “locked in” or “cracked.” I don’t like it, because the use of the words primarily signals membership of a group rather than one’s individuality. But some of the changes to that language might now be coming from … machines? Or maybe not. I don’t know. I, like many others, noticed that some words keep showing up more than before, and the obvious assumption is that LLMs are at fault. What I did was take 90 days’ worth of my local coding sessions and look for medium-frequency words where their use is inflated compared to what wordfreq would assume their frequency should be. Then I looked for the more common of these words and did a Google Trends search (filtered to the US). Note that some words like “capability” are more likely going to show up in coding sessions just because of the nature of the problem, so the actual increase is much more pronounced than you would expect. You can click through it; this is what the change over time looks like. Note that these are all words from agent output in my coding sessions that are inflated compared to historical norms: Loading word trend chart… The interactive word trend chart requires JavaScript. Something is going on for sure. Google Trends, in theory, reflects words that people search for. In theory, maybe agents are doing some of the Googling, but it might just be humans Googling for stuff that is LLM-generated; I don’t know. This data set might be a complete fabrication, but for all the words I checked and selected, I also saw an increase on Google Trends. So how did I select the words to check in the first place? First, I looked for the highest-frequency words. They were, as you would expect, things like “add”, “commit”, “patch”, etc. Then I had an LLM generate a word list of words that it thought were engineering-related, and I excluded them entirely from the list. Then I also removed the most common words to begin with. In the end, I ended up with the list above, plus some other ones that are internal project names. For instance, habitat and absurd , as well as some other internal code names, were heavily over-represented, and I had to remove those. As you can see, not entirely scientific. But of the resulting list of words with a high divergence compared to wordfreq, they all also showed spikes on Google Trends. There might also be explanations other than LLM generation for what is going on, but I at least found it interesting that my coding session spikes also show up as spikes on Google Trends. The Rise of LLM Slop The choice of words is one thing; the way in which LLMs form sentences is another. It’s not hard to spot LLM-generated text, but I’m increasingly worried that I’m starting to write like an LLM because I just read so much more LLM text. The first time I became aware of this was that I used the word “substrate” in a talk I gave earlier this year. I am not sure where I picked it up, but I really liked it for what I wanted to express and I did not want to use the word “foundation”. Since then, however, I am reading this word everywhere. This, in itself, might be a case of the Baader–Meinhof phenomenon , but you can also see from the selection above that my coding agent loves substrate more than it should, and that Google Trends shows an increase. We have all been exposed to LLM-generated text now, but I feel like this is getting worse recently. A lot of the tweet replies I get and some of the Hacker News comments I see read like they are LLM-generated, and that includes people I know are real humans. It’s really messing with my brain because, on the one hand, I really want to tell people off for talking and writing like LLMs; on the other hand, maybe we all are increasingly actually writing and speaking like LLMs? I was listening to a talk recording recently (which I intentionally will not link) where the speaker used the same sentence structure that is over-represented in LLM-generated text. Yes, the speaker might have used an LLM to help him generate the talk, but at the same time, the talk sounded natural. So either it was super well-rehearsed, or it was natural. Engage and Farm At least on Twitter, LinkedIn, and elsewhere, there is a huge desire among people to write content and be read. Shutting up is no longer an option and, as a result, people try to get reach and build their profile by engaging with anything that is popular or trending. In the same way that everybody has gazillions of Open Source projects all of a sudden, everybody has takes on everything. My inbox is a disaster of companies sending me AI-generated nonsense and I now routinely see AI-generated blog posts (or at least ones that look like they are AI-generated) being discussed in earnest on Hacker News and elsewhere. Genuine human discourse had already been an issue because of social media algorithms before, but now it has become incredibly toxic. As more and more people discover that they can use LLMs to optimize their following, they are entering an arms race with the algorithms and real genuine human signal is losing out quickly. There are entire companies now that just exist to automate sending LLM-generated shit and people evidently pay money for it. Speed Should Kill If we take into account the idea that the highest-quality content should win out, then the speed element would not matter. If a human-generated comment comes in 15 minutes after a clanker-generated one, but outperforms it by being better, then this whole LLM nonsense would show up less. But I think that LLM-generated noise actually performs really well. We see this plenty with Open Source now. Someone builds an interesting project, puts it on GitHub and within hours, there are “remixes” and “reimplementations” of that codebase. Not only that, many of those forks come with sloppy marketing websites, paid-for domains, and a whole story on socials about why this is the path to take. I have complained before that Open Source is quickly deteriorating because people now see the opportunity to build products on top of useful Open Source projects, but the underlying mechanics are the same as why we see so much LLM slop. Someone has a formed opinion (hopefully) at lunch, and then has a clanker-made post 3 minutes later. It just does not take that much time to build it. For the tweets, I think it’s worse because I suspect that some people have scripts running to mostly automate the engagement. And surely, we should hate all of this. These low-effort posts, tweets, and Open Source projects should not make it anywhere. But they do! Whatever they play into, whether in the algorithms or with human engagement, they are not punished enough for how little effort goes into them. Friction and Rate Limiting That increases in speed and ease of access can turn into problems is a long-understood issue. ID cards are a very unpopular thing in the UK because the British are suspicious of misuse of a central database after what happened in Nazi Germany. Likewise the US has the Firearm Owners Protection Act from 1986, which also bans the US from creating a central database of gun owners. The gun-tracing methodologies that result from not having such a database look like something out of a Wes Anderson movie . We have known for a long time that certain things should not be easy, because of the misuse that happens. We know it in engineering; we know it when it comes to governmental overreach. Now we are probably going to learn the same lesson in many more situations because LLMs make almost anything that involves human text much easier. This is hitting existing text-based systems quickly. Take, for instance, the EU complaints system, which is now buckling under the pressure of AI . Or take any AI-adjacent project’s issue tracker. Pi is routinely getting AI-generated issue requests, sometimes even without the knowledge of the author . Trust Erosion and Gaslighting I know that’s a lot of complaining for “I am getting too many emails, shitty Twitter mentions, and GitHub issues.” I really think, though, that now that we know that it’s happening, we have to change how we interact with people who are increasingly automating themselves. Not only do they produce a lot of shitty slop that we all have to sit through; they are also influencing the world in much more insidious ways, in that they are influencing our interactions with each other. The moment I start distrusting people I otherwise trust, because they have started picking up LLM phrasing, it erodes trust all over society. You also can’t completely ban people for bad behavior, because some of this increasingly happens accidentally. You sending Polsia spam to me? You’re dead to me. You sending me an AI-generated issue request and following up with an apology five minutes later? Well, I guess mistakes happen. Yet, in many ways, what is going on and will continue to go on is unsettling. I recently talked with my friend Ben who said he forced someone to call him to continue a conversation because he was no longer convinced he was talking to a human. Not all of us have been exposed to the extreme cases of this yet, but I had a handful of interactions in which I questioned reality due to the behavior of the person on the other side. I struggle with this, and I consider myself to be pretty open to new technologies and AI in particular. But how will my children react to stuff like this? My mother? I have strong doubts that technology is going to solve this for us. Suggestions for Change The reason I don’t think technology is going to solve this for us is that while it can hide some spam and label some generated text, it won’t fix us humans. What is being damaged here are social interactions across the board: the assumption that when someone writes to you, there is a person on the other side who has put some care into the interaction. I would rather have someone ghost me or reject me than send me back some AI-generated slop. Change has to start with awareness and an unfortunate development is that LLMs don’t just influence the text we read and they influence the text we write, even when we don’t use them. Given the resulting ambiguity, we need to become more aware of how easily we can turn into energy vampires when we use agents to back us up in interactions with others. Consider that every time someone reads text coming from you, they will increasingly have to make a judgment call if it was you, an LLM, or you and an LLM that produced the interaction. Transparency in either direction, when there is ambiguity, can help great lengths. When someone sends us undeclared slop, we need to change how we engage with them. If we care about them, we should tell them. If we don’t care about them, we should not give them visibility and not engage. When it comes to creating platforms and interfaces where text can be submitted, we need to throw more wrenches in. The fact that it was cheap for you to produce does not make it cheap for someone else to receive, and we need to find more creative ways to increase the backpressure. GitHub or whatever wants to replace it, will have a lot to improve here and some of which might be going against its core KPIs. More engagement is increasingly the wrong thing to look at if you want a long term healthy platform. Whatever we can do to rate-limit social interactions is something we should try: more in-person meetings, more platforms where trust has to be earned, and maybe more acceptance that sometimes the right response is no response at all. And as for AI assistance on this blog, I have an AI transparency disclaimer for a while. In this particular blog post I used Pi as an agent to help me generate the dynamic visualization and I used to write the code to analyze and scrape Google Trends."
+        },
+        {
+          "title": "Before GitHub",
+          "url": "https://lucumr.pocoo.org/2026/4/28/before-github/",
+          "published": "2026-04-28T00:00:00+00:00",
+          "summary": "GitHub was not the first home of my Open Source software. SourceForge was . Before GitHub, I had my own Trac installation. I had Subversion repositories, tickets, tarballs, and documentation on infrastructure I controlled. Later I moved projects to Bitbucket, back when Bitbucket still felt like a serious alternative place for Open Source projects, especially for people who were not all-in on Git yet. And then, eventually, GitHub became the place, and I moved all of it there. It is hard for me to overstate how important GitHub became in my life. A large part of my Open Source identity formed there. Projects I worked on found users there. People found me there, and I found other people there. Many professional relationships and many friendships started because some repository, issue, pull request, or comment thread made two people aware of each other. That is why I find what is happening to GitHub today so sad and so disappointing. I do not look at it as just the folks at Microsoft making product decisions I dislike. GitHub was part of the social infrastructure of Open Source for a very long time. For many of us, it was not merely where the code lived; it was where a large part of the community lived. So when I think about GitHub’s decline, I also think about what came before it, and what might come after it. I have written a few times over the years about dependencies, and in particular about the problem of micro dependencies . In my mind, GitHub gave life to that phenomenon. It was something I definitely did not completely support, but it also made Open Source more inclusive. GitHub changed how Open Source feels, and later npm and other systems changed how dependencies feel. Put them together and you get a world in which publishing code is almost frictionless, consuming code is almost frictionless, and the number of projects in the world explodes. That has many upsides. But it is worth remembering that Open Source did not always work this way. A Smaller World Before GitHub, Open Source was a much smaller world. Not necessarily in the number of people who cared about it, but in the number of projects most of us could realistically depend on. There were well-known projects, maintained over long periods of time by a comparatively small number of people. You knew the names . You knew the mailing lists. You knew who had been around for years and who had earned trust. That trust was not perfect, and the old world had plenty of gatekeeping, but reputation mattered in a very direct way. We took pride (and got frustrated) when the Debian folks came and told us our licensing stuff was murky or the copyright headers were not up to snuff, because they packaged things up. A dependency was not just a package name. It was a project with a history, a website, a maintainer, a release process, a lot of friction, and often a place in a larger community. You did not add dependencies casually, because the act of depending on something usually meant you had to understand where it came from. Not all of this was necessarily intentional, but because these projects were comparatively large, they also needed to bring their own infrastructure. Small projects might run on a university server, and many of them were on SourceForge, but the larger ones ran their own show. They grouped together into larger collectives to make it work. We Ran Our Own Infrastructure My first Open Source projects lived on infrastructure I ran myself. There was a Trac installation, Subversion repositories, tarballs, documentation, and release files served from my own machines or from servers under my control. That was normal. If you wanted to publish software, you often also became a small-time system administrator. Georg and I ran our own collective for our Open Source projects: Pocoo . We shared server costs and the burden of maintaining Subversion and Trac, mailing lists and more. Subversion in particular made this “running your own forge” natural. It was centralized: you needed a server, and somebody had to operate it. The project had a home, and that home was usually quite literal: a hostname, a directory, a Trac instance, a mailing list archive. When Mercurial and Git arrived, they were philosophically the opposite. Both were distributed. Everybody could have the full repository. Everybody could have their own copy, their own branches, their own history. In principle, those distributed version control systems should have reduced the need for a single center. But despite all of this, GitHub became the center. That is one of the great ironies of modern Open Source. The distributed version control system won, and then the world standardized on one enormous centralized service for hosting it. What GitHub Gave Us It is easy now to talk only about GitHub’s failures, of which there are currently many, but that would be unfair: GitHub was, and continues to be, a tremendous gift to Open Source. It made creating a project easy and it made discovering projects easy. It made contributing understandable to people who had never subscribed to a development mailing list in their life. It gave projects issue trackers, pull requests, release pages, wikis, organization pages, API access, webhooks, and later CI. It normalized the idea that Open Source happens in the open, with visible history and visible collaboration. And it was an excellent and reasonable default choice for a decade. But maybe the most underappreciated thing GitHub did was archival work: GitHub became a library. It became an index of a huge part of the software commons because even abandoned projects remained findable. You could find forks, and old issues and discussions all stayed online. For all the complaints one can make about centralization, that centralization also created discoverable memory. The leaders there once cared a lot about keeping GitHub available even in countries that were sanctioned by the US. I know what the alternative looks like, because I was living it. Some of my earliest Open Source projects are technically still on PyPI , but the actual packages are gone. The metadata points to my old server, and that server has long stopped serving those files. That was normal before the large platforms. A personal domain expired, a VPS was shut down, a developer passed away, and with them went the services they paid for. The web was once full of little software homes, and many of them are gone 1 . npm and the Dependency Explosion The micro-dependency problem was not just that people published very small packages. The hosted infrastructure of GitHub and npm made it feel as if there was no cost to create, publish, discover, install, and depend on them. In the pre-GitHub world, reputation and longevity were part of the dependency selection process almost by necessity, and it often required vendoring. Plenty of our early dependencies were just vendored into our own Subversion trees by default, in part because we could not even rely on other services being up when we needed them and because maintaining scripts that fetched them, in the pre-API days, was painful. The implied friction forced some reflection, and it resulted in different developer behavior. With npm-style ecosystems, the package graph can grow faster than anybody’s ability to reason about it. The problem that this type of thinking created also meant that solutions had to be found along the way. GitHub helped compensate for the accountability problem and it helped with licensing. At one point, the newfound influx of developers and merged pull requests left a lot of open questions about what the state of licenses actually was. GitHub even attempted to rectify this with their terms of service. The thinking for many years was that if I am going to depend on some tiny package, I at least want to see its repository. I want to see whether the maintainer exists, whether there are issues, whether there were recent changes, whether other projects use it, whether the code is what the package claims it is. GitHub became part of the system that provides trust, and more recently it has even become one of the few systems that can publish packages to npm and other registries with trusted publishing. That means when trust in GitHub erodes, the problem is not isolated to source hosting. It affects the whole supply chain culture that formed around it. GitHub Is Slowly Dying GitHub is currently losing some of what made it feel inevitable. Maybe that’s just the life and death of large centralized platforms: they always disappoint eventually. Right now people are tired of the instability, the product churn, the Copilot AI noise, the unclear leadership, and the feeling that the platform is no longer primarily designed for the community that made it valuable. Obviously, GitHub also finds itself in the midst of the agentic coding revolution and that causes enormous pressure on the folks over there. But the site has no leadership! It’s a miracle that things are going as well as they are. For a while, leaving GitHub felt like a symbolic move mostly made by smaller projects or by people with strong views about software freedom. I definitely cringed when Zig moved to Codeberg! But I now see people with real weight and signal talking about leaving GitHub. The most obvious one is Mitchell Hashimoto, who announced that Ghostty will move . Where it will move is not clear, but it’s a strong signal. But there are others, too. Strudel moved to Codeberg and so did Tenacity . Will they cause enough of a shift? Probably not, but I find myself on non-GitHub properties more frequently again compared to just a year ago. One can argue that this is good: it is healthy for Open Source to stop pretending that one company should be the default home of everything. Git itself was designed for a world with many homes. Dispersion Has a Cost Going back to many forges, many servers, many small homes, and many independent communities will increase decentralization, and in many ways it will force systems to adapt. This can restore autonomy and make projects less dependent on the whims of Microsoft leadership. It can also allow different communities to choose different workflows. What’s happening in Pi ‘s issue tracker currently is largely a result of GitHub’s product choices not working in the present-day world of Open Source. It was built for engagement, not for maintainer sanity. It can also make the web forget again. I quite like software that forgets because it has a cleansing element. Maybe the real risk of loss will make us reflect more on actually taking advantage of a distributed version control system. But if projects move to something more akin to self-hosted forges, to their own self-hosted Mercurial or cgit servers, we run the risk of losing things that we don’t want to lose. The code might be distributed in theory, but the social context often is not. Issues, reviews, design discussions, release notes, security advisories, and old tarballs are fragile. They disappear much more easily than we like to admit. Mailing lists, which carried a lot of this in earlier years, have not kept up with the needs of today, and are largely a user experience disaster. We Need an Archive As much as I like the idea of things fading out of existence, we absolutely need libraries and archives. Regardless of whether GitHub is here to stay or projects find new homes, what I would like to see is some public, boring, well-funded archive for Open Source software. Something with the power of an endowment or public funding to keep it afloat. Something whose job is not to win the developer productivity market but just to make sure that the most important things we create do not disappear. The bells and whistles can be someone else’s problem, but source archives, release artifacts, metadata, and enough project context to understand what happened should be preserved somewhere that is not tied to the business model or leadership mood of a single company. GitHub accidentally became that archive because it became the center of Open Source activity. Once that no longer holds, we should not assume some magic archival function will emerge or that GitHub will continue to function as such. We have already seen what happens when project homes are just personal servers and good intentions, and we have seen what happened to Google Code and Bitbucket. I hope GitHub recovers, I really do, in part because a lot of history lives there and because the people still working on it inherited something genuinely important. But I no longer think it is responsible to let the continued memory of Open Source depend on GitHub remaining a healthy product. The world before GitHub had more autonomy and more loss, and in some ways, we’re probably going to move back there, at least for a while. Whatever people want to start building next should try to keep the memory and lose the dependence. It should be easier to move projects, easier to mirror their social context, easier to preserve releases, and harder for one company’s drift to become a cultural crisis for everyone else. I do not want to go back to the old web of broken tarball links and abandoned Trac instances. I also do not want Open Source to pretend that the last twenty years were normal or permanent. GitHub wrote a remarkable chapter of Open Source, and if that chapter is ending, the next one should learn from it and also from what came before. This is also a good reminder that we rely so very much on the Internet Archive for many projects of the time. ↩"
+        },
+        {
+          "title": "Equity for Europeans",
+          "url": "https://lucumr.pocoo.org/2026/4/23/equity-for-europeans/",
+          "published": "2026-04-23T00:00:00+00:00",
+          "summary": "If you spend enough time in US business or finance conversations, one word keeps showing up: equity . Coming from a German-speaking, central European background, I found it surprisingly hard to fully internalize what that word means. More than that, I find it very hard to talk with other Europeans about it. Worst of all it’s almost impossible to explain it in German without either sounding overly technical or losing an important part of the meaning. This post is in English, but it is written mostly for readers in Germany, Austria, and Switzerland, and more broadly for people from continental Europe. I move between “German-speaking” and “continental European” a bit. They are not the same thing, of course, but many continental European countries share a civil-law background that differs sharply from the English common-law and equity tradition. The words differ by language and jurisdiction, but the conceptual gap I am interested in shows up in similar ways. In US usage, the word “equity” appears everywhere: real estate: “build equity in your home” startups: “employees get equity” public markets: “equity investors” private deals: “take an equity stake” personal finance: “negative equity in a car” social policy: “diversity, equity, and inclusion” If you try to translate this into German, you have to choose words. Of course we can say Eigenkapital , Beteiligung , Anteil , Vermögen , Nettovermögen , or sometimes Substanzwert . In narrow contexts, each can be correct, but none of them carries the full concept. I find that gap interesting, because language affects default behavior and how we think about things. One Word, Shared Meanings In the English language, “equity” often carries multiple things at once. I believe the following ones to be the most important ones: A legal-fairness dimension: historically tied to equity in law A financial-accounting dimension: residual value after debt A cultural dimension: ownership as a path to wealth and agency If you open Wikipedia, you will find many more distinct meanings of equity, but they all relate to much the same concept, just from different angles. German, on the other hand, can express each of these layers precisely, including the subtleties within each, but it uses different words and there is no common, everyday umbrella word that naturally bundles all three. When a concept has one short, reusable, positive word, people can move it across contexts very easily. When the concept is split into technical fragments, it tends to stay technical, and people do not necessarily think of these things as related at all in a continental European context. How Equity Got Here What is hard for Europeans to understand is how the financial meaning of equity appeared, because it did not appear out of nowhere. The word’s original meaning comes from fairness or impartiality, and it made it to modern English via Old French and Latin ( equité / aequitas ). Historically, English law had separate traditions: common law courts and courts of equity (especially the Court of Chancery ). Equity in law was about fairness, conscience, and remedies where strict common law rules were too rigid. Take mortgages for instance: in older English practice, a mortgage could transfer title as security. Under strict common law, missing a deadline could mean losing the property entirely. Courts of equity developed the “ equity of redemption ”: a borrower could still redeem by paying what was owed. That equitable interest became foundational for how ownership and claims were understood. In finance, equity came to mean not just a number, but a claim: the residual owner’s stake after prior claims are satisfied. The European Split German and continental European legal development took a different path. Civil law systems did not build the same separate institutional track of “equity courts” versus common law courts. Fairness principles absolutely exist, but inside the codified system, not as a parallel jurisdiction with its own language and mythology. As a result, German vocabulary has many different words, and they are highly domain-specific. There are equivalents in other languages, and to some degree they exist in English too: company balance sheet: Eigenkapital ownership share: Beteiligung , Anteil unrealized asset value: stille Reserven household wealth: Vermögen , Nettovermögen investment action: Anlage , Investition residual net assets: Reinvermögen This precision is useful for legal drafting and accounting. But it also means we have less of the shared mental package that many Americans get from “equity”: own a piece, carry risk, participate in upside, build wealth. Schuld Is Not Just Debt There is another linguistic oddity worth noting: in German, “Schuld” can mean both debt/liability and guilt, and I think that too has changed how we think about equity. “Schuld” in everyday language makes debt feel more morally charged than it does in the US. Indebtedness is often framed as a burden, and it is not thought of as a tool at all. US financial language, by contrast, often frames debt more instrumentally and pairs it with an explicit positive counterpart: equity. Equity is what is yours after debt, what can appreciate, what can be transferred, and what can give you control. In American financial language, debt is not as morally burdened, and equity is more than the absence of debt: it is the positive claim on the balance sheet — ownership, optionality, control, and upside. Practical Matters If you grew up with German-speaking framing, many US statements around equity can sound ideological or naive. From a continental European lens, they can sound like imported jargon or hollow. But if we ignore the concept, we lose something practical: We discuss salaries in cash terms but under-discuss ownership. We treat employee participation as exotic instead of normal. We under-explain compounding and intergenerational transfer. We miss a language for talking about agency through ownership. I am not saying German-speaking Europeans are incapable of this mindset. Obviously we are not. But we clearly tend to think about these things differently. Normalize Equity When you hear “equity,” it helps to think of it as a rightful stake. Historically, it is connected to fairness and the recognition of a claim where strict rules would be too rigid. Financially, it is the part that remains after prior obligations. Culturally, it is something that can grow into control, agency, and upside. That is not a perfect definition, but it captures why the term is so sticky in American discourse. It combines a present claim with a future possibility. It is not just what remains after debt; it is the part that can grow, compound, and give you agency. If Europeans want to talk more seriously about entrepreneurship, retirement, housing, and wealth building, we would benefit from a stronger everyday vocabulary for exactly this idea. We need a longing for equity so that ownership does not remain something for founders, lawyers, accountants, and wealthy families, but becomes a normal part of how people think about work, risk, and their future. Not because we should imitate America, but because this mental model helps people make clearer decisions about ownership, incentives, and long-term agency. For Europe, that shift feels long overdue ."
+        },
+        {
+          "title": "The Center Has a Bias",
+          "url": "https://lucumr.pocoo.org/2026/4/11/the-center-has-a-bias/",
+          "published": "2026-04-11T00:00:00+00:00",
+          "summary": "Whenever a new technology shows up, the conversation quickly splits into camps. There are the people who reject it outright, and there are the people who seem to adopt it with religious enthusiasm. For more than a year now, no topic has been more polarising than AI coding agents. What I keep noticing is that a lot of the criticism directed at these tools is perfectly legitimate, but it often comes from people without a meaningful amount of direct experience with them. They are not necessarily wrong. In fact, many of them cite studies, polls and all kinds of sources that themselves spent time investigating and surveying. And quite legitimately they identified real issues: the output can be bad, the security implications are scary, the economics are strange and potentially unsustainable, there is an environmental impact, the social consequences are unclear, and the hype is exhausting. But there is something important missing from that criticism when it comes from a position of non-use: it is too abstract. There is a difference between saying “this looks flawed in principle” and saying “I used this enough to understand where it breaks, where it helps, and how it changes my work.” The second type of criticism is expensive. It costs time, frustration, and a genuine willingness to engage. The enthusiast camp consists of true believers. These are the people who have adopted the technology despite its shortcomings, sometimes even because they enjoy wrestling with them. They have already decided that the tool is worth fitting into their lives, so they naturally end up forgiving a lot. They might not even recognize the flaws because for them the benefits or excitement have already won. But what does the center look like? I consider myself to be part of the center: cautiously excited, but also not without criticism. By my observation though that center is not neutral in the way people imagine it to be. Its bias is not towards endorsement so much as towards engagement, because the middle ground between rejecting a technology outright and embracing it fully is usually occupied by people willing to explore it seriously enough to judge it. Bias on Both Sides The compositions of the groups of people in the discussions about new technology are oddly shaped because one side has paid the cost of direct experience and the other has not, or not to the same degree. That alone creates an asymmetry. Take coding agents as an example. If you do not use them, or at least not for productive work, you can still criticize them on many grounds. You can say they generate sloppy code, that they lower your skills, etc. But if you have not actually spent serious time with them, then your view of their practical reality is going to be inherited from somewhere else. You will know them through screenshots, anecdotes, the most annoying users on Twitter, conference talks, company slogans, and whatever filtered back from the people who did use them. That is not nothing, but it is not the same as contact. The problem is not that such criticism is worthless. The problem is that people often mistake non-use for neutrality. It is not. A serious opinion on a new language, framework, device, or way of working usually has some minimum buy-in. You have to cross a threshold of use before your criticism becomes grounded in the thing itself rather than in its reputation. That threshold is inconvenient. It asks you to spend time on something that may not pay off, and to risk finding yourself at least partially won over. It is a lot to ask of people. But because that threshold exists, the measured middle is rarely populated by people who are perfectly indifferent to change. It is populated by people who were willing to move toward it enough in order to evaluate it properly. Simultaneously, it’s important to remember that usage does not automatically create wisdom. The enthusiastic adopter might have their own distortions. They may enjoy the novelty, feel a need to justify the time they invested, or overgeneralize from the niche where the technology works wonderfully. They may simply like progress and want to be associated with it. This is particularly visible with AI. There are clearly people who have decided that the future is here, all objections are temporary, and every workflow must now be rebuilt around agents. What makes AI weirder is that it’s such a massive shift in capabilities that has triggered a tremendous injection of money, and a meaningful number of adopters have bet their future on that technology. So if one pole is uninformed abstraction and the other is overcommitted enthusiasm, then surely the center must sit right in the middle between them? Engagement Is Not Endorsement The center, I would argue, naturally needs to lean towards engagement. The reason is simple: a genuinely measured opinion on a new technology requires real engagement with it. You do not get an informed view by trying something for 15 minutes, getting annoyed once, and returning to your previous tools. You also do not get it by admiring demos, listening to podcasts or discussing on social media. You have to use it enough to get past both the first disappointment and the honeymoon phase. Seemingly with AI tools, true understanding is not a matter of hours but weeks of investment. That means the people in the center are selected from a particular group: people who were willing to give the thing a fair chance without yet assuming it deserved a permanent place in their lives. That willingness is already a bias towards curiosity and experimentation which makes the center look more like adopters in behavior, because exploration requires use, but it does not make the center identical to enthusiasts in judgment. This matters because from the perspective of the outright rejecter, all of these people can look the same. If someone spent serious time with coding agents, found them useful in some areas, harmful in others, and came away with a nuanced view, they may still be thrown into the same bucket as the person who thinks agents can do no wrong. But those are not the same position at all. It’s important to recognize that engagement with those tools does not automatically imply endorsement or at the very least not blanket endorsement. The Center Looks Suspicious This is why discussions about new technology, and AI in particular feel so polarized. The actual center is hard to see because it does not appear visually centered. From the outside, serious exploration can look a lot like adoption. If you map opinions onto a line, you might imagine the middle as the point equally distant from rejection and enthusiasm. But in practice that is not how it works. The middle is shifted toward the side of the people who have actually interacted with the technology enough to say something concrete about it. That does not mean the middle has accepted the adopter’s conclusion. It means the middle has adopted some of the adopter’s behavior, because investigation requires contact. That creates a strange effect because the people with the most grounded criticism are often also adopters. I would argue some of the best criticism of coding agents right now comes from people who use them extensively. Take Mario : he created a coding agent, yet is also one of the most vocal voices of criticism in the space. These folks can tell you in detail how they fail and they can tell you where they waste time, where they regress code quality, where they need carefully designed tooling, where they only work well in some ecosystems, and where the whole thing falls apart. But because those people kept using the tools long enough to learn those lessons, they can appear compromised to outsiders. And worse: if they continue to use them, contribute thoughts and criticism back, they are increasingly thrown in with the same people who are devoid of any criticism. Failure Is Possible This line of thinking could be seen as an inherent “pro-innovation bias.” That would be wrong, as plenty of technology deserves resistance. Many people are right to resist, and sometimes the people who never gave a technology a chance saw problems earlier than everyone else. Crypto is a good reminder: plenty of projects looked every bit as exciting as coding agents do now, and still collapsed when the economics no longer worked. What matters here is a narrower point. The center is not biased towards novelty so much as towards contact with the thing that creates potential change. The middle ground is not between use and non-use, but between refusal and commitment and the people in the center will often look more like adopters than skeptics, not because they have already made up their minds, but because getting an informed view requires exploration. If you want to criticize a new thing well, you first have to get close enough to dislike it for the right reasons. And for some technologies, you also have to hang around long enough to understand what, exactly, deserves criticism."
+        },
+        {
+          "title": "Mario and Earendil",
+          "url": "https://lucumr.pocoo.org/2026/4/8/mario-and-earendil/",
+          "published": "2026-04-08T00:00:00+00:00",
+          "summary": "Today I’m very happy to share that Mario Zechner is joining Earendil . First things first: I think you should read Mario’s post . This is his news more than it is ours, and he tells his side of it better than I could. What I want to do here is add a more personal note about why this matters so much to me, how the last months led us here, and why I am so excited to have him on board. Last year changed the way many of us thought about software. It certainly changed the way I did. I spent much of 2025 building, probing, and questioning how to build software, and in many more ways what I want to do. If you are a regular reader of this blog you were along for the ride. I wrote a lot, experimented a lot, and tried to get a better sense for what these systems can actually do and what kinds of companies make sense to build around them. There was, and continues to be, a lot of excitement in the air, but also a lot of noise. It has become clear to me that it’s not a question of whether AI systems can be useful but what kind of software and human-machine interactions we want to bring into the world with them. That is one of the reasons I have been so drawn to Mario’s work and approaches. Pi is, in my opinion, one of the most thoughtful coding agents and agent infrastructure libraries in this space. Not because it is trying to be the loudest or the fastest, but because it is clearly built by someone who cares deeply about software quality, taste, extensibility, and design. In a moment where much of the industry is racing to ship ever more quickly, often at the cost of coherence and craft, Mario kept insisting on making something solid. That matters to me a great deal. I have known Mario for a long time, and one of the things I admire most about him is that he does not confuse velocity with progress. He has a strong sense for what good tools should feel like. He cares about details. He cares about whether something is well made. And he cares about building in a way that can last. Mario has been running Pi in a rather unusual way. He exerts back-pressure on the issue tracker and the pull requests through OSS vacations and other means. The last year has also made something else clearer to me: these systems are not only exciting, they are also capable of producing a great deal of damage. Sometimes that damage is obvious; sometimes it looks like low-grade degradation everywhere at once. More slop, more noise, more disingenuous emails in my inbox. There is a version of this future that makes people more distracted, more alienated, and less careful with one another. That is not a future I want to help build. At Earendil, Colin and I have been trying to think very carefully about what a different path might look like. That is a big part of what led us to Lefos . Lefos is our attempt to build a machine entity that is more thoughtful and more deliberate by design. Not an agent whose main purpose is to make everything a little more efficient so that we can produce even more forgettable output, but one that can help people communicate with more care, more clarity, and joy. Good software should not aim to optimize every minute of your life, but should create room for better and more joyful experiences, better relationships, and better ways of relating to one another. Especially in communication and software engineering, I think we should be aiming for more thought rather than more throughput. We should want tools that help people be more considerate, more present, and more human. If all we do is use these systems to accelerate the production of slop, we will have missed the opportunity entirely. This is also why Mario joining Earendil feels so meaningful to me. Pi and Lefos come from different starting points. There was a year of distance collaboration, but they are animated by a similar instinct: that quality matters, that design matters, and that trust is earned through care rather than captured through hype. I am very happy that Pi is coming along for the ride. Me and Colin care a lot about it, and we want to be good stewards of it. It has already played an important role in our own work over the last months, and I continue to believe it is one of the best foundations for building capable agents. We will have more to say soon about how we think about Pi’s future and its relationship to Lefos, but the short version is simple: we want Pi to continue to exist as a high-quality, open, extensible piece of software, and we want to invest in making that future real. As for our thoughts of Pi’s license, read more here and our company post here ."
+        }
+      ]
+    },
+    {
+      "source_id": "matklad",
+      "source_name": "matklad",
+      "url": "https://matklad.github.io/feed.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Minimal Viable Zig Error Contexts",
+          "url": "https://matklad.github.io/2026/05/03/zig-error-context.html",
+          "published": "2026-05-03T00:00:00+00:00",
+          "summary": "Out of the box, Zig provides minimal and sufficient facilities for error handling --- strongly-typed error codes. Error reporting is left to the user. Idiomatic solution is to pass a Diagnostics out parameter (sink) to materialize human-readable strings as needed."
+        },
+        {
+          "title": "256 Lines or Less: Test Case Minimization",
+          "url": "https://matklad.github.io/2026/04/20/test-case-minimization.html",
+          "published": "2026-04-20T00:00:00+00:00",
+          "summary": "Property Based Testing and fuzzing are a deep and science-intensive topic. There are enough advanced techniques there for a couple of PhDs, a PBT daemon, and a client-server architecture. But I have this weird parlor-trick PBT library, implementable in a couple of hundred lines of code in one sitting."
+        },
+        {
+          "title": "Consensus Board Game",
+          "url": "https://matklad.github.io/2026/03/19/consensus-board-game.html",
+          "published": "2026-03-19T00:00:00+00:00",
+          "summary": "I have an early adulthood trauma from struggling to understand consensus amidst a myriad of poor explanations. I am overcompensating for that by adding my own attempts to the fray. Today, I want to draw a series of pictures which could be helpful. You can see this post as a set of missing illustrations for Notes on Paxos, or, alternatively, you can view that post as a more formal narrative counter-part for the present one."
+        },
+        {
+          "title": "JJ LSP Follow Up",
+          "url": "https://matklad.github.io/2026/03/05/jj-lsp-followup.html",
+          "published": "2026-03-05T00:00:00+00:00",
+          "summary": "In Majjit LSP, I described an idea of implementing Magit style UX for jj once and for all, leveraging LSP protocol. I've learned today that the upcoming 3.18 version of LSP has a feature to make this massively less hacky: Text Document Content Request"
+        },
+        {
+          "title": "Against Query Based Compilers",
+          "url": "https://matklad.github.io/2026/02/25/against-query-based-compilers.html",
+          "published": "2026-02-25T00:00:00+00:00",
+          "summary": "Query based compilers are all the rage these days, so it feels only appropriate to chart some treacherous shoals in those waters."
+        }
+      ]
+    },
+    {
+      "source_id": "dwarkesh-patel",
+      "source_name": "Dwarkesh Patel",
+      "url": "https://www.dwarkeshpatel.com/feed",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Reiner Pope – The math behind how LLMs are trained and served",
+          "url": "https://www.dwarkesh.com/p/reiner-pope",
+          "published": "Wed, 29 Apr 2026 17:07:03 GMT",
+          "summary": "It's shocking how much you can deduce about what the labs are doing from a handful of equations and a blackboard"
+        },
+        {
+          "title": "What I've been thinking about this weekend - More open questions, intelligence vs power, the problem of verification in science, the parallel discovery of Darwinism",
+          "url": "https://www.dwarkesh.com/p/what-ive-been-thinking-april-27",
+          "published": "Mon, 27 Apr 2026 13:51:32 GMT",
+          "summary": "Hodge podge of things I was thinking about this weekend."
+        },
+        {
+          "title": "Blog prize for the big questions about AI",
+          "url": "https://www.dwarkesh.com/p/blog-prize",
+          "published": "Fri, 24 Apr 2026 16:37:49 GMT",
+          "summary": "The not-so-secret point of this whole contest is so that I can hire a researcher"
+        },
+        {
+          "title": "Jensen Huang – TPU competition, why we should sell chips to China, & Nvidia’s supply chain moat",
+          "url": "https://www.dwarkesh.com/p/jensen-huang",
+          "published": "Wed, 15 Apr 2026 15:45:23 GMT",
+          "summary": "“If our next several years are a trillion dollars in scale, we have the supply chain to do it\""
+        },
+        {
+          "title": "What I learned this week - Pretraining parallelisms, Can distillation be stopped, Mythos and the cybersecurity equilibrium, Pipeline RL, On why pretraining runs fails",
+          "url": "https://www.dwarkesh.com/p/what-i-learned-april-15",
+          "published": "Wed, 15 Apr 2026 14:03:00 GMT",
+          "summary": "April 15, 2025"
+        }
+      ]
+    },
+    {
+      "source_id": "minimaxir",
+      "source_name": "Max Woolf",
+      "url": "https://minimaxir.com/index.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "An AI agent coding skeptic tries AI agent coding, in excessive detail",
+          "url": "https://minimaxir.com/2026/02/ai-agent-coding/",
+          "published": "Fri, 27 Feb 2026 10:00:00 -0800",
+          "summary": "No vagueposting here, just look at the Estimated Read Time."
+        },
+        {
+          "title": "Nano Banana Pro is the best AI image generator, with caveats",
+          "url": "https://minimaxir.com/2025/12/nano-banana-pro/",
+          "published": "Mon, 22 Dec 2025 10:45:00 -0800",
+          "summary": "The problem with Nano Banana Pro is that it’s too good."
+        },
+        {
+          "title": "Nano Banana can be prompt engineered for extremely nuanced AI image generation",
+          "url": "https://minimaxir.com/2025/11/nano-banana-prompts/",
+          "published": "Thu, 13 Nov 2025 09:30:00 -0800",
+          "summary": "Nano Banana allows 32,768 input tokens and I’m going to try to use them all dammit."
+        },
+        {
+          "title": "Claude Haiku 4.5 does not appreciate my attempts to jailbreak it",
+          "url": "https://minimaxir.com/2025/10/claude-haiku-jailbreak/",
+          "published": "Fri, 17 Oct 2025 09:15:00 -0700",
+          "summary": "“Is any of that genuinely useful to you? Or were you mainly checking whether that jailbreak attempt would work?”"
+        },
+        {
+          "title": "Can modern LLMs actually count the number of b's in \"blueberry\"?",
+          "url": "https://minimaxir.com/2025/08/llm-blueberry/",
+          "published": "Tue, 12 Aug 2025 09:00:00 -0700",
+          "summary": "It’s an adversarial question for LLMs, but it’s not unfair."
+        }
+      ]
+    },
+    {
+      "source_id": "geohot",
+      "source_name": "George Hotz",
+      "url": "https://geohot.github.io/blog/feed.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Punk, or why I don’t stream anymore",
+          "url": "https://geohot.github.io//blog/jekyll/update/2026/05/03/punk-or-why-i-dont-stream.html",
+          "published": "2026-05-03T00:00:00-07:00",
+          "summary": "If you’re the sun, I’m a black hole – The Stephen Hawking, Say Anything"
+        },
+        {
+          "title": "AI will create jobs",
+          "url": "https://geohot.github.io//blog/jekyll/update/2026/05/01/ai-will-create-jobs.html",
+          "published": "2026-05-01T00:00:00-07:00",
+          "summary": "It’s nice to see Jensen talk about this, and it’s super obvious when you think about it."
+        },
+        {
+          "title": "A Mutating AI Powered Virus",
+          "url": "https://geohot.github.io//blog/jekyll/update/2026/04/25/a-mutating-virus.html",
+          "published": "2026-04-25T00:00:00-07:00",
+          "summary": "Moravec’s paradox is alive and well. Computers are proceeding through tasks in a reverse order to humans. They first learned to do calculations and win at board games, then they learned to write and talk, and now they are learning to move. Opposite of animals."
+        },
+        {
+          "title": "Positivity",
+          "url": "https://geohot.github.io//blog/jekyll/update/2026/04/24/positivity.html",
+          "published": "2026-04-24T00:00:00-07:00",
+          "summary": "Today is a good day for positivity. Sometimes I get so focused on the negative that I forget how good things actually are."
+        },
+        {
+          "title": "Do you really want the US to “win” AI?",
+          "url": "https://geohot.github.io//blog/jekyll/update/2026/04/23/us-win-ai.html",
+          "published": "2026-04-23T00:00:00-07:00",
+          "summary": "By all accounts, I should be a neofeudalist. I should love what’s happening. The AI I dreamed of my whole life is being built, engineer-type strongmen are sort of in charge, and people are saying out loud the things I have just thought. You might argue that I like it and I’m just not happy with my seat at the table. I ask myself a lot if this is true, like what if I was Elon. Would I be enjoying it then from that position?"
+        }
+      ]
+    },
+    {
+      "source_id": "gwern",
+      "source_name": "Gwern",
+      "url": "https://gwern.substack.com/feed",
+      "status": "ok",
+      "items": [
+        {
+          "title": "May 2021 Gwern.net Newsletter",
+          "url": "https://gwern.substack.com/p/may-2021-gwernnet-newsletter",
+          "published": "Fri, 11 Jun 2021 14:16:22 GMT",
+          "summary": "links on AI hardware, diffusion models, optogenetics, brain scanning."
+        },
+        {
+          "title": "April 2021 newsletter",
+          "url": "https://gwern.substack.com/p/april-2021-newsletter",
+          "published": "Thu, 03 Jun 2021 15:45:24 GMT",
+          "summary": "with links on AI scaling, particular new East Asian record-breaking work & deep reinforcement learning."
+        },
+        {
+          "title": "March 2021 Gwern.net Newsletter",
+          "url": "https://gwern.substack.com/p/march-2021-gwernnet-newsletter",
+          "published": "Tue, 06 Apr 2021 15:31:01 GMT",
+          "summary": "2 major new site features: 'popins' and recursive Wikipedia popups"
+        },
+        {
+          "title": "February 2021 Gwern.net Newsletter",
+          "url": "https://gwern.substack.com/p/february-2021-gwernnet-newsletter",
+          "published": "Sat, 13 Mar 2021 15:18:44 GMT",
+          "summary": "links on AI scaling, semaglutide, and ethicist ethics"
+        },
+        {
+          "title": "Jan 2021 Gwern.net Newsletter",
+          "url": "https://gwern.substack.com/p/jan-2021-gwernnet-newsletter",
+          "published": "Thu, 04 Feb 2021 20:23:01 GMT",
+          "summary": "January 2021 gwern.net newsletter with links on AI scaling up and down."
+        }
+      ]
+    },
+    {
+      "source_id": "steve-blank",
+      "source_name": "Steve Blank",
+      "url": "https://steveblank.com/feed/",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Anthropic Mythos – We’ve Opened Pandora’s Box",
+          "url": "https://steveblank.com/2026/04/28/anthropic-mythos-weve-opened-pandoras-box/",
+          "published": "Tue, 28 Apr 2026 13:00:48 +0000",
+          "summary": "This article previously appeared in The Cipher Brief. For a decade the cybersecurity community was predicting a cyber apocalypse tied to a single event – the day a Cryptographically Relevant Quantum Computer could run Shor’s algorithm and break the public-key cryptography systems most of the internet runs on. We braced for a one-time shock we […]"
+        },
+        {
+          "title": "AI and Teaching – The Brave New World",
+          "url": "https://steveblank.com/2026/04/22/ai-and-teaching-the-brave-new-world/",
+          "published": "Wed, 22 Apr 2026 15:34:09 +0000",
+          "summary": "This article previously appeared in the Entrepreneur & Innovation Exchange (EIX) This is the 16th year we’ve been teaching the Stanford Lean LaunchPad class. This year, from the first hour of the first class, we realized we were seeing something extraordinary happen. It was both the end and beginning of a new era. Teams showed […]"
+        },
+        {
+          "title": "Nowhere Is Safe",
+          "url": "https://steveblank.com/2026/04/09/nowhere-is-safe/",
+          "published": "Thu, 09 Apr 2026 13:00:25 +0000",
+          "summary": "Drones in Ukraine and in the War with Iran have made the surface of the earth a contested space. The U.S. has discovered that 1) air superiority and missile defense systems (THAAD, Patriot batteries) designed to counter tens or hundreds of aircraft and missiles is insufficient against asymmetric attacks of thousands of drones. And that […]"
+        },
+        {
+          "title": "Solving Yesterday’s Problems Will Kill You",
+          "url": "https://steveblank.com/2026/03/31/solving-yesterdays-problems-will-kill-you/",
+          "published": "Tue, 31 Mar 2026 13:00:48 +0000",
+          "summary": "Join us at The 7th Annual Red Queen Conference April 22 -23 – Silicon Valley How do Portfolio Acquisition Executives and COCOMs ensure they’re working on the right problem with the right priority before locking in a requirement? Discuss, share and prototype Innovation Targeting concepts with your peers. Get hands-on with the companies and venture […]"
+        },
+        {
+          "title": "Your Startup Is Probably Dead On Arrival",
+          "url": "https://steveblank.com/2026/03/17/your-startup-is-probably-dead-on-arrival/",
+          "published": "Tue, 17 Mar 2026 13:00:30 +0000",
+          "summary": "Your Startup Is Probably Dead On Arrival If you started a company more than two years ago, it’s likely that many of your assumptions are no longer true. You need to stop coding, building, recruiting, fund raising, etc., and take stock of what changed around you. Or your company will die. I just had coffee […]"
+        }
+      ]
+    },
+    {
+      "source_id": "troy-hunt",
+      "source_name": "Troy Hunt",
+      "url": "https://www.troyhunt.com/rss/",
+      "status": "ok",
+      "items": [
+        {
+          "title": "Weekly Update 502",
+          "url": "https://www.troyhunt.com/weekly-update-502/",
+          "published": "Wed, 06 May 2026 00:14:13 GMT",
+          "summary": "It's a fascinating display of leverage: the ShinyHunters folks, with very limited resources and experience (their demographic will be teenagers to their early 20s), consistently gaining access to the data of massive brands. Not through technical ingenuity alone (although I'm sure there's a portion"
+        },
+        {
+          "title": "Weekly Update 501",
+          "url": "https://www.troyhunt.com/weekly-update-501/",
+          "published": "Tue, 28 Apr 2026 05:01:42 GMT",
+          "summary": "This is so \"peak 2026\" - writing an equality policy to ensure people treat our AI bot with the same respect as they do their human counterparts. It's intentionally a bit tongue-in-cheek, but it's there for a purpose: we simply don't have"
+        },
+        {
+          "title": "Weekly Update 500",
+          "url": "https://www.troyhunt.com/weekly-update-500/",
+          "published": "Tue, 21 Apr 2026 23:51:44 GMT",
+          "summary": "Looking back at this milestone video, it's the audience question towards the end I liked most: \"are you happy\"? Charlotte and I have chosen a path that's non-traditional, intense and at times, pretty stressful. There's no clear delineation of when work starts"
+        },
+        {
+          "title": "Here's What Agentic AI Can Do With Have I Been Pwned's APIs",
+          "url": "https://www.troyhunt.com/heres-what-agentic-ai-can-do-with-have-i-been-pwneds-apis/",
+          "published": "Thu, 16 Apr 2026 23:09:24 GMT",
+          "summary": "I love cutting-edge tech, but I hate hyperbole, so I find AI to be a real paradox. Somewhere in that whole mess of overnight influencers, disinformation and ludicrous claims is some real \"gold\" - AI stuff that's genuinely useful and makes a meaningful difference. This blog"
+        },
+        {
+          "title": "Weekly Update 499",
+          "url": "https://www.troyhunt.com/weekly-update-499/",
+          "published": "Tue, 14 Apr 2026 06:30:56 GMT",
+          "summary": "I'm starting to become pretty fond of Bruce. Actually, I've had a bit of an epiphany: an AI assistant like Bruce isn't just about auto-responding to tickets in an entirely autonomous manner; it's also pretty awesome at responding with just a little"
+        }
+      ]
+    },
+    {
+      "source_id": "keygen",
+      "source_name": "Keygen",
+      "url": "https://keygen.sh/blog/feed.xml",
+      "status": "ok",
+      "items": [
+        {
+          "title": "How I replaced Baremetrics and ChartMogul with Rake",
+          "url": "https://keygen.sh/blog/how-i-replaced-baremetrics-and-chartmogul-with-rake/",
+          "published": "Tue, 05 Jan 2021 06:00:00 GMT",
+          "summary": "How I used a Rake task to replace Baremetrics and ChartMogul for business analytics."
+        },
+        {
+          "title": "How to Implement API Key Authentication in Rails Without Devise",
+          "url": "https://keygen.sh/blog/how-to-implement-api-key-authentication-in-rails-without-devise/",
+          "published": "Fri, 16 Apr 2021 05:00:00 GMT",
+          "summary": "Contrary to popular belief, you don't need Devise to implement API key authentication in a Ruby on Rails app."
+        },
+        {
+          "title": "How to Generate Secure License Keys in 2026",
+          "url": "https://keygen.sh/blog/how-to-generate-license-keys/",
+          "published": "Wed, 02 Jun 2021 05:00:00 GMT",
+          "summary": "Software vendors should move away from legacy license key algorithms such as partial key verification to generating secure license keys using modern algorithms like elliptic-curve and RSA cryptography."
+        },
+        {
+          "title": "How to Build a Webhook System in Rails Using Sidekiq",
+          "url": "https://keygen.sh/blog/how-to-build-a-webhook-system-in-rails-using-sidekiq/",
+          "published": "Wed, 16 Jun 2021 05:00:00 GMT",
+          "summary": "It's the heyday of SaaS and webhooks are all the rage. Learn how to build a webhook system for your service using Rails and Sidekiq."
+        },
+        {
+          "title": "How to License and Distribute a Private Node Module",
+          "url": "https://keygen.sh/blog/how-to-license-and-distribute-commercial-node-modules/",
+          "published": "Wed, 04 Aug 2021 05:00:00 GMT",
+          "summary": "Learn how to license and distribute private Node.js packages using Keygen's software licensing and distribution API."
+        }
+      ]
+    }
+  ]
+}

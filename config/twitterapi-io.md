@@ -16,7 +16,7 @@ export TWITTERAPI_IO_KEY="..."
 
 官方文档要求每个请求携带 `X-API-Key` / `x-api-key` header。
 
-当前机器上的 Codex 沙箱无法直接访问本机 `127.0.0.1:7890` 代理；在 Codex 里真实请求该 API 时，需要使用非沙箱网络权限执行。普通终端里只要 proxy 环境变量可用即可。
+当前机器已改为系统/TUN 级代理时，采集脚本不需要也不会自动注入 `127.0.0.1:7890`。普通终端和 Codex 自动化优先走系统网络；如果某次运行需要显式代理，再在运行环境中设置 `http_proxy`、`https_proxy` 或 `all_proxy`。
 
 更推荐的长期方式是把 key 放进 macOS Keychain：
 

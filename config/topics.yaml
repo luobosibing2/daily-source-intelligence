@@ -105,3 +105,29 @@ topics:
     exclude:
       - no implementation detail
       - pure showcase
+
+  - id: fde
+    label: Forward Deployed Engineering / Enterprise AI Deployment
+    keywords:
+      - FDE
+      - FDSE
+      - Forward Deployed Engineer
+      - Forward-Deployed Engineer
+      - Forward Deployed Engineering
+      - Forward-Deployed Engineering
+      - customer-facing engineering
+      - embedded engineering
+      - field engineering
+      - enterprise AI deployment
+      - implementation bottleneck
+      - product feedback loop
+      - field intelligence
+      - Palantirization
+      - Delta
+      - Echo
+    exclude:
+      - full disk encryption
+      - disk encryption
+      - job posting only
+      - hiring only
+      - military deployment unrelated to software

@@ -2,13 +2,14 @@
 
 ## 关注方向
 
-第一版重点关注 AI agent、LLM、AI 编程工具、模型发布、官方产品更新、开发者工具链、独立开发/创业、产品增长，以及高价值泛 infra 工程实践。
+第一版重点关注 AI agent、LLM、AI 编程工具、模型发布、官方产品更新、开发者工具链、独立开发/创业、产品增长、Forward Deployed Engineering / 企业 AI 落地，以及高价值泛 infra 工程实践。
 
 高价值信号包括：
 
 - 官方发布：模型、API、产品、价格、政策、SDK、重要文档更新。
 - 核心人物观点：AI labs、开发者工具、agent framework、AI coding 领域关键人物的新判断。
 - 工程实践：prompt、agent workflow、memory、tool use、eval、deployment、security、observability、systems、ops。
+- FDE / 企业 AI 落地：Forward Deployed Engineer、FDSE、客户现场工程、企业数据集成、现场反馈回流产品、AI 部署最后一公里。
 - 开源动态：重要 agent/LLM/devtool 项目的 release、breaking change、roadmap。
 - 独立开发：产品想法、分发、收入结构、build in public、solo SaaS、自动化运营。
 - 争议信号：对主流叙事有反证价值的 benchmark、事故、限制、成本变化。
