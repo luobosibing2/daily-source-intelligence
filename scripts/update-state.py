@@ -12,11 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 RAW_ROOT = ROOT / "raw"
 STATE_ROOT = ROOT / "state"
 
-PROXY = {
-    "http_proxy": "http://127.0.0.1:7890",
-    "https_proxy": "http://127.0.0.1:7890",
-    "all_proxy": "socks5://127.0.0.1:7890",
-}
+PROXY_ENV_KEYS = [
+    "http_proxy",
+    "https_proxy",
+    "all_proxy",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "ALL_PROXY",
+    "no_proxy",
+    "NO_PROXY",
+]
 
 X_KEYWORDS = [
     "agent",
@@ -25,14 +30,19 @@ X_KEYWORDS = [
     "claude",
     "codex",
     "cursor",
+    "fde",
+    "fdse",
     "llm",
     "mcp",
     "openclaw",
     "openai",
+    "palantirization",
     "revenue",
     "saas",
     "startup",
     "vibe",
+    "forward deployed",
+    "forward-deployed",
     "自动化",
     "独立开发",
 ]
@@ -79,6 +89,14 @@ def in_daily_window(value, run_date, lookback_days=1):
 
 def today_from_run(run_date):
     return run_date or now_local().date().isoformat()
+
+
+def proxy_env_snapshot():
+    return {key: redact_proxy_value(os.environ[key]) for key in PROXY_ENV_KEYS if os.environ.get(key)}
+
+
+def redact_proxy_value(value):
+    return re.sub(r"://[^/@]+@", "://<redacted>@", value)
 
 
 def load_raw(run_date):
@@ -259,8 +277,8 @@ def manifest(raw, run_date):
         "collected_at": collected_at,
         "timezone": "Asia/Shanghai",
         "mode": "manual_or_automation",
-        "network_mode": "script_default_proxy_or_existing_env",
-        "proxy": PROXY,
+        "network_mode": "system_network_or_existing_proxy_env",
+        "proxy_env": proxy_env_snapshot(),
         "window": {
             "primary": f"{run_date} daily run with source-specific recency windows",
             "fallback": "recent feed entries when source does not expose exact 24h filtering",
@@ -418,6 +436,9 @@ def is_official_source(source_id):
         "huggingface-blog",
         "claude-blog",
         "anthropic-news-page",
+        "palantir-blog",
+        "ramp-builders",
+        "a16z-news",
     }
 
 

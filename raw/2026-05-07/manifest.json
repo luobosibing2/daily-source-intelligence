@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "run_date": "2026-05-07",
-  "collected_at": "2026-05-07T10:03:24+08:00",
+  "collected_at": "2026-05-07T14:29:05+08:00",
   "timezone": "Asia/Shanghai",
   "mode": "manual_or_automation",
   "network_mode": "script_default_proxy_or_existing_env",
@@ -36,7 +36,7 @@
     "official_pages_failed": 0,
     "twitterapi_io_used": true,
     "twitterapi_io_status": "ok",
-    "x_twitter_direct_count": 165,
+    "x_twitter_direct_count": 133,
     "x_twitter_used": true
   },
   "notable_limitations": [

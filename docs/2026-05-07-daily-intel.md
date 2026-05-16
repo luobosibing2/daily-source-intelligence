@@ -2,10 +2,10 @@
 
 ## 采集范围
 
-- 运行时间：2026-05-07 Asia/Shanghai，本轮按 `RUN_DATE=2026-05-07` 写入当天 raw 目录。
+- 运行时间：2026-05-07 14:29:05 Asia/Shanghai，本轮按 `RUN_DATE=2026-05-07` 写入当天 raw 目录。
 - 稳定来源：RSS/Atom 20 个源，20 个成功；GitHub releases 6 个源，6 个通过 Atom feed 成功；GitHub Trending 1 个源成功，解析 10 个每日热门 repo；official pages 4 个源，2 个成功、2 个 limited。
-- X/Twitter：通过 `twitterapi.io` read endpoint 成功处理 26 个配置账号，保留 165 条 36 小时窗口内 direct-x 原始条目。
-- 状态更新：[`../raw/2026-05-07/manifest.json`](../raw/2026-05-07/manifest.json)、[`../state/source-health.json`](../state/source-health.json)、[`../state/seen.json`](../state/seen.json) 已由 `update-state.py` 更新；本轮 `seen_added=39`，累计 298 条。
+- X/Twitter：通过 `twitterapi.io` read endpoint 成功处理 26 个配置账号，保留 133 条 36 小时窗口内 direct-x 原始条目。
+- 状态更新：[`../raw/2026-05-07/manifest.json`](../raw/2026-05-07/manifest.json)、[`../state/source-health.json`](../state/source-health.json)、[`../state/seen.json`](../state/seen.json) 已由 `update-state.py` 更新；本轮 `seen_added=15`，累计 313 条。
 - 本次没有使用 Exa MCP、登录态浏览器、X/Twitter 账号凭证、写操作 endpoint、posting、liking、following 或 DM。
 - 本地归档：
   - [`../raw/2026-05-07/rss-items.json`](../raw/2026-05-07/rss-items.json)
@@ -91,7 +91,7 @@
 
 - 本次 X/Twitter 只使用 `twitterapi.io` 的 `GET https://api.twitterapi.io/twitter/user/last_tweets` read endpoint，`includeReplies=false`。
 - `twitterapi.io` 顶层状态为 `ok`，26 个账号全部账号级 `status=ok`，没有 skipped/failed 账号。
-- 本轮共保留 165 条 direct-x 原始条目。保留数较高的账号包括 `levelsio` 20 条、`corbin_braun` 18 条、`Hesamation` 16 条、`jackfriks` 13 条、`rileybrown` 13 条、`cellinlab` 13 条、`steipete` 12 条、`EXM7777` 12 条、`marclou` 11 条、`sama` 10 条。
+- 本轮共保留 133 条 direct-x 原始条目。保留数较高的账号包括 `levelsio` 18 条、`corbin_braun` 17 条、`cellinlab` 17 条、`Hesamation` 13 条、`EXM7777` 11 条、`marclou` 9 条、`steipete` 8 条、`rileybrown` 8 条、`jackfriks` 6 条、`sama` 4 条。
 - `karpathy`、`rryssf_`、`Yangyixxxx`、`pangyusio`、`genspark_ai`、`lidang`、`_LuoFuli` 等账号请求成功但 kept_count 为 0；这表示 36 小时窗口和脚本过滤下没有保留条目，不等于账号没有更新。
 - direct-x 内容包含转发、短评论、个人观点和产品线索；日报只把它们作为直接来源线索，不把个人观点写成官方事实。
 
@@ -113,7 +113,7 @@
 
 ## 运行统计
 
-- 新增条目：`seen_added=39`。
+- 新增条目：`seen_added=15`。
 - 高信号条目：8 条。
 - 重复跳过：由 `state/seen.json` 去重；本轮没有单独人工复核重复数。
 - 失败来源：0 个 failed；limited 来源 2 个：`openai-news`、`claude-docs-release-notes`。

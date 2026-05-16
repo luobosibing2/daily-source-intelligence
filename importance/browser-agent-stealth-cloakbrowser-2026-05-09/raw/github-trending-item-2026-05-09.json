@@ -1,0 +1,15 @@
+{
+  "repo": "CloakHQ/CloakBrowser",
+  "url": "https://github.com/CloakHQ/CloakBrowser",
+  "description": "Stealth Chromium that passes every bot detection test. Drop-in Playwright replacement with source-level fingerprint patches. 30/30 tests passed.",
+  "trending_description": "Stealth Chromium that passes every bot detection test. Drop-in Playwright replacement with source-level fingerprint patches. 30/30 tests passed.",
+  "language": "Python",
+  "stars": "3,095",
+  "forks": "249",
+  "stars_today": "526",
+  "readme_status": "ok",
+  "readme_url": "https://raw.githubusercontent.com/CloakHQ/CloakBrowser/HEAD/README.md",
+  "readme_path": "raw/2026-05-09/github-trending-readmes/CloakHQ__CloakBrowser.md",
+  "readme_title": "Install",
+  "readme_excerpt": "Stealth Chromium that passes every bot detection test. Not a patched config. Not a JS injection. A real Chromium binary with fingerprints modified at the C++ source level. Antibot systems score it as a normal browser — because it is a normal browser. Cloudflare Turnstile — 3 live tests passing (headed mode, macOS) Drop-in Playwright/Puppeteer replacement for Python and JavaScript. Same API, same code — just swap the import. 3 lines of code, 30 seconds to unblock. 49 source-level C++ patches** — canvas, WebGL, audio, fonts, GPU, screen, WebRTC, network timing, automation signals, CDP input behavior `humanize=True`** — human-like mouse curves, keyboard timing, and scroll patterns. One flag, behavioral detection passes 0.9 reCAPTCHA v3 score** — human-level, server-verified Passes Cloudflare Turnstile**, FingerprintJS, BrowserScan — tested against 30+ detection sites Auto-updating binary**"
+}

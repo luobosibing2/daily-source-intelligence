@@ -12,6 +12,7 @@
 | [`reports/`](reports/) | 每日趋势分析报告目录，输出文件不随流程配置 commit。 |
 | `memory-dream.md` | Memory & Dream 长期专题报告输出路径，包含时间线、阶段判断、证据强度和待验证问题。 |
 | `financial-agents.md` | Financial Agents 长期专题报告输出路径，包含时间线、阶段判断、证据强度和待验证问题。 |
+| `forward-deployed-engineering.md` | Forward Deployed Engineering 长期专题报告输出路径，包含企业 AI 落地、现场工程、产品反馈回路和服务化边界判断。 |
 | [`raw/`](raw/) | trend 扩充搜索归档材料。 |
 
 ## 与其它目录的关系
@@ -29,6 +30,6 @@
 4. 对高信号补充官方页、官方 docs、GitHub repo、release body 或 README。
 5. 把扩充材料写入 `raw/YYYY-MM-DD/<trend-id>/`。
 6. 写当天 [`reports/`](reports/) 下的 trend report。
-7. 更新对应专题报告：`memory-dream.md` 或 `financial-agents.md`。
+7. 更新对应专题报告：以 [`../config/trends.yaml`](../config/trends.yaml) 中 enabled trend 的 `timeline` 字段为准。
 
 如果当天某个 enabled trend 没有新信号，trend report 必须写 `no-new-signal`；如果日报或 raw 缺失，必须写 `skipped` 和原因。

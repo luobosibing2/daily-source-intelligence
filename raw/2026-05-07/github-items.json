@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "collected_at": "2026-05-07T10:03:01+08:00",
+  "collected_at": "2026-05-07T14:28:46+08:00",
   "api_status": {
     "status": "skipped",
     "url_example": "https://api.github.com/repos/openai/codex/releases?per_page=5",
@@ -18,11 +18,25 @@
       "status": "ok",
       "items": [
         {
-          "title": "rust-v0.129.0-alpha.13",
+          "title": "rust-v0.129.0-alpha.15",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.15",
+          "summary": "Release 0.129.0-alpha.15",
+          "author": "github-actions[bot]",
+          "updated": "2026-05-07T05:56:34Z"
+        },
+        {
+          "title": "0.129.0-alpha.14",
+          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.14",
+          "summary": "Release 0.129.0-alpha.14",
+          "author": "github-actions[bot]",
+          "updated": "2026-05-07T03:46:38Z"
+        },
+        {
+          "title": "0.129.0-alpha.13",
           "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.13",
           "summary": "Release 0.129.0-alpha.13",
           "author": "github-actions[bot]",
-          "updated": "2026-05-07T00:17:19Z"
+          "updated": "2026-05-07T02:29:42Z"
         },
         {
           "title": "rusty-v8-v147.4.0",
@@ -37,20 +51,6 @@
           "summary": "Release 0.129.0-alpha.12",
           "author": "github-actions[bot]",
           "updated": "2026-05-06T21:42:00Z"
-        },
-        {
-          "title": "rust-v0.129.0-alpha.11",
-          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.11",
-          "summary": "Release 0.129.0-alpha.11",
-          "author": "github-actions[bot]",
-          "updated": "2026-05-06T18:37:31Z"
-        },
-        {
-          "title": "0.129.0-alpha.10",
-          "url": "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.10",
-          "summary": "Release 0.129.0-alpha.10",
-          "author": "github-actions[bot]",
-          "updated": "2026-05-06T07:49:29Z"
         }
       ]
     },

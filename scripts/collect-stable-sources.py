@@ -26,18 +26,6 @@ README_CANDIDATES = [
     "README.rst",
     "README.txt",
 ]
-DEFAULT_PROXY_ENV = {
-    "http_proxy": "http://127.0.0.1:7890",
-    "https_proxy": "http://127.0.0.1:7890",
-    "all_proxy": "socks5://127.0.0.1:7890",
-}
-
-
-def ensure_default_proxy_env():
-    if os.environ.get("DAILY_INTEL_DISABLE_DEFAULT_PROXY") == "1":
-        return
-    for key, value in DEFAULT_PROXY_ENV.items():
-        os.environ.setdefault(key, value)
 
 
 def now_local():
@@ -505,7 +493,6 @@ def load_sources():
 
 
 def main():
-    ensure_default_proxy_env()
     run_date = os.environ.get("RUN_DATE") or now_local().strftime("%Y-%m-%d")
     output_dir = RAW_ROOT / run_date
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/chengyizhou/code/research-docs/daily-source-intelligence/logs/.42ab859f940e48e0718909212176a1b8f12f0f69-audit.json",
+    "files": [
+        {
+            "date": 1778637677598,
+            "name": "/Users/chengyizhou/code/research-docs/daily-source-intelligence/logs/mcp-puppeteer-2026-05-13.log",
+            "hash": "21a20cf2cb0397f04a05d726a2c0aa128e24f40af6d849b6c6ba5d3ac0bb2067"
+        },
+        {
+            "date": 1778775268545,
+            "name": "/Users/chengyizhou/code/research-docs/daily-source-intelligence/logs/mcp-puppeteer-2026-05-15.log",
+            "hash": "3e16bfa1121ba4e81da2f568fb221408d0d9d29653783680957e46eed590aba1"
+        },
+        {
+            "date": 1778896909200,
+            "name": "/Users/chengyizhou/code/research-docs/daily-source-intelligence/logs/mcp-puppeteer-2026-05-16.log",
+            "hash": "bca6883e269317b1accaf0169ca5cb806d4852365bdb0bc0d8f9e83dce00534c"
+        }
+    ],
+    "hashType": "sha256"
+}

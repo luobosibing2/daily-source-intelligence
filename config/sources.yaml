@@ -170,6 +170,94 @@ rss:
     topics: [indie-founder, infra, product-growth]
     note: Added from Karpathy RSS post / HN popular blogs OPML.
 
+  - id: fde-hub
+    name: FDE Hub
+    url: https://www.fdehub.org/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, product-growth]
+    note: Core FDE practitioner source; selected for direct Forward Deployed Engineering signal.
+
+  - id: forward-deployed
+    name: Forward Deployed
+    url: https://www.forwarddeployed.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, product-growth]
+    note: Media/community feed at the intersection of AI, software development, and enterprise deployment.
+
+  - id: pragmatic-engineer
+    name: The Pragmatic Engineer
+    url: https://newsletter.pragmaticengineer.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-systems, product-growth]
+    note: High-signal engineering/business analysis; keep FDE items and adjacent enterprise engineering role shifts.
+
+  - id: svpg
+    name: Silicon Valley Product Group
+    url: https://www.svpg.com/feed/
+    enabled: true
+    priority: true
+    topics: [fde, product-growth, ai-systems]
+    note: Product operating-model lens on FDE, product discovery, platform feedback loops, and AI-era product creation.
+
+  - id: ramp-builders
+    name: Ramp Builders
+    url: https://builders.ramp.com/feed.xml
+    enabled: true
+    priority: true
+    topics: [fde, ai-systems, product-growth, infra]
+    note: Company practice source for scaling Forward Deployed Engineering and enterprise AI implementation.
+
+  - id: palantir-blog
+    name: Palantir Blog
+    url: https://blog.palantir.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, infra]
+    note: Original FDE/FDSE context and Palantir product-deployment model source.
+
+  - id: a16z-news
+    name: a16z News
+    url: https://www.a16z.news/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, product-growth, ai-systems]
+    note: VC/market-structure view on Palantirization, enterprise AI deployment, and FDE economics.
+
+  - id: ted-mabrey
+    name: Ted Mabrey
+    url: https://tedmabrey.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems]
+    note: Thought source; keep FDE/Palantir operating-model essays, not every general post.
+
+  - id: thomas-otter
+    name: Thomas Otter
+    url: https://thomasotter.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, product-growth, ai-systems]
+    note: Thought source for FDE economics, enterprise software adoption, and product-led growth boundaries.
+
+  - id: nabeel-qureshi
+    name: Nabeel S. Qureshi
+    url: https://nabeelqu.co/rss
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems, ai-agent]
+    note: Thought source for Palantir, enterprise data integration, AI deployment, and institutions.
+
+  - id: sarah-constantin
+    name: Sarah Constantin
+    url: https://sarahconstantin.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems]
+    note: Thought source; keep data-integration and enterprise systems essays when they connect to FDE.
+
 github_repos:
   - id: openai-codex
     name: OpenAI Codex
@@ -227,7 +315,7 @@ github_trending:
     url: https://github.com/trending?since=daily
     enabled: true
     priority: true
-    topics: [ai-coding, ai-agent, infra, ai-systems, indie-founder]
+    topics: [ai-coding, ai-agent, infra, ai-systems, indie-founder, fde]
     note: Daily all-language GitHub trending page; use as discovery signal, not official project endorsement.
 
 official_pages:

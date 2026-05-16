@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-05-12T21:47:47+08:00",
+  "sources": [
+    {
+      "source_id": "openai-news",
+      "source_name": "OpenAI News",
+      "url": "https://openai.com/news/",
+      "status": "limited",
+      "title": "",
+      "bytes": 9524,
+      "reason": "HTML page did not return a usable title/content snapshot in this environment; RSS source was successful."
+    },
+    {
+      "source_id": "anthropic-news-page",
+      "source_name": "Anthropic News",
+      "url": "https://www.anthropic.com/news",
+      "status": "failed",
+      "error": "curl: (16) Error in the HTTP2 framing layer"
+    },
+    {
+      "source_id": "claude-docs-release-notes",
+      "source_name": "Claude Docs Release Notes",
+      "url": "https://docs.claude.com/en/release-notes/overview",
+      "status": "ok",
+      "title": "Claude Platform - Claude API Docs",
+      "bytes": 1001258,
+      "published": "May 11, 2026"
+    },
+    {
+      "source_id": "claude-blog",
+      "source_name": "Claude Blog",
+      "url": "https://claude.com/blog",
+      "status": "ok",
+      "title": "Blog | Claude",
+      "bytes": 763406,
+      "published": "May 6, 2026",
+      "items": [
+        {
+          "title": "Agent view in Claude Code",
+          "url": "https://claude.com/blog/agent-view-in-claude-code",
+          "published": "May 11, 2026"
+        },
+        {
+          "title": "Introducing the Claude Platform on AWS",
+          "url": "https://claude.com/blog/claude-platform-on-aws",
+          "published": "May 11, 2026"
+        },
+        {
+          "title": "Collaborate with Claude across Excel, PowerPoint, Word and Outlook",
+          "url": "https://claude.com/blog/collaborate-with-claude-across-excel-powerpoint-word-and-outlook",
+          "published": "May 7, 2026"
+        },
+        {
+          "title": "New in Claude Managed Agents: dreaming, outcomes, and multiagent orchestration",
+          "url": "https://claude.com/blog/new-in-claude-managed-agents",
+          "published": "May 6, 2026"
+        },
+        {
+          "title": "Deploying Claude across financial services",
+          "url": "https://claude.com/blog/deploying-claude-across-financial-services",
+          "published": "May 5, 2026"
+        }
+      ]
+    }
+  ]
+}

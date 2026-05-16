@@ -113,3 +113,51 @@ trends:
       - unrelated stock market commentary
     timeline: trend/financial-agents.md
     report_section: Financial Agents
+
+  - id: forward-deployed-engineering
+    label: Forward Deployed Engineering
+    enabled: true
+    description: >
+      Tracks the FDE/FDSE operating model: customer-embedded engineers,
+      enterprise AI deployment, product-feedback loops from the field,
+      data-integration bottlenecks, implementation economics, and the
+      boundary between true productized deployment and consulting relabeling.
+    why_watch: >
+      AI products increasingly fail or succeed at the enterprise last mile:
+      messy data, unclear workflows, security constraints, and adoption gaps.
+      FDE is a useful lens for watching how teams turn field learning into
+      reusable product and where the model collapses into low-margin services.
+    include_keywords:
+      - FDE
+      - FDSE
+      - Forward Deployed Engineer
+      - Forward-Deployed Engineer
+      - Forward Deployed Engineering
+      - Forward-Deployed Engineering
+      - customer-facing engineering
+      - embedded engineer
+      - embedded engineering
+      - field engineering
+      - field intelligence
+      - enterprise AI deployment
+      - implementation bottleneck
+      - last mile
+      - product feedback loop
+      - data integration
+      - Palantirization
+      - Delta
+      - Deltas
+      - Echo
+      - customer environment
+      - onsite
+    exclude_keywords:
+      - full disk encryption
+      - disk encryption
+      - finite difference equation
+      - job board only
+      - hiring only
+      - generic job posting
+      - military deployment unrelated to software
+      - consulting pitch without product feedback loop
+    timeline: trend/forward-deployed-engineering.md
+    report_section: Forward Deployed Engineering
