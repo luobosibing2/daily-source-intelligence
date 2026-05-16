@@ -21,10 +21,11 @@
 2. 采集稳定来源
    - 优先运行 `daily-source-intelligence/scripts/collect-stable-sources.py`，统一写出 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
    - 脚本不再内置或自动补本机代理。网络路径优先使用系统/TUN 级代理；如需显式代理，运行前手动设置 `http_proxy`、`https_proxy` 或 `all_proxy`，`curl` 会自动读取这些环境变量。
-   - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。
+   - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。脚本必须用 [`config/topics.yaml`](config/topics.yaml) 与每个 source 的 `topics` 判断 feed 条目是否命中关注方向；命中的 RSS 条目必须继续打开原文 URL，归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`，并在 `rss-items.json` 条目上写入 `relevance_status`、`matched_topics`、`matched_keywords`、`fulltext_status`、`fulltext_method`、`fulltext_path`、`raw_html_path` 或失败原因。不能只凭 feed title/RSS summary 写强判断。
+   - RSS 原文抓取先用 `curl` 保存 HTML/提取文本；如果 `curl` 失败、返回 Cloudflare/JS challenge、正文太短或不可读，必须自动尝试 `autocli read <url>`。`autocli` 成功时将 Markdown 归档为 `.autocli.md`，证据方法标为 `autocli-read`；仍失败时标为 `limited`/`failed`，日报和 trend 只能写边界，不得把摘要升级成全文证据。
    - GitHub：第一版无 `GITHUB_TOKEN` 时优先读取 `https://github.com/{repo}/releases.atom`；REST API 只作为增强路径。若 REST API 返回 rate limit 或 403，不视为整体失败，降级到 Atom feed 并写入 `source-health.json`。
-   - GitHub Trending：读取 `github_trending` sources，默认采集 `https://github.com/trending?since=daily` 的前 10 个项目，写入 `github-trending.json`。每个 repo 必须保留 GitHub Trending 页面上的 `trending_description`，也必须继续打开并归档 README，保存到 `raw/YYYY-MM-DD/github-trending-readmes/`，并在 `github-trending.json` 中写入 `readme_status`、`readme_path`、`readme_title` 和 `readme_excerpt`。Trending 只作为发现/研究线索，证据等级默认 `secondary-source`；不要把“上榜”写成官方发布、质量背书或长期趋势。
-   - 官方页面：读取 `official_pages`，优先发现新 blog、changelog、release note 或 docs update。
+   - GitHub Trending：读取 `github_trending` sources，默认采集 `https://github.com/trending?since=daily` 的前 10 个项目，写入 `github-trending.json`。每个 repo 必须保留 GitHub Trending 页面上的 `trending_description`，也必须继续打开并归档 README，保存到 `raw/YYYY-MM-DD/github-trending-readmes/`，并在 `github-trending.json` 中写入 `readme_status`、`readme_method`、`readme_path`、`readme_title` 和 `readme_excerpt`。README raw 抓取失败时尝试 `autocli read`；Trending 页面自身若 curl 失败但 `autocli` 可读，只能归档诊断快照，仍不能替代 repo-card HTML 解析。Trending 只作为发现/研究线索，证据等级默认 `secondary-source`；不要把“上榜”写成官方发布、质量背书或长期趋势。
+   - 官方页面：读取 `official_pages`，优先发现新 blog、changelog、release note 或 docs update。官方页面抓取失败、limited 或 challenge 时同样尝试 `autocli read`，并把 `fetch_method` / `fulltext_method` 写入 `official-pages.json`。
 
 3. 使用 twitterapi.io 采集 X/Twitter 直接证据
    - 运行 `daily-source-intelligence/scripts/collect-twitterapi-io.py`。脚本优先读取环境变量 `TWITTERAPI_IO_KEY`；如果不存在，再尝试从 macOS Keychain 的 `service=twitterapi.io`、`account=$USER` 读取。
@@ -45,7 +46,9 @@
    - 当天目录：`raw/YYYY-MM-DD/`
    - 保存一份 `manifest.json`，记录采集时间、查询范围、来源、命中数量、失败来源。
    - 保存稳定来源条目为 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
+   - 保存 RSS 命中关注方向的原文归档到 `rss-fulltext/<source-id>/`；`.html` 是 `curl` 原始响应，`.extracted.md` 是本地文本提取，`.autocli.md` 是 `autocli read` 可读正文。
    - 保存 GitHub Trending README 原文到 `github-trending-readmes/`；如果 README 缺失、raw URL 不可访问或下载失败，必须在 `github-trending.json` 和日报“不确定性与待验证项”里说明。
+   - 保存官方页面 fallback 正文到 `official-page-text/`；如果只有 `curl` challenge HTML 或 `autocli` 也失败，必须在 `official-pages.json`、`manifest.json` 和日报“不确定性与待验证项”里说明。
    - 保存 twitterapi.io 结果为 `twitterapi-io-results.json`；若没有 `TWITTERAPI_IO_KEY`，也要写入 skipped 文件。
    - 对高信号原文，尽量保存 HTML、Markdown 或文本提取文件；无法归档时在日报“不确定性与待验证项”说明。
 
@@ -79,6 +82,7 @@
    - 每条 X/Twitter 相关内容必须标注证据等级：
      - `direct-x`
      - `secondary-source`
+   - 每条 RSS/Atom 高信号必须检查 `rss-items.json` 中对应条目的 `fulltext_status`。只有 `fulltext_status=ok` 且 `fulltext_path` 指向本地归档时，才能写成已读原文；`limited`、`failed` 或 `skipped` 只能按摘要/发现线索写边界。
    - GitHub Trending 每日热门项目必须单独说明覆盖状态、解析到的 repo 数、Trending description 覆盖状态、README 归档覆盖状态，以及它只是 discovery signal 的边界。
    - 每个 GitHub Trending repo 的项目归纳必须写成“读者能看懂的项目介绍”，不能只写标签、黑话或一句抽象定位。每段至少交代：
      - 这个项目到底是什么，不要只复述 repo slogan。
@@ -94,10 +98,10 @@
    - 读取 `config/trends.yaml`，所有 `enabled: true` 的 trend 都必须在当天 trend report 中出现。
    - 输入范围为当天日报 `docs/YYYY-MM-DD-daily-intel.md` 与当天 raw `raw/YYYY-MM-DD/`；聊天中的未归档判断不能作为 trend 证据。
    - 只对明确命中 enabled trend 且有新信息量的高信号做扩充搜索。扩充来源优先级：官方页面、官方 docs、GitHub repo、GitHub release body、GitHub README；普通 web search 只用于定位原始官方材料。
-   - 凡是被选入 trend 的 RSS / Atom / 官方博客 / 博文 / newsletter 条目，必须先下载并归档原文，再阅读原文后写入 trend 判断；不能只凭 feed title、RSS summary、站点 metadata 或聊天中的印象更新专题结论。
-   - 原文归档写入 `trend/raw/YYYY-MM-DD/<trend-id>/`，优先保存 HTML 原文、Markdown/文本提取版和一个简短 manifest；如果下载失败、付费墙、反爬、正文不可读或只有 RSS 摘要，必须在当天 trend report 中标为 `needs-fulltext` / `limited`，且不能把该条提升为强 trend 结论。
+   - 凡是被选入 trend 的 RSS / Atom / 官方博客 / 博文 / newsletter 条目，必须先下载并归档原文，再阅读原文后写入 trend 判断；不能只凭 feed title、RSS summary、站点 metadata 或聊天中的印象更新专题结论。优先复用当天 `raw/YYYY-MM-DD/rss-fulltext/` 中已归档的 fulltext；缺失时再补抓并归档到 trend raw。
+   - 原文归档写入 `trend/raw/YYYY-MM-DD/<trend-id>/`，优先保存 HTML 原文、Markdown/文本提取版和一个简短 manifest；如果 `curl` 下载失败、付费墙、反爬、正文不可读或只有 RSS 摘要，必须尝试 `autocli read`。`autocli` 仍失败时，在当天 trend report 中标为 `needs-fulltext` / `limited`，且不能把该条提升为强 trend 结论。
    - GitHub Trending / GitHub repo 信号必须至少读取并归档 README 或 release body；README 缺失或正文不可读时，只能列为 discovery candidate，不能写机制判断。
-   - trend 扩充不得重跑 `twitterapi.io`，不得使用登录态浏览器，不得使用 X/Twitter 写操作、posting、liking、following 或 DM。
+   - trend 扩充不得重跑 `twitterapi.io`，不得使用 X/Twitter 写操作、posting、liking、following 或 DM。公开网页正文可用 `autocli read` 作为失败 fallback，但必须记录 `autocli-read` 方法和归档路径，不得把登录态社交内容当作替代证据。
    - 扩充得到的官方页面、docs、README、release body、摘录或 manifest 写入 `trend/raw/YYYY-MM-DD/<trend-id>/`。
    - 写入当天趋势分析报告：`trend/reports/YYYY-MM-DD-trend-report.md`。报告必须回答“今天这些情报对长期趋势意味着什么”，不能只写 audit 表。
    - 有新增趋势信号时，只更新对应专题报告，例如 `trend/memory-dream.md`、`trend/financial-agents.md`、`trend/forward-deployed-engineering.md`；无新增时，不强行改专题报告，但当天 trend report 必须标记 `no-new-signal`。
@@ -110,7 +114,7 @@
 
 ## 第一版边界
 
-- 不使用登录态抓取网页。
+- 不使用登录态抓取 X/Twitter 或其它需要账号权限的私有内容；公开网页、公开博客或公开文件在 `curl` 失败时可用 `autocli read` 作为读取 fallback，并必须记录方法与限制。
 - 不使用官方 X API 或非官方账号密码自动化。
 - 不使用 Exa MCP 作为 fallback discovery layer。
 - `twitterapi.io` 仅使用 read endpoints；不使用发帖、点赞、关注、DM 等 action endpoints。

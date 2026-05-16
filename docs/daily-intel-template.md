@@ -41,6 +41,9 @@
 | 来源 | 类型 | 原文链接 | 本地归档 | 证据等级 | 备注 |
 | --- | --- | --- | --- | --- | --- |
 
+- RSS/Atom 高信号必须引用 `rss-items.json` 中的 `fulltext_status` 和本地 fulltext 归档；`limited` / `failed` / `skipped` 不能写成已读原文。
+- `autocli-read` 是 `curl` 失败或 limited 后的公开网页读取 fallback；在备注中保留该方法名和剩余边界。
+
 ## 4. X/Twitter 覆盖说明
 
 - 本日报通过 `twitterapi.io` 收集 X/Twitter 直接证据，不使用官方 X API，不使用 Exa MCP。

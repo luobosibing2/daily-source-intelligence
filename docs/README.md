@@ -15,6 +15,10 @@ GitHub Trending 每日热门项目写入 `raw/YYYY-MM-DD/github-trending.json`�
 
 GitHub 项目总结必须写成读者能看懂的项目介绍，而不是标签堆叠。每个 repo 至少讲清楚：它到底是什么、解决什么具体问题、给谁用或怎么用、README 能确认的核心机制/功能边界/部署形态、为什么今天值得记录、还有哪些风险或待验证点。必须把 Trending description 和 README 合成一段自然语言归纳，不要写成 `Trending description:` / `README 归纳:` 这种固定字段拆分。遇到金融、交易、浏览器绕检测、凭据路由、自动执行、隐私或安全敏感项目时，必须单独写清风险边界；README 缺失时只能列为待读候选，不写机制总结。
 
+RSS/Atom 高信号不能只凭 feed 摘要写强判断。collector 会用 [`../config/topics.yaml`](../config/topics.yaml) 与 source `topics` 标记 `relevance_status`，相关条目会继续打开原文并归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`。日报引用 RSS 高信号时必须检查 `fulltext_status`：`ok` 可以写已读原文，`limited` / `failed` / `skipped` 只能写成摘要线索并说明边界。
+
+网页或公开文件的 `curl` 抓取失败、Cloudflare/JS challenge、正文太短或不可读时，collector 会尝试 `autocli read`。如果成功，本地归档使用 `.autocli.md`，证据方法写作 `autocli-read`；如果仍失败，日报必须保留 `needs-fulltext` / `limited` 边界。
+
 ## 长期趋势分析
 
 日报正文不包含 trend 小节。每日任务在日报完成后，按 [`../config/trends.yaml`](../config/trends.yaml) 更新 [`../trend/`](../trend/) 下的独立每日趋势分析报告，以及每个 enabled trend 配置的长期专题报告输出路径，例如 `trend/memory-dream.md`、`trend/financial-agents.md` 和 `trend/forward-deployed-engineering.md`。

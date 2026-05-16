@@ -119,6 +119,27 @@ def status_counts(sources):
     }
 
 
+def rss_fulltext_counts(rss_sources):
+    counts = {
+        "ok": 0,
+        "limited": 0,
+        "failed": 0,
+        "skipped": 0,
+        "attempted": 0,
+        "matched": 0,
+    }
+    for source in rss_sources:
+        for item in source.get("items", []):
+            status = item.get("fulltext_status")
+            if item.get("relevance_status") == "matched":
+                counts["matched"] += 1
+            if status in {"ok", "limited", "failed", "skipped"}:
+                counts[status] += 1
+            if status in {"ok", "limited", "failed"}:
+                counts["attempted"] += 1
+    return counts
+
+
 def twitter_collection_status(twitter):
     provider_status = twitter.get("status")
     if provider_status != "ok":
@@ -142,10 +163,12 @@ def source_health(raw, run_date):
         if not source_id:
             continue
         if source.get("status") == "ok":
+            fulltext = rss_fulltext_counts([source])
             sources[source_id] = {
                 "status": "ok",
                 "last_success": run_date,
                 "consecutive_failures": 0,
+                "note": f"{len(source.get('items', []))} feed items parsed; relevant fulltext ok={fulltext['ok']}, limited={fulltext['limited']}, failed={fulltext['failed']}.",
             }
         else:
             sources[source_id] = {
@@ -255,6 +278,7 @@ def source_health(raw, run_date):
 
 def manifest(raw, run_date):
     rss_counts = status_counts(raw["rss"].get("sources", []))
+    rss_fulltext = rss_fulltext_counts(raw["rss"].get("sources", []))
     official_counts = status_counts(raw["official"].get("sources", []))
     trending_counts = status_counts(raw["github_trending"].get("sources", []))
     github_sources = raw["github"].get("sources", [])
@@ -294,6 +318,12 @@ def manifest(raw, run_date):
         "summary": {
             "rss_sources_ok": rss_counts["ok"],
             "rss_sources_failed": rss_counts["failed"],
+            "rss_fulltext_matched": rss_fulltext["matched"],
+            "rss_fulltext_attempted": rss_fulltext["attempted"],
+            "rss_fulltext_ok": rss_fulltext["ok"],
+            "rss_fulltext_limited": rss_fulltext["limited"],
+            "rss_fulltext_failed": rss_fulltext["failed"],
+            "rss_fulltext_skipped": rss_fulltext["skipped"],
             "github_sources_ok_via_atom": sum(1 for item in github_sources if item.get("status") == "ok"),
             "github_api_status": github_api_status.get("status"),
             "github_trending_sources_ok": trending_counts["ok"],
@@ -324,6 +354,16 @@ def build_limitations(raw):
     failed_rss = [source.get("source_id") for source in raw["rss"].get("sources", []) if source.get("status") != "ok"]
     if failed_rss:
         limitations.append(f"RSS failed sources: {', '.join(failed_rss)}.")
+    for source in raw["rss"].get("sources", []):
+        limited_items = [
+            item.get("title") or item.get("url")
+            for item in source.get("items", [])
+            if item.get("fulltext_status") in {"limited", "failed"}
+        ]
+        if limited_items:
+            sample = "; ".join(limited_items[:3])
+            more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
+            limitations.append(f"{source.get('source_id')} RSS fulltext limited/failed for {len(limited_items)} matched item(s): {sample}{more}.")
     for source in raw["github_trending"].get("sources", []):
         if source.get("status") == "limited":
             reason = (source.get("reason") or "limited parseable content").rstrip(".")
