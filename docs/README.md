@@ -17,6 +17,8 @@ GitHub 项目总结必须写成读者能看懂的项目介绍，而不是标签�
 
 RSS/Atom 高信号不能只凭 feed 摘要写强判断。collector 会用 [`../config/topics.yaml`](../config/topics.yaml) 与 source `topics` 标记 `relevance_status`，相关条目会继续打开原文并归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`。日报引用 RSS 高信号时必须检查 `fulltext_status`：`ok` 可以写已读原文，`limited` / `failed` / `skipped` 只能写成摘要线索并说明边界。
 
+OpenAI 与 Claude Code 是一手重点源，地位不同于普通 RSS/blog。配置了 `fulltext_policy: always` 的 source 不按普通 topic match 跳过；只要 feed/release Atom 里有条目，就写入 `relevance_status=always_read` 并提取可用正文。日报必须放到“一手重点源 / First-party OpenAI & Claude Code”部门，保留 `intelligence_department`、`fulltext_status` 和本地归档链接。
+
 网页或公开文件的 `curl` 抓取失败、Cloudflare/JS challenge、正文太短或不可读时，collector 会尝试 `autocli read`。如果成功，本地归档使用 `.autocli.md`，证据方法写作 `autocli-read`；如果仍失败，日报必须保留 `needs-fulltext` / `limited` 边界。
 
 ## 长期趋势分析

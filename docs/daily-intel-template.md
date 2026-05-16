@@ -17,6 +17,11 @@
 
 ## 2. 按主题分组摘要
 
+### 一手重点源 / First-party OpenAI & Claude Code
+
+- 必须优先检查 `intelligence_department` 为 `first-party-openai` 或 `first-party-claude-code` 的 RSS/release Atom 条目。
+- 这些来源配置为 `fulltext_policy: always`，不按普通 topic match 跳过；但仍要标注 `fulltext_status`、`fulltext_method` 和本地归档路径。
+
 ### LLM / Frontier Models
 
 ### AI Agent / Agentic Workflow
@@ -42,6 +47,7 @@
 | --- | --- | --- | --- | --- | --- |
 
 - RSS/Atom 高信号必须引用 `rss-items.json` 中的 `fulltext_status` 和本地 fulltext 归档；`limited` / `failed` / `skipped` 不能写成已读原文。
+- OpenAI / Claude Code 一手重点源还要引用 `intelligence_department` 与 `relevance_status=always_read`；release Atom 正文归档在 `github-release-fulltext/<source-id>/`。
 - `autocli-read` 是 `curl` 失败或 limited 后的公开网页读取 fallback；在备注中保留该方法名和剩余边界。
 
 ## 4. X/Twitter 覆盖说明

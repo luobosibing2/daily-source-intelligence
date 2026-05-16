@@ -4,6 +4,8 @@ rss:
     url: https://openai.com/news/rss.xml
     enabled: true
     priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-openai
     topics: [llm, ai-agent, ai-coding]
 
   - id: anthropic-news
@@ -264,15 +266,19 @@ github_repos:
     repo: openai/codex
     enabled: true
     priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-openai
     topics: [ai-coding, ai-agent]
 
   - id: anthropics-claude-code
     name: Claude Code
     repo: anthropics/claude-code
-    enabled: false
+    enabled: true
     priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-claude-code
     topics: [ai-coding, ai-agent]
-    note: Enable only if the repository path is confirmed.
+    note: First-party Claude Code release Atom feed; always extract release content when present.
 
   - id: modelcontextprotocol-servers
     name: MCP Servers

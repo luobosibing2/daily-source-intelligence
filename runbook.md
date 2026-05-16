@@ -21,9 +21,10 @@
 2. 采集稳定来源
    - 优先运行 `daily-source-intelligence/scripts/collect-stable-sources.py`，统一写出 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
    - 脚本不再内置或自动补本机代理。网络路径优先使用系统/TUN 级代理；如需显式代理，运行前手动设置 `http_proxy`、`https_proxy` 或 `all_proxy`，`curl` 会自动读取这些环境变量。
-   - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。脚本必须用 [`config/topics.yaml`](config/topics.yaml) 与每个 source 的 `topics` 判断 feed 条目是否命中关注方向；命中的 RSS 条目必须继续打开原文 URL，归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`，并在 `rss-items.json` 条目上写入 `relevance_status`、`matched_topics`、`matched_keywords`、`fulltext_status`、`fulltext_method`、`fulltext_path`、`raw_html_path` 或失败原因。不能只凭 feed title/RSS summary 写强判断。
+   - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。脚本默认用 [`config/topics.yaml`](config/topics.yaml) 与每个 source 的 `topics` 判断 feed 条目是否命中关注方向；命中的 RSS 条目必须继续打开原文 URL，归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`，并在 `rss-items.json` 条目上写入 `relevance_status`、`matched_topics`、`matched_keywords`、`fulltext_status`、`fulltext_method`、`fulltext_path`、`raw_html_path` 或失败原因。不能只凭 feed title/RSS summary 写强判断。
+   - 一手重点源不走 topic 过滤。凡是 source 配置了 `fulltext_policy: always`，例如 `openai-blog`、`openai-codex`、`anthropics-claude-code`，只要 feed/release Atom 里出现条目就尝试提取正文，并写入 `relevance_status=always_read` 与 `intelligence_department`。日报里把这些条目放到“一手重点源 / First-party OpenAI & Claude Code”部门，不因关键词未命中而跳过。
    - RSS 原文抓取先用 `curl` 保存 HTML/提取文本；如果 `curl` 失败、返回 Cloudflare/JS challenge、正文太短或不可读，必须自动尝试 `autocli read <url>`。`autocli` 成功时将 Markdown 归档为 `.autocli.md`，证据方法标为 `autocli-read`；仍失败时标为 `limited`/`failed`，日报和 trend 只能写边界，不得把摘要升级成全文证据。
-   - GitHub：第一版无 `GITHUB_TOKEN` 时优先读取 `https://github.com/{repo}/releases.atom`；REST API 只作为增强路径。若 REST API 返回 rate limit 或 403，不视为整体失败，降级到 Atom feed 并写入 `source-health.json`。
+   - GitHub：第一版无 `GITHUB_TOKEN` 时优先读取 `https://github.com/{repo}/releases.atom`；REST API 只作为增强路径。若 REST API 返回 rate limit 或 403，不视为整体失败，降级到 Atom feed 并写入 `source-health.json`。配置了 `fulltext_policy: always` 的 release Atom 源必须保留 release Atom content 全文到 `raw/YYYY-MM-DD/github-release-fulltext/<source-id>/`；内容过短时标为 `limited`，不能假装读到了 release body。
    - GitHub Trending：读取 `github_trending` sources，默认采集 `https://github.com/trending?since=daily` 的前 10 个项目，写入 `github-trending.json`。每个 repo 必须保留 GitHub Trending 页面上的 `trending_description`，也必须继续打开并归档 README，保存到 `raw/YYYY-MM-DD/github-trending-readmes/`，并在 `github-trending.json` 中写入 `readme_status`、`readme_method`、`readme_path`、`readme_title` 和 `readme_excerpt`。README raw 抓取失败时尝试 `autocli read`；Trending 页面自身若 curl 失败但 `autocli` 可读，只能归档诊断快照，仍不能替代 repo-card HTML 解析。Trending 只作为发现/研究线索，证据等级默认 `secondary-source`；不要把“上榜”写成官方发布、质量背书或长期趋势。
    - 官方页面：读取 `official_pages`，优先发现新 blog、changelog、release note 或 docs update。官方页面抓取失败、limited 或 challenge 时同样尝试 `autocli read`，并把 `fetch_method` / `fulltext_method` 写入 `official-pages.json`。
 
@@ -47,6 +48,7 @@
    - 保存一份 `manifest.json`，记录采集时间、查询范围、来源、命中数量、失败来源。
    - 保存稳定来源条目为 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
    - 保存 RSS 命中关注方向的原文归档到 `rss-fulltext/<source-id>/`；`.html` 是 `curl` 原始响应，`.extracted.md` 是本地文本提取，`.autocli.md` 是 `autocli read` 可读正文。
+   - 保存一手 release Atom 全文归档到 `github-release-fulltext/<source-id>/`；`.atom.md` 是从 GitHub release Atom `<content>` 提取的可读正文。
    - 保存 GitHub Trending README 原文到 `github-trending-readmes/`；如果 README 缺失、raw URL 不可访问或下载失败，必须在 `github-trending.json` 和日报“不确定性与待验证项”里说明。
    - 保存官方页面 fallback 正文到 `official-page-text/`；如果只有 `curl` challenge HTML 或 `autocli` 也失败，必须在 `official-pages.json`、`manifest.json` 和日报“不确定性与待验证项”里说明。
    - 保存 twitterapi.io 结果为 `twitterapi-io-results.json`；若没有 `TWITTERAPI_IO_KEY`，也要写入 skipped 文件。
@@ -83,6 +85,7 @@
      - `direct-x`
      - `secondary-source`
    - 每条 RSS/Atom 高信号必须检查 `rss-items.json` 中对应条目的 `fulltext_status`。只有 `fulltext_status=ok` 且 `fulltext_path` 指向本地归档时，才能写成已读原文；`limited`、`failed` 或 `skipped` 只能按摘要/发现线索写边界。
+   - 日报必须有“一手重点源 / First-party OpenAI & Claude Code”部门，优先汇总 `intelligence_department` 为 `first-party-openai` 或 `first-party-claude-code` 的条目；这些条目不受普通 topic match 限制，但仍必须写清 fulltext 是否 ok/limited。
    - GitHub Trending 每日热门项目必须单独说明覆盖状态、解析到的 repo 数、Trending description 覆盖状态、README 归档覆盖状态，以及它只是 discovery signal 的边界。
    - 每个 GitHub Trending repo 的项目归纳必须写成“读者能看懂的项目介绍”，不能只写标签、黑话或一句抽象定位。每段至少交代：
      - 这个项目到底是什么，不要只复述 repo slogan。

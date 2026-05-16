@@ -10,6 +10,7 @@
 - `official-pages.json`：官方页面检查结果。
 - `twitterapi-io-results.json`：`twitterapi.io` X/Twitter 直接证据或 skipped/failed 状态。
 - `rss-fulltext/<source-id>/`：RSS/Atom 条目命中关注方向后的原文归档；`.html` 是 `curl` 原始响应，`.extracted.md` 是本地文本提取，`.autocli.md` 是 `autocli read` fallback 提取的正文。
+- `github-release-fulltext/<source-id>/`：一手 release Atom 源的正文归档；`.atom.md` 是从 GitHub release Atom `<content>` 提取的可读正文。
 - `official-page-text/`：官方页面在 `curl` limited/failed 后的可读正文归档或诊断快照。
 - 原文 HTML、Markdown 或文本提取文件：对高信号材料和相关 RSS 条目保存。
 

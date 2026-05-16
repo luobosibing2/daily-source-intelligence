@@ -235,6 +235,25 @@ def readable_title_from_markdown(markdown_text):
     return ""
 
 
+def is_always_fulltext_source(source):
+    policy = str(source.get("fulltext_policy") or "").strip().lower()
+    return policy in {"always", "always_read", "must_read"}
+
+
+def source_department(source):
+    return source.get("intelligence_department") or source.get("department") or ""
+
+
+def source_metadata(source):
+    metadata = {}
+    if source.get("fulltext_policy"):
+        metadata["fulltext_policy"] = source.get("fulltext_policy")
+    department = source_department(source)
+    if department:
+        metadata["intelligence_department"] = department
+    return metadata
+
+
 def fetch_readable_page(url, output_dir, stem, fetched=None):
     result = {
         "fulltext_attempted": True,
@@ -304,6 +323,15 @@ def phrase_matches(haystack, phrase):
 
 
 def rss_item_relevance(source, item, topics_by_id):
+    if is_always_fulltext_source(source):
+        return {
+            "relevance_status": "always_read",
+            "matched_topics": list(source.get("topics", [])),
+            "matched_keywords": [],
+            "relevance_reason": "source fulltext_policy=always",
+            "is_relevant": True,
+        }
+
     haystack = f"{item.get('title', '')} {item.get('summary', '')}".lower()
     matched_topics = []
     matched_keywords = []
@@ -352,6 +380,7 @@ def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id):
         item = dict(item)
         relevance = rss_item_relevance(source, item, topics_by_id)
         item.update({key: value for key, value in relevance.items() if key != "is_relevant"})
+        item.update(source_metadata(source))
         if not relevance["is_relevant"]:
             item["fulltext_status"] = "skipped"
             item["fulltext_reason"] = f"RSS title/summary did not match configured topics for {source.get('id')}."
@@ -467,6 +496,7 @@ def collect_rss(rss_sources, output_dir, topics_by_id):
                     "url": source["url"],
                     "status": "ok",
                     "items": items,
+                    **source_metadata(source),
                 }
             )
         except Exception as exc:
@@ -494,7 +524,7 @@ def rss_fulltext_summary(rss_results):
     for source in rss_results:
         for item in source.get("items", []):
             status = item.get("fulltext_status")
-            if item.get("relevance_status") == "matched":
+            if item.get("relevance_status") in {"matched", "always_read"}:
                 counts["matched"] += 1
             if status in {"ok", "limited", "failed", "skipped"}:
                 counts[status] += 1
@@ -503,7 +533,77 @@ def rss_fulltext_summary(rss_results):
     return counts
 
 
-def collect_github(github_sources):
+def github_release_fulltext_summary(github_results):
+    counts = {
+        "always_read": 0,
+        "attempted": 0,
+        "ok": 0,
+        "limited": 0,
+        "failed": 0,
+    }
+    for source in github_results:
+        for item in source.get("items", []):
+            status = item.get("fulltext_status")
+            if item.get("relevance_status") == "always_read":
+                counts["always_read"] += 1
+            if status in {"ok", "limited", "failed"}:
+                counts[status] += 1
+                counts["attempted"] += 1
+    return counts
+
+
+def archive_release_atom_content(source, item, output_dir, release_body):
+    source_dir = output_dir / "github-release-fulltext" / safe_slug(source.get("id", "github-source"))
+    stem = item_file_stem(source.get("id", "github-source"), item.get("title", ""), item.get("url", ""))
+    text = strip_html(release_body or "")
+    payload = "\n".join(
+        [
+            f"# {item.get('title') or item.get('url')}",
+            "",
+            f"- Source: {source.get('name') or source.get('id')}",
+            f"- URL: {item.get('url') or ''}",
+            f"- Updated: {item.get('updated') or item.get('published') or ''}",
+            "",
+            text,
+        ]
+    ).strip()
+    result = {
+        "relevance_status": "always_read",
+        **source_metadata(source),
+    }
+    if content_text_is_usable(text):
+        result.update(
+            {
+                "fulltext_status": "ok",
+                "fulltext_method": "release-atom-content",
+                "fulltext_path": write_archive_text(source_dir / f"{stem}.atom.md", payload),
+                "fulltext_chars": len(text),
+                "fulltext_excerpt": text_excerpt(text),
+            }
+        )
+    elif text:
+        result.update(
+            {
+                "fulltext_status": "limited",
+                "fulltext_method": "release-atom-content",
+                "fulltext_path": write_archive_text(source_dir / f"{stem}.atom.md", payload),
+                "fulltext_chars": len(text),
+                "fulltext_excerpt": text_excerpt(text),
+                "fulltext_error": "Release Atom content was present but too short to treat as fulltext.",
+            }
+        )
+    else:
+        result.update(
+            {
+                "fulltext_status": "failed",
+                "fulltext_method": "release-atom-content",
+                "fulltext_error": "Release Atom item did not include content.",
+            }
+        )
+    return result
+
+
+def collect_github(github_sources, output_dir):
     api_url = "https://api.github.com/repos/openai/codex/releases?per_page=5"
     api_exit, api_http_status, _ = curl_status(api_url)
     api_status = {
@@ -534,9 +634,15 @@ def collect_github(github_sources):
         try:
             items = parse_feed_items(fetched["body"])
             for item in items:
+                release_body = item.get("summary", "")
                 item["author"] = "github-actions[bot]" if "alpha" in item.get("title", "") else item.get("author", "")
                 item["updated"] = item.pop("published", "")
-                item["summary"] = summarize_github_entry(item)
+                if is_always_fulltext_source(source):
+                    item["release_body"] = strip_html(release_body)
+                    item["summary"] = text_excerpt(item["release_body"], limit=900) or summarize_github_entry(item)
+                    item.update(archive_release_atom_content(source, item, output_dir, release_body))
+                else:
+                    item["summary"] = summarize_github_entry(item)
             results.append(
                 {
                     "source_id": source["id"],
@@ -545,6 +651,7 @@ def collect_github(github_sources):
                     "url": atom_url,
                     "status": "ok",
                     "items": items,
+                    **source_metadata(source),
                 }
             )
         except Exception as exc:
@@ -871,10 +978,11 @@ def main():
     rss_sources, github_sources, trending_sources, official_sources = load_sources()
     topics_by_id = load_topics()
     rss_results = collect_rss(rss_sources, output_dir, topics_by_id)
-    github_api_status, github_results = collect_github(github_sources)
+    github_api_status, github_results = collect_github(github_sources, output_dir)
     trending_results = collect_github_trending(trending_sources, output_dir)
     official_results = collect_official_pages(official_sources, output_dir)
     rss_fulltext = rss_fulltext_summary(rss_results)
+    github_release_fulltext = github_release_fulltext_summary(github_results)
 
     rss_payload = {
         "schema_version": 1,
@@ -914,6 +1022,11 @@ def main():
         "rss_fulltext_failed": rss_fulltext["failed"],
         "github_sources": len(github_results),
         "github_ok": sum(1 for item in github_results if item["status"] == "ok"),
+        "github_release_fulltext_always_read": github_release_fulltext["always_read"],
+        "github_release_fulltext_attempted": github_release_fulltext["attempted"],
+        "github_release_fulltext_ok": github_release_fulltext["ok"],
+        "github_release_fulltext_limited": github_release_fulltext["limited"],
+        "github_release_fulltext_failed": github_release_fulltext["failed"],
         "github_trending_sources": len(trending_results),
         "github_trending_ok": sum(1 for item in trending_results if item["status"] == "ok"),
         "official_sources": len(official_results),

@@ -131,11 +131,30 @@ def rss_fulltext_counts(rss_sources):
     for source in rss_sources:
         for item in source.get("items", []):
             status = item.get("fulltext_status")
-            if item.get("relevance_status") == "matched":
+            if item.get("relevance_status") in {"matched", "always_read"}:
                 counts["matched"] += 1
             if status in {"ok", "limited", "failed", "skipped"}:
                 counts[status] += 1
             if status in {"ok", "limited", "failed"}:
+                counts["attempted"] += 1
+    return counts
+
+
+def github_release_fulltext_counts(github_sources):
+    counts = {
+        "ok": 0,
+        "limited": 0,
+        "failed": 0,
+        "attempted": 0,
+        "always_read": 0,
+    }
+    for source in github_sources:
+        for item in source.get("items", []):
+            status = item.get("fulltext_status")
+            if item.get("relevance_status") == "always_read":
+                counts["always_read"] += 1
+            if status in {"ok", "limited", "failed"}:
+                counts[status] += 1
                 counts["attempted"] += 1
     return counts
 
@@ -184,12 +203,18 @@ def source_health(raw, run_date):
         if not source_id:
             continue
         if source.get("status") == "ok":
+            fulltext = github_release_fulltext_counts([source])
             sources[source_id] = {
                 "status": "ok_via_atom",
                 "last_success": run_date,
                 "consecutive_failures": 0,
                 "api_status": github_api.get("status"),
             }
+            if fulltext["attempted"]:
+                sources[source_id]["note"] = (
+                    f"{len(source.get('items', []))} release Atom items parsed; "
+                    f"first-party release fulltext ok={fulltext['ok']}, limited={fulltext['limited']}, failed={fulltext['failed']}."
+                )
         else:
             sources[source_id] = {
                 "status": "failed",
@@ -279,6 +304,7 @@ def source_health(raw, run_date):
 def manifest(raw, run_date):
     rss_counts = status_counts(raw["rss"].get("sources", []))
     rss_fulltext = rss_fulltext_counts(raw["rss"].get("sources", []))
+    github_release_fulltext = github_release_fulltext_counts(raw["github"].get("sources", []))
     official_counts = status_counts(raw["official"].get("sources", []))
     trending_counts = status_counts(raw["github_trending"].get("sources", []))
     github_sources = raw["github"].get("sources", [])
@@ -326,6 +352,11 @@ def manifest(raw, run_date):
             "rss_fulltext_skipped": rss_fulltext["skipped"],
             "github_sources_ok_via_atom": sum(1 for item in github_sources if item.get("status") == "ok"),
             "github_api_status": github_api_status.get("status"),
+            "github_release_fulltext_always_read": github_release_fulltext["always_read"],
+            "github_release_fulltext_attempted": github_release_fulltext["attempted"],
+            "github_release_fulltext_ok": github_release_fulltext["ok"],
+            "github_release_fulltext_limited": github_release_fulltext["limited"],
+            "github_release_fulltext_failed": github_release_fulltext["failed"],
             "github_trending_sources_ok": trending_counts["ok"],
             "github_trending_sources_limited": trending_counts["limited"],
             "github_trending_sources_failed": trending_counts["failed"],
@@ -364,6 +395,16 @@ def build_limitations(raw):
             sample = "; ".join(limited_items[:3])
             more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
             limitations.append(f"{source.get('source_id')} RSS fulltext limited/failed for {len(limited_items)} matched item(s): {sample}{more}.")
+    for source in raw["github"].get("sources", []):
+        limited_items = [
+            item.get("title") or item.get("url")
+            for item in source.get("items", [])
+            if item.get("fulltext_status") in {"limited", "failed"}
+        ]
+        if limited_items:
+            sample = "; ".join(limited_items[:3])
+            more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
+            limitations.append(f"{source.get('source_id')} release fulltext limited/failed for {len(limited_items)} first-party item(s): {sample}{more}.")
     for source in raw["github_trending"].get("sources", []):
         if source.get("status") == "limited":
             reason = (source.get("reason") or "limited parseable content").rstrip(".")
