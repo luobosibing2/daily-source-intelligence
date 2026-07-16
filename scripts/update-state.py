@@ -12,11 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 RAW_ROOT = ROOT / "raw"
 STATE_ROOT = ROOT / "state"
 
-PROXY = {
-    "http_proxy": "http://127.0.0.1:7890",
-    "https_proxy": "http://127.0.0.1:7890",
-    "all_proxy": "socks5://127.0.0.1:7890",
-}
+PROXY_ENV_KEYS = [
+    "http_proxy",
+    "https_proxy",
+    "all_proxy",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "ALL_PROXY",
+    "no_proxy",
+    "NO_PROXY",
+]
 
 X_KEYWORDS = [
     "agent",
@@ -25,14 +30,19 @@ X_KEYWORDS = [
     "claude",
     "codex",
     "cursor",
+    "fde",
+    "fdse",
     "llm",
     "mcp",
     "openclaw",
     "openai",
+    "palantirization",
     "revenue",
     "saas",
     "startup",
     "vibe",
+    "forward deployed",
+    "forward-deployed",
     "自动化",
     "独立开发",
 ]
@@ -81,12 +91,21 @@ def today_from_run(run_date):
     return run_date or now_local().date().isoformat()
 
 
+def proxy_env_snapshot():
+    return {key: redact_proxy_value(os.environ[key]) for key in PROXY_ENV_KEYS if os.environ.get(key)}
+
+
+def redact_proxy_value(value):
+    return re.sub(r"://[^/@]+@", "://<redacted>@", value)
+
+
 def load_raw(run_date):
     raw_dir = RAW_ROOT / run_date
     return {
         "raw_dir": raw_dir,
         "rss": read_json(raw_dir / "rss-items.json", {"sources": []}),
         "github": read_json(raw_dir / "github-items.json", {"sources": [], "api_status": {}}),
+        "github_trending": read_json(raw_dir / "github-trending.json", {"sources": []}),
         "official": read_json(raw_dir / "official-pages.json", {"sources": []}),
         "twitter": read_json(raw_dir / "twitterapi-io-results.json", {"status": "missing", "accounts": []}),
     }
@@ -100,6 +119,61 @@ def status_counts(sources):
     }
 
 
+def rss_fulltext_counts(rss_sources):
+    counts = {
+        "ok": 0,
+        "limited": 0,
+        "failed": 0,
+        "skipped": 0,
+        "attempted": 0,
+        "matched": 0,
+    }
+    for source in rss_sources:
+        for item in source.get("items", []):
+            status = item.get("fulltext_status")
+            if item.get("relevance_status") in {"matched", "always_read"}:
+                counts["matched"] += 1
+            if status in {"ok", "limited", "failed", "skipped"}:
+                counts[status] += 1
+            if status in {"ok", "limited", "failed"}:
+                counts["attempted"] += 1
+    return counts
+
+
+def github_release_fulltext_counts(github_sources):
+    counts = {
+        "ok": 0,
+        "limited": 0,
+        "failed": 0,
+        "attempted": 0,
+        "always_read": 0,
+    }
+    for source in github_sources:
+        for item in source.get("items", []):
+            status = item.get("fulltext_status")
+            if item.get("relevance_status") == "always_read":
+                counts["always_read"] += 1
+            if status in {"ok", "limited", "failed"}:
+                counts[status] += 1
+                counts["attempted"] += 1
+    return counts
+
+
+def twitter_collection_status(twitter):
+    provider_status = twitter.get("status")
+    if provider_status != "ok":
+        return provider_status or "failed"
+    accounts = twitter.get("accounts", [])
+    if not accounts:
+        return "ok"
+    ok_count = sum(1 for account in accounts if account.get("status") == "ok")
+    if ok_count == len(accounts):
+        return "ok"
+    if ok_count > 0:
+        return "partial"
+    return "failed"
+
+
 def source_health(raw, run_date):
     sources = {}
 
@@ -108,10 +182,12 @@ def source_health(raw, run_date):
         if not source_id:
             continue
         if source.get("status") == "ok":
+            fulltext = rss_fulltext_counts([source])
             sources[source_id] = {
                 "status": "ok",
                 "last_success": run_date,
                 "consecutive_failures": 0,
+                "note": f"{len(source.get('items', []))} feed items parsed; relevant fulltext ok={fulltext['ok']}, limited={fulltext['limited']}, failed={fulltext['failed']}.",
             }
         else:
             sources[source_id] = {
@@ -127,18 +203,50 @@ def source_health(raw, run_date):
         if not source_id:
             continue
         if source.get("status") == "ok":
+            fulltext = github_release_fulltext_counts([source])
             sources[source_id] = {
                 "status": "ok_via_atom",
                 "last_success": run_date,
                 "consecutive_failures": 0,
                 "api_status": github_api.get("status"),
             }
+            if fulltext["attempted"]:
+                sources[source_id]["note"] = (
+                    f"{len(source.get('items', []))} release Atom items parsed; "
+                    f"first-party release fulltext ok={fulltext['ok']}, limited={fulltext['limited']}, failed={fulltext['failed']}."
+                )
         else:
             sources[source_id] = {
                 "status": "failed",
                 "last_checked": run_date,
                 "consecutive_failures": 1,
                 "note": source.get("error") or "GitHub release feed failed.",
+            }
+
+    for source in raw["github_trending"].get("sources", []):
+        source_id = source.get("source_id")
+        if not source_id:
+            continue
+        if source.get("status") == "ok":
+            sources[source_id] = {
+                "status": "ok",
+                "last_success": run_date,
+                "consecutive_failures": 0,
+                "note": f"{len(source.get('items', []))} daily trending repositories parsed.",
+            }
+        elif source.get("status") == "limited":
+            sources[source_id] = {
+                "status": "limited",
+                "last_checked": run_date,
+                "consecutive_failures": 1,
+                "note": source.get("reason") or "GitHub Trending page returned limited parseable content.",
+            }
+        else:
+            sources[source_id] = {
+                "status": "failed",
+                "last_checked": run_date,
+                "consecutive_failures": 1,
+                "note": source.get("error") or "GitHub Trending fetch or parsing failed.",
             }
 
     for source in raw["official"].get("sources", []):
@@ -167,11 +275,12 @@ def source_health(raw, run_date):
             }
 
     twitter = raw["twitter"]
-    twitter_ok = twitter.get("status") == "ok"
+    twitter_status = twitter_collection_status(twitter)
+    twitter_ok = twitter_status == "ok"
     kept_total = sum(account.get("kept_count", 0) for account in twitter.get("accounts", []))
     failed_accounts = [account.get("handle") for account in twitter.get("accounts", []) if account.get("status") != "ok"]
     sources["twitterapi.io"] = {
-        "status": "ok" if twitter_ok else twitter.get("status", "failed"),
+        "status": twitter_status,
         "last_success" if twitter_ok else "last_checked": run_date,
         "consecutive_failures": 0 if twitter_ok else 1,
         "note": f"{len(twitter.get('accounts', []))} configured accounts processed; {kept_total} direct X items kept in the {twitter.get('window_hours', 36)}h window.",
@@ -179,7 +288,7 @@ def source_health(raw, run_date):
     if failed_accounts:
         sources["twitterapi.io"]["failed_accounts"] = failed_accounts
     sources["x-twitter"] = {
-        "status": "ok_via_twitterapi_io" if twitter_ok else "failed",
+        "status": "ok_via_twitterapi_io" if twitter_ok else twitter_status,
         "last_checked": run_date,
         "consecutive_failures": 0 if twitter_ok else 1,
         "note": "Direct X evidence is collected only through twitterapi.io; Exa MCP is not used.",
@@ -194,14 +303,19 @@ def source_health(raw, run_date):
 
 def manifest(raw, run_date):
     rss_counts = status_counts(raw["rss"].get("sources", []))
+    rss_fulltext = rss_fulltext_counts(raw["rss"].get("sources", []))
+    github_release_fulltext = github_release_fulltext_counts(raw["github"].get("sources", []))
     official_counts = status_counts(raw["official"].get("sources", []))
+    trending_counts = status_counts(raw["github_trending"].get("sources", []))
     github_sources = raw["github"].get("sources", [])
     github_api_status = raw["github"].get("api_status", {})
     twitter = raw["twitter"]
+    twitter_status = twitter_collection_status(twitter)
     kept_total = sum(account.get("kept_count", 0) for account in twitter.get("accounts", []))
     collected_times = [
         raw["rss"].get("collected_at"),
         raw["github"].get("collected_at"),
+        raw["github_trending"].get("collected_at"),
         raw["official"].get("collected_at"),
         twitter.get("collected_at"),
     ]
@@ -213,8 +327,8 @@ def manifest(raw, run_date):
         "collected_at": collected_at,
         "timezone": "Asia/Shanghai",
         "mode": "manual_or_automation",
-        "network_mode": "script_default_proxy_or_existing_env",
-        "proxy": PROXY,
+        "network_mode": "system_network_or_existing_proxy_env",
+        "proxy_env": proxy_env_snapshot(),
         "window": {
             "primary": f"{run_date} daily run with source-specific recency windows",
             "fallback": "recent feed entries when source does not expose exact 24h filtering",
@@ -222,22 +336,39 @@ def manifest(raw, run_date):
         "outputs": {
             "rss_items": f"daily-source-intelligence/raw/{run_date}/rss-items.json",
             "github_items": f"daily-source-intelligence/raw/{run_date}/github-items.json",
+            "github_trending": f"daily-source-intelligence/raw/{run_date}/github-trending.json",
             "official_pages": f"daily-source-intelligence/raw/{run_date}/official-pages.json",
             "twitterapi_io_results": f"daily-source-intelligence/raw/{run_date}/twitterapi-io-results.json",
+            "twitter_topic_brief": f"daily-source-intelligence/raw/{run_date}/twitter-topic-brief.json",
             "daily_report": f"daily-source-intelligence/docs/{run_date}-daily-intel.md",
         },
         "summary": {
             "rss_sources_ok": rss_counts["ok"],
             "rss_sources_failed": rss_counts["failed"],
+            "rss_fulltext_matched": rss_fulltext["matched"],
+            "rss_fulltext_attempted": rss_fulltext["attempted"],
+            "rss_fulltext_ok": rss_fulltext["ok"],
+            "rss_fulltext_limited": rss_fulltext["limited"],
+            "rss_fulltext_failed": rss_fulltext["failed"],
+            "rss_fulltext_skipped": rss_fulltext["skipped"],
             "github_sources_ok_via_atom": sum(1 for item in github_sources if item.get("status") == "ok"),
             "github_api_status": github_api_status.get("status"),
+            "github_release_fulltext_always_read": github_release_fulltext["always_read"],
+            "github_release_fulltext_attempted": github_release_fulltext["attempted"],
+            "github_release_fulltext_ok": github_release_fulltext["ok"],
+            "github_release_fulltext_limited": github_release_fulltext["limited"],
+            "github_release_fulltext_failed": github_release_fulltext["failed"],
+            "github_trending_sources_ok": trending_counts["ok"],
+            "github_trending_sources_limited": trending_counts["limited"],
+            "github_trending_sources_failed": trending_counts["failed"],
+            "github_trending_repo_count": sum(len(source.get("items", [])) for source in raw["github_trending"].get("sources", [])),
             "official_pages_ok": official_counts["ok"],
             "official_pages_limited": official_counts["limited"],
             "official_pages_failed": official_counts["failed"],
             "twitterapi_io_used": twitter.get("status") == "ok",
-            "twitterapi_io_status": twitter.get("status"),
+            "twitterapi_io_status": twitter_status,
             "x_twitter_direct_count": kept_total,
-            "x_twitter_used": twitter.get("status") == "ok",
+            "x_twitter_used": twitter_status in {"ok", "partial"},
         },
         "notable_limitations": build_limitations(raw),
     }
@@ -255,6 +386,38 @@ def build_limitations(raw):
     failed_rss = [source.get("source_id") for source in raw["rss"].get("sources", []) if source.get("status") != "ok"]
     if failed_rss:
         limitations.append(f"RSS failed sources: {', '.join(failed_rss)}.")
+    for source in raw["rss"].get("sources", []):
+        limited_items = [
+            item.get("title") or item.get("url")
+            for item in source.get("items", [])
+            if item.get("fulltext_status") in {"limited", "failed"}
+        ]
+        if limited_items:
+            sample = "; ".join(limited_items[:3])
+            more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
+            limitations.append(f"{source.get('source_id')} RSS fulltext limited/failed for {len(limited_items)} matched item(s): {sample}{more}.")
+    for source in raw["github"].get("sources", []):
+        limited_items = [
+            item.get("title") or item.get("url")
+            for item in source.get("items", [])
+            if item.get("fulltext_status") in {"limited", "failed"}
+        ]
+        if limited_items:
+            sample = "; ".join(limited_items[:3])
+            more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
+            limitations.append(f"{source.get('source_id')} release fulltext limited/failed for {len(limited_items)} first-party item(s): {sample}{more}.")
+    for source in raw["github_trending"].get("sources", []):
+        if source.get("status") == "limited":
+            reason = (source.get("reason") or "limited parseable content").rstrip(".")
+            limitations.append(f"{source.get('source_id')} limited: {reason}.")
+        elif source.get("status") not in {"ok", "limited"}:
+            limitations.append(f"{source.get('source_id')} failed: {source.get('error') or 'GitHub Trending fetch or parsing failed'}.")
+    twitter = raw["twitter"]
+    twitter_status = twitter_collection_status(twitter)
+    if twitter_status in {"failed", "partial"}:
+        failed_accounts = [account.get("handle") for account in twitter.get("accounts", []) if account.get("status") != "ok"]
+        if failed_accounts:
+            limitations.append(f"twitterapi.io {twitter_status}: failed accounts: {', '.join(failed_accounts)}.")
     return limitations
 
 
@@ -322,6 +485,29 @@ def stable_seen_items(raw, run_date):
                     "evidence_level": "official-source",
                 }
             )
+
+    for source in raw["github_trending"].get("sources", []):
+        if source.get("status") != "ok":
+            continue
+        for item in source.get("items", []):
+            url = item.get("url")
+            repo = item.get("repo")
+            if not url or not repo:
+                continue
+            title_bits = [repo]
+            trending_description = item.get("trending_description") or item.get("description")
+            if trending_description:
+                title_bits.append(trending_description)
+            items.append(
+                {
+                    "id": f"github-trending:{repo}",
+                    "first_seen": run_date,
+                    "source": source.get("source_id"),
+                    "title": " - ".join(title_bits)[:180],
+                    "url": url,
+                    "evidence_level": "secondary-source",
+                }
+            )
     return items
 
 
@@ -332,6 +518,9 @@ def is_official_source(source_id):
         "huggingface-blog",
         "claude-blog",
         "anthropic-news-page",
+        "palantir-blog",
+        "ramp-builders",
+        "a16z-news",
     }
 
 

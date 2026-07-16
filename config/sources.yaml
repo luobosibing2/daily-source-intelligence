@@ -4,14 +4,16 @@ rss:
     url: https://openai.com/news/rss.xml
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    fulltext_policy: always
+    intelligence_department: first-party-openai
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: anthropic-news
     name: Anthropic News
     url: https://www.anthropic.com/news/rss.xml
     enabled: false
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
     note: Disabled until an official RSS/Atom feed is verified; use official_pages.anthropic-news-page.
 
   - id: google-deepmind-blog
@@ -19,7 +21,7 @@ rss:
     url: https://deepmind.google/blog/rss.xml
     enabled: true
     priority: true
-    topics: [llm, infra]
+    topics: [llm, infra, ai-governance]
 
   - id: huggingface-blog
     name: Hugging Face Blog
@@ -33,7 +35,7 @@ rss:
     url: https://simonwillison.net/atom/everything/
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: lilian-weng
     name: Lilian Weng
@@ -101,10 +103,10 @@ rss:
   - id: rachel-by-the-bay
     name: Rachel by the Bay
     url: https://rachelbythebay.com/w/atom.xml
-    enabled: true
+    enabled: false
     priority: false
     topics: [infra, ai-systems]
-    note: Added from Karpathy RSS post / HN popular blogs OPML; retained as broad ops/infra signal.
+    note: "Disabled after repeated SSL fetch failure in automation: curl (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL."
 
   - id: matklad
     name: matklad
@@ -129,6 +131,14 @@ rss:
     priority: true
     topics: [llm, ai-agent, ai-coding]
     note: Added from Karpathy RSS post / HN popular blogs OPML.
+
+  - id: matt-pocock-aihero
+    name: Matt Pocock / AI Hero
+    url: https://www.aihero.dev/rss.xml
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, ai-systems, product-growth]
+    note: Official RSS for Matt Pocock's current AI engineering and agent skills content; preferred over stale Total TypeScript RSS.
 
   - id: geohot
     name: George Hotz
@@ -170,21 +180,113 @@ rss:
     topics: [indie-founder, infra, product-growth]
     note: Added from Karpathy RSS post / HN popular blogs OPML.
 
+  - id: fde-hub
+    name: FDE Hub
+    url: https://www.fdehub.org/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, product-growth]
+    note: Core FDE practitioner source; selected for direct Forward Deployed Engineering signal.
+
+  - id: forward-deployed
+    name: Forward Deployed
+    url: https://www.forwarddeployed.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, product-growth]
+    note: Media/community feed at the intersection of AI, software development, and enterprise deployment.
+
+  - id: pragmatic-engineer
+    name: The Pragmatic Engineer
+    url: https://newsletter.pragmaticengineer.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-systems, product-growth]
+    note: High-signal engineering/business analysis; keep FDE items and adjacent enterprise engineering role shifts.
+
+  - id: svpg
+    name: Silicon Valley Product Group
+    url: https://www.svpg.com/feed/
+    enabled: true
+    priority: true
+    topics: [fde, product-growth, ai-systems]
+    note: Product operating-model lens on FDE, product discovery, platform feedback loops, and AI-era product creation.
+
+  - id: ramp-builders
+    name: Ramp Builders
+    url: https://builders.ramp.com/feed.xml
+    enabled: true
+    priority: true
+    topics: [fde, ai-systems, product-growth, infra]
+    note: Company practice source for scaling Forward Deployed Engineering and enterprise AI implementation.
+
+  - id: palantir-blog
+    name: Palantir Blog
+    url: https://blog.palantir.com/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, ai-systems, infra]
+    note: Original FDE/FDSE context and Palantir product-deployment model source.
+
+  - id: a16z-news
+    name: a16z News
+    url: https://www.a16z.news/feed
+    enabled: true
+    priority: true
+    topics: [fde, ai-agent, product-growth, ai-systems]
+    note: VC/market-structure view on Palantirization, enterprise AI deployment, and FDE economics.
+
+  - id: ted-mabrey
+    name: Ted Mabrey
+    url: https://tedmabrey.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems]
+    note: Thought source; keep FDE/Palantir operating-model essays, not every general post.
+
+  - id: thomas-otter
+    name: Thomas Otter
+    url: https://thomasotter.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, product-growth, ai-systems]
+    note: Thought source for FDE economics, enterprise software adoption, and product-led growth boundaries.
+
+  - id: nabeel-qureshi
+    name: Nabeel S. Qureshi
+    url: https://nabeelqu.co/rss
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems, ai-agent]
+    note: Thought source for Palantir, enterprise data integration, AI deployment, and institutions.
+
+  - id: sarah-constantin
+    name: Sarah Constantin
+    url: https://sarahconstantin.substack.com/feed
+    enabled: true
+    priority: false
+    topics: [fde, ai-systems]
+    note: Thought source; keep data-integration and enterprise systems essays when they connect to FDE.
+
 github_repos:
   - id: openai-codex
     name: OpenAI Codex
     repo: openai/codex
     enabled: true
     priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-openai
     topics: [ai-coding, ai-agent]
 
   - id: anthropics-claude-code
     name: Claude Code
     repo: anthropics/claude-code
-    enabled: false
+    enabled: true
     priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-claude-code
     topics: [ai-coding, ai-agent]
-    note: Enable only if the repository path is confirmed.
+    note: First-party Claude Code release Atom feed; always extract release content when present.
 
   - id: modelcontextprotocol-servers
     name: MCP Servers
@@ -221,20 +323,29 @@ github_repos:
     priority: true
     topics: [llm, infra]
 
+github_trending:
+  - id: github-trending-daily
+    name: GitHub Trending Daily
+    url: https://github.com/trending?since=daily
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, infra, ai-systems, indie-founder, fde]
+    note: Daily all-language GitHub trending page; use as discovery signal, not official project endorsement.
+
 official_pages:
   - id: openai-news
     name: OpenAI News
     url: https://openai.com/news/
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: anthropic-news-page
     name: Anthropic News
     url: https://www.anthropic.com/news
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: claude-docs-release-notes
     name: Claude Docs Release Notes
@@ -248,7 +359,52 @@ official_pages:
     url: https://claude.com/blog
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
+
+official_link_candidates:
+  enabled: true
+  min_score: 20
+  official_domains:
+    - openai.com
+    - anthropic.com
+    - claude.com
+    - deepmind.google
+    - ai.google
+    - blog.google
+    - x.ai
+    - mistral.ai
+    - meta.com
+    - about.fb.com
+    - microsoft.com
+    - github.com
+    - vatican.va
+    - vaticannews.va
+    - humandevelopment.va
+    - whitehouse.gov
+    - congress.gov
+    - europa.eu
+    - oecd.org
+    - nist.gov
+  strong_keywords:
+    - AI governance
+    - AI ethics
+    - public trust
+    - public legitimacy
+    - frontier AI
+    - AI policy
+    - AI regulation
+    - regulator
+    - government
+    - Vatican
+    - Pope
+    - encyclical
+    - human dignity
+    - societal impact
+    - human rights
+    - EU AI Act
+    - NIST
+    - OECD
+    - public good
 
 x_accounts:
   - id: karpathy
@@ -270,21 +426,29 @@ x_accounts:
     handle: OpenAI
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: anthropic
     name: Anthropic
     handle: AnthropicAI
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
 
   - id: simonwillison
     name: Simon Willison
     handle: simonw
     enabled: true
     priority: true
-    topics: [llm, ai-agent, ai-coding]
+    topics: [llm, ai-agent, ai-coding, ai-governance]
+
+  - id: mattpocock
+    name: Matt Pocock
+    handle: mattpocockuk
+    enabled: true
+    priority: true
+    topics: [ai-coding, ai-agent, product-growth]
+    note: TypeScript and AI education signal; handle verified before adding.
 
   - id: hesamation
     name: Hesamation

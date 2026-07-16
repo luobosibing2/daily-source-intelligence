@@ -44,6 +44,32 @@ topics:
       - coupon
       - course discount
 
+  - id: ai-governance
+    label: AI Governance / Public Legitimacy
+    keywords:
+      - AI governance
+      - AI ethics
+      - public trust
+      - public legitimacy
+      - frontier AI
+      - AI policy
+      - AI regulation
+      - regulator
+      - government
+      - Vatican
+      - Pope
+      - encyclical
+      - human dignity
+      - societal impact
+      - human rights
+      - EU AI Act
+      - NIST
+      - OECD
+    exclude:
+      - generic politics without AI
+      - generic ethics essay without AI lab or policy actor
+      - religion unrelated to AI
+
   - id: infra
     label: AI Infrastructure / Open Source
     keywords:
@@ -105,3 +131,29 @@ topics:
     exclude:
       - no implementation detail
       - pure showcase
+
+  - id: fde
+    label: Forward Deployed Engineering / Enterprise AI Deployment
+    keywords:
+      - FDE
+      - FDSE
+      - Forward Deployed Engineer
+      - Forward-Deployed Engineer
+      - Forward Deployed Engineering
+      - Forward-Deployed Engineering
+      - customer-facing engineering
+      - embedded engineering
+      - field engineering
+      - enterprise AI deployment
+      - implementation bottleneck
+      - product feedback loop
+      - field intelligence
+      - Palantirization
+      - Delta
+      - Echo
+    exclude:
+      - full disk encryption
+      - disk encryption
+      - job posting only
+      - hiring only
+      - military deployment unrelated to software

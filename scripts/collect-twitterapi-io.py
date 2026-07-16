@@ -15,11 +15,6 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "config" / "sources.yaml"
 RAW_ROOT = ROOT / "raw"
 LOCAL_ENV = ROOT / ".env.local"
-DEFAULT_PROXY_ENV = {
-    "http_proxy": "http://127.0.0.1:7890",
-    "https_proxy": "http://127.0.0.1:7890",
-    "all_proxy": "socks5://127.0.0.1:7890",
-}
 
 
 def load_local_env():
@@ -34,13 +29,6 @@ def load_local_env():
         value = value.strip().strip('"').strip("'")
         if key and key not in os.environ:
             os.environ[key] = value
-
-
-def ensure_default_proxy_env():
-    if os.environ.get("DAILY_INTEL_DISABLE_DEFAULT_PROXY") == "1":
-        return
-    for key, value in DEFAULT_PROXY_ENV.items():
-        os.environ.setdefault(key, value)
 
 
 def fail(message, output_path=None):
@@ -227,7 +215,6 @@ def collect_account(account, api_key, since):
 
 
 def main():
-    ensure_default_proxy_env()
     run_date = os.environ.get("RUN_DATE") or datetime.now().strftime("%Y-%m-%d")
     output_dir = RAW_ROOT / run_date
     output_dir.mkdir(parents=True, exist_ok=True)

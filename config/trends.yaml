@@ -1,0 +1,607 @@
+schema_version: 1
+description: >
+  Long-term trend watch configuration for Daily Source Intelligence. Enabled
+  trends must be checked after the daily report is written. Trend analysis
+  does not add a section to the daily report; it writes separate files under
+  trend/.
+
+defaults:
+  candidate_scope: daily_report_and_raw
+  enrichment_mode: high_signal_only
+  enrichment_sources:
+    - official_pages
+    - official_docs
+    - github_repo
+    - github_release_body
+    - github_readme
+    - web_search_for_official_source_location_only
+  prohibited_sources:
+    - logged_in_browser
+    - twitter_write_endpoints
+    - posting
+    - liking
+    - following
+    - direct_messages
+    - twitterapi_io_rerun_for_trend
+  evidence_levels:
+    - official-source
+    - direct-x
+    - secondary-source
+    - inference
+
+trends:
+  - id: memory-dream
+    label: Memory & Dream
+    enabled: true
+    description: >
+      Tracks how agents preserve, refine, retrieve, compress, grade, and reuse
+      context across long-running work. This includes dreaming, memory stores,
+      prompt caching, context freshness, self-refining loops, outcomes/eval,
+      multiagent traceability, and long-task reliability.
+    why_watch: >
+      Long-lived agents cannot rely on one prompt window. The durable advantage
+      moves toward memory lifecycle, context hygiene, quality rubrics, and
+      systems that keep agents useful across sessions.
+    include_keywords:
+      - dreaming
+      - dream
+      - memory
+      - memories
+      - prompt caching
+      - cache
+      - context
+      - context window
+      - context freshness
+      - session continuity
+      - compaction
+      - outcomes
+      - rubric
+      - grader
+      - self-improving
+      - self-refining
+      - multiagent orchestration
+      - long horizon
+      - MCP context
+    exclude_keywords:
+      - system memory allocation
+      - GPU memory
+      - operating system memory
+      - dream job
+      - memory leak unrelated to agents
+    timeline: trend/memory-dream.md
+    report_section: Memory & Dream
+
+  - id: financial-agents
+    label: Financial Agents
+    enabled: true
+    description: >
+      Tracks AI agents in financial services and finance-adjacent operations:
+      banking, investment research, wealth management, private equity,
+      trading research, AML, credit decisioning, risk, compliance, Treasury,
+      transaction-adjacent tools, and human sign-off boundaries.
+    why_watch: >
+      Finance is a high-value, high-constraint vertical. Strong signals here
+      reveal how agent systems package domain skills, governed data access,
+      auditability, and human approval before autonomous execution.
+    include_keywords:
+      - financial services
+      - finance
+      - banking
+      - bank
+      - banker
+      - investment banking
+      - equity research
+      - private equity
+      - wealth management
+      - portfolio
+      - trading
+      - trader
+      - market data
+      - AML
+      - credit decisioning
+      - risk
+      - compliance
+      - Treasury
+      - invoice
+      - ledger
+      - human sign-off
+      - investment advice
+    exclude_keywords:
+      - generic company finance
+      - personal budgeting without agents
+      - fundraising press release without workflow detail
+      - unrelated stock market commentary
+    timeline: trend/financial-agents.md
+    report_section: Financial Agents
+
+  - id: forward-deployed-engineering
+    label: Forward Deployed Engineering
+    enabled: true
+    description: >
+      Tracks the FDE/FDSE operating model: customer-embedded engineers,
+      enterprise AI deployment, product-feedback loops from the field,
+      data-integration bottlenecks, implementation economics, and the
+      boundary between true productized deployment and consulting relabeling.
+    why_watch: >
+      AI products increasingly fail or succeed at the enterprise last mile:
+      messy data, unclear workflows, security constraints, and adoption gaps.
+      FDE is a useful lens for watching how teams turn field learning into
+      reusable product and where the model collapses into low-margin services.
+    include_keywords:
+      - FDE
+      - FDSE
+      - Forward Deployed Engineer
+      - Forward-Deployed Engineer
+      - Forward Deployed Engineering
+      - Forward-Deployed Engineering
+      - customer-facing engineering
+      - embedded engineer
+      - embedded engineering
+      - field engineering
+      - field intelligence
+      - enterprise AI deployment
+      - implementation bottleneck
+      - last mile
+      - product feedback loop
+      - data integration
+      - Palantirization
+      - Delta
+      - Deltas
+      - Echo
+      - customer environment
+      - onsite
+    exclude_keywords:
+      - full disk encryption
+      - disk encryption
+      - finite difference equation
+      - job board only
+      - hiring only
+      - generic job posting
+      - military deployment unrelated to software
+      - consulting pitch without product feedback loop
+    timeline: trend/forward-deployed-engineering.md
+    report_section: Forward Deployed Engineering
+
+  - id: enterprise-delivery-system
+    label: Enterprise Delivery System
+    enabled: true
+    description: >
+      Tracks AI agents moving from individual coding helpers into enterprise
+      delivery systems: SDLC throughput, launch readiness, test/review gates,
+      legacy modernization, data/application prototyping, internal tools,
+      release governance, auditability, human approval, and cross-team handoffs.
+    why_watch: >
+      When agents accelerate local coding and prototyping, the bottleneck often
+      moves to organizational absorption: backend/API readiness, central data
+      queues, QA, security review, production rollout, governance controls,
+      ownership, and measurement. This trend watches whether vendors and users
+      are packaging agents as delivery infrastructure rather than personal
+      productivity tools.
+    include_keywords:
+      - enterprise delivery system
+      - enterprise delivery
+      - software delivery
+      - software development lifecycle
+      - SDLC
+      - delivery lifecycle
+      - organizational throughput
+      - workflow throughput
+      - delivery bottleneck
+      - implementation bottleneck
+      - backend readiness
+      - backend tickets
+      - central data team
+      - central Data/AI team
+      - launch readiness
+      - release readiness
+      - production rollout
+      - release confidence
+      - zero P1
+      - P1 defects
+      - unit test coverage
+      - test coverage
+      - QA
+      - review gate
+      - approval gate
+      - human review gate
+      - mandatory review
+      - PR review
+      - RBAC
+      - customizable policies
+      - OS-level sandboxing
+      - auditable workspace governance
+      - governance controls
+      - audit trail
+      - governed deployment
+      - enterprise deployment
+      - legacy refactor
+      - legacy modernization
+      - codebase size reduction
+      - data warehouse migration
+      - data warehouse prototype
+      - internal app
+      - internal application
+      - Figma prototype
+      - working front-end
+      - customer-facing software
+      - on-call assistant
+      - incident workflow
+      - production incident
+      - change management
+      - trust and measurement
+      - measurable business impact
+      - workflow redesign
+      - process redesign
+      - delivery system
+      - work artifact
+      - source citation
+      - connector permissions
+      - deployment playbook
+      - prototype in hours
+      - 企业交付系统
+      - 企业软件交付
+      - 组织吞吐
+      - 交付吞吐
+      - 交付瓶颈
+      - 上线窗口
+      - 发布窗口
+      - 生产上线
+      - 发版风险
+      - 测试覆盖率
+      - P1 缺陷
+      - 旧代码重构
+      - 遗留系统改造
+      - 数据仓库迁移
+      - 内部应用原型
+      - 后端工单
+      - 审批门禁
+      - 审计工作区治理
+      - 人工审核
+      - 治理控制
+      - 工作流改造
+    exclude_keywords:
+      - package delivery
+      - food delivery
+      - logistics delivery unrelated to software
+      - delivery company unrelated to software
+      - content delivery network
+      - CDN
+      - delivery room
+      - mail delivery
+      - generic CI/CD tutorial without agents
+      - shipping metaphor without workflow detail
+      - pure benchmark without enterprise workflow
+      - hiring only
+      - customer story without delivery workflow detail
+      - personal productivity tip
+      - frontend prototype without production or deployment context
+    timeline: trend/enterprise-delivery-system.md
+    report_section: Enterprise Delivery System
+
+  - id: codex-feature-watch
+    label: Codex Feature Watch
+    enabled: true
+    description: >
+      Tracks which OpenAI Codex features are being added or hardened across
+      CLI, TUI, SDK, app-server, goals, profiles, permissions, sandboxing, MCP,
+      plugins, extensions, hooks, remote-control, packaging, telemetry, and
+      reliability. Versions are evidence anchors, but the trend is organized
+      by feature surface and capability evolution.
+    why_watch: >
+      Codex releases are a first-party window into how OpenAI is hardening the
+      coding-agent runtime. Feature deltas show which control surfaces are
+      becoming product primitives: profiles, goals, MCP environments, connector
+      schemas, extension hooks, remote reliability, SDK auth, and packaging.
+    include_keywords:
+      - OpenAI Codex
+      - Codex CLI
+      - Codex release
+      - Codex releases
+      - openai/codex
+      - rust-v
+      - rust-v0.
+      - codex 0.
+      - Codex 0.
+      - codex exec
+      - codex exec resume
+      - codex remote-control
+      - codex sandbox
+      - codex mcp
+      - codex profile
+      - --profile
+      - permission profile
+      - permission profiles
+      - goals
+      - /goal
+      - app-server
+      - TUI
+      - Python SDK
+      - extension hooks
+      - extension lifecycle
+      - hook inputs
+      - conversation history search
+      - connector schema
+      - readOnlyHint
+      - managed network proxy
+      - remote compaction
+      - exec-server websocket
+      - Codex package
+      - DotSlash
+    exclude_keywords:
+      - Codex Alimentarius
+      - manuscript codex
+      - ancient codex
+      - game codex
+      - codec
+      - coding challenge named codex but unrelated to OpenAI
+      - OpenAI model release without Codex product changes
+      - ChatGPT feature unrelated to Codex
+    timeline: trend/codex-feature-watch.md
+    report_section: Codex Feature Watch
+
+  - id: ai-governance-legitimacy
+    label: AI Governance Legitimacy
+    enabled: true
+    description: >
+      Tracks AI labs, frontier-model leaders, and core technical figures when
+      they enter public-authority, policy, religious, legal, standards, or
+      high-impact governance texts. The focus is legitimacy, public trust,
+      societal framing, and governance influence, not generic AI ethics essays.
+    why_watch: >
+      Frontier AI products are increasingly shaped by public legitimacy and
+      institutional trust. Signals like a lab co-founder participating in a
+      Vatican encyclical launch can reframe model limits, human dignity,
+      labor, accountability, and public-good claims outside ordinary product
+      marketing or engineering release notes.
+    include_keywords:
+      - AI governance
+      - AI ethics
+      - public trust
+      - public legitimacy
+      - frontier AI
+      - AI policy
+      - AI regulation
+      - regulator
+      - government
+      - Vatican
+      - Pope
+      - encyclical
+      - human dignity
+      - societal impact
+      - human rights
+      - EU AI Act
+      - NIST
+      - OECD
+      - public good
+      - common good
+      - accountability
+      - labor
+      - labour
+    exclude_keywords:
+      - generic politics without AI
+      - generic ethics essay without AI lab or policy actor
+      - religion unrelated to AI
+      - personal opinion without primary source
+      - culture-war commentary without source text
+      - safety marketing without public authority or governance text
+    timeline: trend/ai-governance-legitimacy.md
+    report_section: AI Governance Legitimacy
+
+  - id: claude-code-feature-watch
+    label: Claude Code Feature Watch
+    enabled: true
+    description: >
+      Tracks which Claude Code features are being added or hardened across
+      skills, slash commands, plugins, hooks, MCP, background agents, workflows,
+      usage accounting, permissions, sandboxing, managed settings, remote
+      sessions, terminal UX, observability, and long-session reliability.
+      Versions are evidence anchors, but the trend is organized by feature
+      surface and capability evolution.
+    why_watch: >
+      Claude Code ships frequent small releases where important runtime changes
+      are easy to miss. Feature deltas reveal how Anthropic is turning skills,
+      plugins, hooks, MCP, background agents, usage accounting, and permission
+      hardening into a governed agent runtime.
+    include_keywords:
+      - Claude Code
+      - Claude Code release
+      - Claude Code releases
+      - anthropics/claude-code
+      - claude-code
+      - claude code v
+      - Claude Code v
+      - v2.1.
+      - /code-review
+      - /simplify
+      - /reload-skills
+      - /usage
+      - /diff
+      - /background
+      - claude agents
+      - background agents
+      - background workflows
+      - skills
+      - slash commands
+      - disallowed-tools
+      - SessionStart hook
+      - MessageDisplay hook
+      - SubagentStop hook
+      - plugin marketplace
+      - pluginSuggestionMarketplaces
+      - managed settings
+      - MCP servers
+      - MCP pagination
+      - cloud MCP connectors
+      - egress proxy
+      - PowerShell permission
+      - sandbox allowlist
+      - usage breakdown
+      - OTEL
+      - OpenTelemetry
+      - stale thinking-block signatures
+    exclude_keywords:
+      - Claude model release without Claude Code product changes
+      - Claude API release without Claude Code product changes
+      - Claude Desktop only
+      - Claude Cowork only
+      - Anthropic research paper unrelated to Claude Code
+      - generic VS Code extension unrelated to Claude Code
+      - code review article not about Claude Code release
+    timeline: trend/claude-code-feature-watch.md
+    report_section: Claude Code Feature Watch
+
+  - id: codex-claude-usage-tactics
+    label: Codex & Claude Code Usage Tactics
+    enabled: true
+    description: >
+      Tracks reusable usage tactics for OpenAI Codex and Claude Code: prompt
+      framing, bug-hunting prompts, review workflows, repo-local decision
+      memory, ADRs for agents, AGENTS.md / skills / rules usage, long-task
+      delegation, thread/session orchestration, computer-use supervision, and
+      other concrete operator practices. The focus is how to use the tools
+      better, not which product feature shipped.
+    why_watch: >
+      As Codex and Claude Code become long-running agent runtimes, advantage
+      shifts from raw model choice to operator technique: how users frame
+      tasks, preserve project judgment, trigger reviews, supervise background
+      work, manage multiple threads, and avoid amplifying low-quality output.
+      Official guidance and high-quality practitioner notes can become durable
+      playbooks.
+    include_keywords:
+      - Codex usage
+      - Claude Code usage
+      - using Codex
+      - using Claude Code
+      - Codex tips
+      - Claude Code tips
+      - Codex best practices
+      - Claude Code best practices
+      - Codex workflow
+      - Claude Code workflow
+      - prompt Codex
+      - prompt Claude Code
+      - prompting Codex
+      - prompting Claude Code
+      - prompt framing
+      - usage tactics
+      - workflow tips
+      - agent workflow
+      - agent operator
+      - yielding agents
+      - agent stack
+      - ADR for agents
+      - Architecture Decision Record
+      - decision record
+      - repo-local memory
+      - project memory
+      - AGENTS.md
+      - skills for agents
+      - bug hunting
+      - find bugs
+      - there is a bug
+      - code review prompt
+      - autoreview
+      - /goal
+      - crabbox
+      - multi-agent workflow
+      - agent orchestration
+      - thread management
+      - spin up new threads
+      - create new threads
+      - new chat sessions
+      - delegated task
+      - projectless background sessions
+      - worktree threads
+      - spin up worktrees
+      - pin threads
+      - side conversations
+      - remote threads
+      - Codex threads
+      - computer use supervision
+      - agent mini-apps
+      - generative UI
+      - context switching
+      - orchestration tax
+      - slop
+      - 使用技巧
+      - 使用战术
+      - 提示方式
+      - 提示词写法
+      - 让 Codex 找 bug
+      - 让 Claude Code 找 bug
+      - 多线程
+      - 长任务
+      - 长时间任务
+      - 项目记忆
+      - 决策记录
+    exclude_keywords:
+      - generic prompt tips without Codex or Claude Code
+      - model benchmark only
+      - model release only
+      - feature release without usage advice
+      - product announcement without workflow guidance
+      - generic AI productivity tip
+      - generic coding advice without agent workflow
+      - vibe coding joke only
+      - social media hot take without reusable tactic
+      - hiring or job post
+      - generic ADR unrelated to agents
+      - architecture decision record unrelated to agents
+      - agent hype without concrete workflow
+    timeline: trend/codex-claude-usage-tactics.md
+    report_section: Codex & Claude Code Usage Tactics
+
+  - id: claude-tag-identity
+    label: Claude Tag Identity
+    enabled: true
+    description: >
+      Tracks Claude Tag and adjacent team-wide agent identity patterns:
+      workspace-scoped agent accounts, Slack/channel participation, admin
+      configured tool access, shared-context delegation, auditability, and the
+      boundary between acting as one user versus acting as an autonomous team
+      member.
+    why_watch: >
+      Claude Tag shifts Claude from a single-user assistant toward an agent
+      that participates in shared team spaces with its own identity and
+      workspace-managed permissions. That can become a durable enterprise
+      pattern for how agents get accounts, access tools, inherit context, and
+      remain governable inside organizations.
+    include_keywords:
+      - Claude Tag
+      - agent identity
+      - team-wide AI
+      - autonomous team-wide AI
+      - workspace-scoped agent
+      - workspace agent
+      - team member
+      - shared channel
+      - Slack
+      - workspace tools
+      - admin configured
+      - agent account
+      - access model
+      - workspace-managed permissions
+      - channel context
+      - delegated tasks
+      - human-agent team
+      - multiplayer AI experience
+      - team-wide agent
+      - Claude joins as a team member
+      - agent 身份
+      - 团队级 AI
+      - 工作区权限
+      - 工作区账号
+      - 团队成员式 agent
+      - 共享频道
+      - 管理员配置
+      - 工具访问权限
+    exclude_keywords:
+      - Claude model release only
+      - Claude Code release without Claude Tag or agent identity
+      - generic Slack bot without workspace agent identity
+      - generic MCP connector release without team-wide agent identity
+      - Claude Desktop only
+      - single-user assistant feature
+      - generic team collaboration article without agent access model
+    timeline: trend/claude-tag-identity.md
+    report_section: Claude Tag Identity
