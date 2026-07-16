@@ -140,6 +140,13 @@ RUN_DATE=YYYY-MM-DD python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
    - 如果没有高相关新增内容，也要生成当天日报，记录采集范围和“无高信号新增内容”。
    - 声明完成前必须核对：日报已写入、candidate audit 已写入且 missed 候选已处理或解释、trend report 已写入、所有 enabled trend 均已检查、对应专题报告已更新或记录无新增、扩充 raw 已归档或 skipped 原因已写清。
 
+11. 发布日报到 main
+   - 每日情报的主工作目录固定在 `develop`。不要在该工作目录切换到 `main`，也不要让日报发布依赖当前 checkout 的分支。
+   - `main` 使用仓库旁边的独立 worktree，默认路径为 `../daily-source-intelligence-main`。首次准备时运行 `git worktree add ../daily-source-intelligence-main main`。
+   - 每日闭环检查通过后，运行 [`scripts/publish-daily-to-main.py`](scripts/publish-daily-to-main.py) `--date YYYY-MM-DD --push`。发布器只从 `develop/docs/YYYY-MM-DD-daily-intel.md` 复制当天日报到 main worktree，并只提交该文件。
+   - 发布器必须确认 main worktree 干净、当前分支是 `main`、远端与 develop 使用同一 `origin`，并在必要时仅对 `origin/main` 做 fast-forward；发现脏改动、分叉或非日报提交时直接失败，不覆盖、不强推。
+   - Git 发布目标固定为 `origin/main`。功能代码是否晋升到 `main` 不由每日日报发布器自动决定，避免把未稳定的 develop 改动混入展示分支。
+
 ## 第一版边界
 
 - 不使用登录态抓取 X/Twitter 或其它需要账号权限的私有内容；公开网页、公开博客或公开文件在 `curl` 失败时可用 `opencli web read` 作为读取 fallback，并必须记录方法与限制。

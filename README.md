@@ -38,6 +38,24 @@ python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
 python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD --skip-collection
 ```
 
+## 分支与日报发布
+
+主工作目录固定用于 `develop` 的功能开发。`main` 使用同一仓库旁边的独立 worktree，专门接收展示用的日期化日报；不要为了发布日报在主工作目录切换到 `main`。
+
+首次准备发布 worktree：
+
+```bash
+git worktree add ../daily-source-intelligence-main main
+```
+
+每日流程完成并通过检查后，从 `develop` 工作目录运行 [`scripts/publish-daily-to-main.py`](scripts/publish-daily-to-main.py)：
+
+```bash
+python3 scripts/publish-daily-to-main.py --date YYYY-MM-DD --push
+```
+
+发布器只复制并提交 `docs/YYYY-MM-DD-daily-intel.md`，显式推送 `origin/main`。它会拒绝脏的 main worktree、错误分支、不同的远端或包含其它文件的暂存区；功能代码从 `develop` 晋升到 `main` 仍是独立的稳定发布动作。
+
 开始前建议先阅读 [运行手册](runbook.md)，并按需调整 [关注方向](config/watch.md)、[主题配置](config/topics.yaml) 与 [来源配置](config/sources.yaml)。
 
 ## X/Twitter 数据与凭据安全
