@@ -12,13 +12,15 @@
 
 ## 每日流程
 
-推荐用 [`scripts/run-dsi-pipeline.py`](scripts/run-dsi-pipeline.py) 承担采集等待和确定性派生物生成，避免在长 Codex 会话里边等边读大 raw。常用入口：
+推荐用 [`scripts/dsi.py`](scripts/dsi.py#L1) 作为统一入口；它保留现有脚本链，同时提供定向采集、dry-run、resume、闭环检查和发布。常用入口：
 
 ```bash
-RUN_DATE=YYYY-MM-DD python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
+python3 scripts/dsi.py run --date YYYY-MM-DD
 ```
 
-该脚本会写入 `raw/YYYY-MM-DD/report-reading-list.json` 与 `raw/YYYY-MM-DD/run-summary.json`。`run-summary.json` 只用于流程状态与路径索引，不是日报证据正文；日报写作仍必须按 `report-reading-list.json` 读取其中列出的正文、README、release body、official-link fulltext 和 priority X direct evidence。
+该入口会从原始归档派生 `raw/YYYY-MM-DD/signals.json`、`report-reading-list.json` 与 `run-summary.json`。`signals.json` 统一执行北京时间日窗口、canonical URL 去重、tweet/repo 去重、多主题合并和评分解释，但不是新的证据真相源；原始归档仍是权威证据。`run-summary.json` 只用于流程状态与路径索引，日报写作仍必须按 `report-reading-list.json` 读取其中列出的正文、README、release body、official-link fulltext 和 priority X direct evidence。
+
+按来源重跑示例：`python3 scripts/dsi.py run --date YYYY-MM-DD --channel rss --source rss:openai-blog --dry-run`。`--dry-run` 不联网、不创建文件；`--resume` 只有在配置指纹和目标输出哈希都一致时才跳过采集。
 
 1. 读取配置
    - 读取 `config/watch.md` 理解关注方向和高信号定义。
@@ -82,7 +84,7 @@ RUN_DATE=YYYY-MM-DD python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
 7. 更新状态
    - 优先运行 `daily-source-intelligence/scripts/update-state.py`，根据当天 raw 文件生成/更新 `manifest.json`、`state/source-health.json` 和 `state/seen.json`。
    - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
-   - 运行 [`scripts/run-dsi-pipeline.py`](scripts/run-dsi-pipeline.py) 或 `--skip-collection` 派生当天 `report-reading-list.json` 和 `run-summary.json`。`report-reading-list.json` 是正文阅读清单，不得替代正文阅读；`run-summary.json` 只记录流程状态、失败源、路径和候选数量。
+   - 运行 [`scripts/dsi.py`](scripts/dsi.py#L1) `prepare --date YYYY-MM-DD` 派生当天 `signals.json`、`report-reading-list.json` 和 `run-summary.json`。已知发布时间必须落在北京时间当天；时间字段缺失时仅保留为 `window_status=unknown` 的覆盖边界。`report-reading-list.json` 是正文阅读清单，不得替代正文阅读；`run-summary.json` 只记录流程状态、失败源、路径和候选数量。
 
 8. 生成日报
    - 写入 `docs/YYYY-MM-DD-daily-intel.md`。
@@ -111,7 +113,9 @@ RUN_DATE=YYYY-MM-DD python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
      - 如涉及金融、浏览器绕检测、凭据路由、自动执行、交易、隐私或安全敏感面，必须额外写风险和待验证点。
    - 项目归纳必须把 Trending description 和 README 原文/摘录合成一段自然语言总结。不要写成 `Trending description:` / `README 归纳:` 这种字段式拆分，不要把两份来源割裂成两段，也不要用 `agent-native / workflow / harness / infra` 等术语堆成一句话就结束。
    - 若 README 缺失，不能写机制总结，只能写“待读 README 的候选项目”，并说明缺失原因和下一步最小验证路径。
-   - 日报初稿完成后运行 `python3 scripts/candidate-audit.py --date YYYY-MM-DD`，写入 `reviews/YYYY-MM-DD-candidate-audit.md`。凡是 `official-link-candidate` 或高分 direct-x/RSS 条目为 `missed`，必须在“今日高信号”或“不确定性与待验证项”中处理；若确认弱相关，可在 audit/review 中说明弱相关边界。
+   - 日报初稿完成后运行 [`scripts/candidate-audit.py`](scripts/candidate-audit.py#L1) `--date YYYY-MM-DD`，同时写入 Markdown 与 `reviews/YYYY-MM-DD-candidate-audit.json`。JSON 记录日报 SHA、稳定 candidate id、计数和处置状态；重跑会保留已有人工 disposition。日报中应写稳定 marker：`<!-- dsi-candidate-audit: covered=N missed=M -->`。
+   - 运行 [`scripts/validate-daily-report.py`](scripts/validate-daily-report.py#L1) `--date YYYY-MM-DD --strict`，核对日报 SHA、报告/审计计数、审计行计数、本地链接，以及 missed official-link candidate 是否已有处置。凡是高分 direct-x/RSS 条目为 `missed`，仍必须在“今日高信号”或“不确定性与待验证项”中处理或解释边界。
+   - 校验通过后，[`scripts/build-daily-bundle.py`](scripts/build-daily-bundle.py#L1) 派生 `docs/YYYY-MM-DD-daily-intel.index.json`、日期化 HTML 与 `docs/index.html`；Markdown 日报仍是可读内容真相源，JSON/HTML 保存它的 SHA，不得反向覆盖 Markdown。
 
 9. 更新长期 trend
    - 日报正文不新增 trend 小节；长期趋势分析写入 `trend/`。
@@ -143,7 +147,7 @@ RUN_DATE=YYYY-MM-DD python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
 11. 发布日报到 main
    - 每日情报的主工作目录固定在 `develop`。不要在该工作目录切换到 `main`，也不要让日报发布依赖当前 checkout 的分支。
    - `main` 使用仓库旁边的独立 worktree，默认路径为 `../daily-source-intelligence-main`。首次准备时运行 `git worktree add ../daily-source-intelligence-main main`。
-   - 每日闭环检查通过后，运行 [`scripts/publish-daily-to-main.py`](scripts/publish-daily-to-main.py) `--date YYYY-MM-DD --push`。发布器只从 `develop/docs/YYYY-MM-DD-daily-intel.md` 复制当天日报到 main worktree，并只提交该文件。
+   - 每日闭环检查通过后，运行 [`scripts/dsi.py`](scripts/dsi.py#L1) `publish --date YYYY-MM-DD --push`。底层发布器兼容旧的 Markdown-only 模式；一旦存在派生输出，则要求并仅提交当天 Markdown、日期化 JSON、日期化 HTML 与 `docs/index.html` 完整四件套。
    - 发布器必须确认 main worktree 干净、当前分支是 `main`、远端与 develop 使用同一 `origin`，并在必要时仅对 `origin/main` 做 fast-forward；发现脏改动、分叉或非日报提交时直接失败，不覆盖、不强推。
    - Git 发布目标固定为 `origin/main`。功能代码是否晋升到 `main` 不由每日日报发布器自动决定，避免把未稳定的 develop 改动混入展示分支。
 

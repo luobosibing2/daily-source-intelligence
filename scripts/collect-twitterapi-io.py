@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import json
 import os
 import subprocess
@@ -214,19 +215,43 @@ def collect_account(account, api_key, since):
         }
 
 
-def main():
-    run_date = os.environ.get("RUN_DATE") or datetime.now().strftime("%Y-%m-%d")
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Collect direct X evidence through twitterapi.io.")
+    parser.add_argument("--date", default=os.environ.get("RUN_DATE") or datetime.now().strftime("%Y-%m-%d"))
+    parser.add_argument("--source", action="append", default=[], help="configured X account id")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+    run_date = args.date
     output_dir = RAW_ROOT / run_date
-    output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "twitterapi-io-results.json"
+
+    accounts = parse_accounts()
+    selected_ids = set(args.source)
+    if selected_ids:
+        available = {account.get("id") for account in accounts}
+        missing = sorted(selected_ids - available)
+        if missing:
+            parser.error(f"unknown or disabled X source(s): {', '.join(missing)}")
+        accounts = [account for account in accounts if account.get("id") in selected_ids]
+    if args.dry_run:
+        print(json.dumps({
+            "event": "x_collection_plan",
+            "run_date": run_date,
+            "sources": [account.get("id") for account in accounts],
+        }, ensure_ascii=False, indent=2))
+        return 0
+
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     api_key = get_api_key()
     if not api_key:
-        return fail("TWITTERAPI_IO_KEY is not set and macOS Keychain fallback did not return a key", output_path)
+        return fail(
+            "TWITTERAPI_IO_KEY is not set and macOS Keychain fallback did not return a key",
+            None if selected_ids else output_path,
+        )
 
     now = datetime.now(timezone.utc)
     since = now - timedelta(hours=int(os.environ.get("TWITTERAPI_IO_WINDOW_HOURS", "36")))
-    accounts = parse_accounts()
     request_interval = float(os.environ.get("TWITTERAPI_IO_REQUEST_INTERVAL_SECONDS", "0"))
     max_workers = max(1, int(os.environ.get("TWITTERAPI_IO_MAX_WORKERS", "5")))
 
@@ -244,6 +269,14 @@ def main():
 
     results = [indexed_results[index] for index in range(len(accounts))]
 
+    if selected_ids and output_path.exists():
+        previous = json.loads(output_path.read_text(encoding="utf-8"))
+        results = [
+            item
+            for item in previous.get("accounts", [])
+            if item.get("account_id") not in selected_ids
+        ] + results
+
     payload = {
         "schema_version": 1,
         "provider": "twitterapi.io",
@@ -257,6 +290,9 @@ def main():
         "include_replies": False,
         "accounts": results,
     }
+    if selected_ids:
+        payload["partial_update"] = True
+        payload["selected_source_ids"] = sorted(selected_ids)
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
     summary = {
         "schema_version": 1,

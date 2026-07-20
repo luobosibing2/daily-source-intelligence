@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import json
 import hashlib
 import os
@@ -986,17 +987,72 @@ def load_sources():
     )
 
 
-def main():
-    run_date = os.environ.get("RUN_DATE") or now_local().strftime("%Y-%m-%d")
+def merge_selected_sources(path, payload, selected_ids):
+    if not selected_ids or not path.exists():
+        return payload
+    previous = json.loads(path.read_text(encoding="utf-8"))
+    current_by_id = {item.get("source_id"): item for item in payload.get("sources", [])}
+    merged = [
+        item
+        for item in previous.get("sources", [])
+        if item.get("source_id") not in selected_ids
+    ]
+    merged.extend(current_by_id.values())
+    payload["sources"] = merged
+    return payload
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Collect configured stable DSI sources.")
+    parser.add_argument("--date", default=os.environ.get("RUN_DATE") or now_local().strftime("%Y-%m-%d"))
+    parser.add_argument(
+        "--channel",
+        action="append",
+        choices=["rss", "github-releases", "github-trending", "official-pages"],
+        help="collect only this channel; repeat for multiple channels",
+    )
+    parser.add_argument("--source", action="append", default=[], help="source id within the selected channel")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+    run_date = args.date
+    channels = set(args.channel or ["rss", "github-releases", "github-trending", "official-pages"])
     output_dir = RAW_ROOT / run_date
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     rss_sources, github_sources, trending_sources, official_sources = load_sources()
+    configured = {
+        "rss": rss_sources,
+        "github-releases": github_sources,
+        "github-trending": trending_sources,
+        "official-pages": official_sources,
+    }
+    selected_ids = set(args.source)
+    if selected_ids:
+        if len(channels) != 1:
+            parser.error("--source requires exactly one concrete --channel")
+        available = {item.get("id") for item in configured[next(iter(channels))]}
+        missing = sorted(selected_ids - available)
+        if missing:
+            parser.error(f"unknown or disabled source(s): {', '.join(missing)}")
+        for channel in configured:
+            configured[channel] = [item for item in configured[channel] if item.get("id") in selected_ids]
+    if args.dry_run:
+        print(json.dumps({
+            "event": "stable_collection_plan",
+            "run_date": run_date,
+            "channels": sorted(channels),
+            "sources": sorted(selected_ids),
+        }, ensure_ascii=False, indent=2))
+        return 0
+
+    output_dir.mkdir(parents=True, exist_ok=True)
     topics_by_id = load_topics()
-    rss_results = collect_rss(rss_sources, output_dir, topics_by_id)
-    github_api_status, github_results = collect_github(github_sources, output_dir)
-    trending_results = collect_github_trending(trending_sources, output_dir)
-    official_results = collect_official_pages(official_sources, output_dir)
+    rss_results = collect_rss(configured["rss"], output_dir, topics_by_id) if "rss" in channels else []
+    if "github-releases" in channels:
+        github_api_status, github_results = collect_github(configured["github-releases"], output_dir)
+    else:
+        github_api_status, github_results = {}, []
+    trending_results = collect_github_trending(configured["github-trending"], output_dir) if "github-trending" in channels else []
+    official_results = collect_official_pages(configured["official-pages"], output_dir) if "official-pages" in channels else []
     rss_fulltext = rss_fulltext_summary(rss_results)
     github_release_fulltext = github_release_fulltext_summary(github_results)
 
@@ -1022,10 +1078,19 @@ def main():
         "sources": trending_results,
     }
 
-    (output_dir / "rss-items.json").write_text(json.dumps(rss_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "github-items.json").write_text(json.dumps(github_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "github-trending.json").write_text(json.dumps(trending_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "official-pages.json").write_text(json.dumps(official_payload, ensure_ascii=False, indent=2) + "\n")
+    output_payloads = {
+        "rss": (output_dir / "rss-items.json", rss_payload),
+        "github-releases": (output_dir / "github-items.json", github_payload),
+        "github-trending": (output_dir / "github-trending.json", trending_payload),
+        "official-pages": (output_dir / "official-pages.json", official_payload),
+    }
+    for channel in channels:
+        path, payload = output_payloads[channel]
+        payload = merge_selected_sources(path, payload, selected_ids)
+        if selected_ids:
+            payload["partial_update"] = True
+            payload["selected_source_ids"] = sorted(selected_ids)
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
     summary = {
         "run_date": run_date,

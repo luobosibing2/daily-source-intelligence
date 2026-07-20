@@ -91,6 +91,41 @@ class CandidateAuditTest(unittest.TestCase):
 
         self.assertEqual(payload["rows"][0]["status"], "covered")
 
+    def test_write_audit_writes_json_sha_and_preserves_disposition(self):
+        report = self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n\n- Other signal.\n")
+        self.write_json(
+            f"raw/{self.date}/official-link-candidates.json",
+            {
+                "candidates": [
+                    {
+                        "tweet_id": "1",
+                        "tweet_url": "https://x.com/a/status/1",
+                        "expanded_url": "https://example.com/post",
+                        "score": 40,
+                    }
+                ]
+            },
+        )
+        module = load_script("candidate-audit.py")
+
+        first = module.write_audit(self.date, root=self.root)
+        row = first["rows"][0]
+        json_path = self.root / "reviews" / f"{self.date}-candidate-audit.json"
+        stored = json.loads(json_path.read_text(encoding="utf-8"))
+        stored["rows"][0]["disposition"] = "deferred"
+        stored["rows"][0]["disposition_note"] = "not material today"
+        json_path.write_text(json.dumps(stored), encoding="utf-8")
+
+        second = module.write_audit(self.date, root=self.root)
+
+        self.assertEqual(second["counts"]["total"], len(second["rows"]))
+        self.assertEqual(second["rows"][0]["candidate_id"], row["candidate_id"])
+        self.assertEqual(second["rows"][0]["disposition"], "deferred")
+        self.assertEqual(
+            second["daily_report_sha256"],
+            __import__("hashlib").sha256(report.read_text(encoding="utf-8").encode("utf-8")).hexdigest(),
+        )
+
     def test_topic_direct_x_not_in_daily_report_is_missed(self):
         self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n\n- Other signal.\n")
         self.write_json(

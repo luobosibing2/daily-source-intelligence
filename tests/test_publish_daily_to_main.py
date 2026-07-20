@@ -84,6 +84,53 @@ class PublishDailyToMainTest(unittest.TestCase):
         self.assertFalse((self.main / f"docs/{self.date}-daily-intel.md").exists())
         self.assertEqual((self.main / "unrelated.txt").read_text(encoding="utf-8"), "do not overwrite\n")
 
+    def test_publish_commits_complete_bundle_only(self):
+        module = load_script()
+        files = {
+            f"docs/{self.date}-daily-intel.md": "# Daily\n",
+            f"docs/{self.date}-daily-intel.index.json": "{}\n",
+            f"docs/{self.date}-daily-intel.html": "<html>daily</html>\n",
+            "docs/index.html": "<html>index</html>\n",
+        }
+        for path, content in files.items():
+            self.write_source(path, content)
+
+        result = module.publish(self.date, source_root=self.source, main_worktree=self.main, push=False)
+
+        self.assertEqual(result["status"], "committed")
+        self.assertEqual(
+            set(git(self.main, "show", "--format=", "--name-only", "HEAD").splitlines()),
+            set(files),
+        )
+        self.assertEqual(len(result["target_reports"]), 4)
+
+    def test_partial_bundle_is_rejected(self):
+        module = load_script()
+        self.write_source(f"docs/{self.date}-daily-intel.md", "# Daily\n")
+        self.write_source(f"docs/{self.date}-daily-intel.html", "<html></html>\n")
+
+        with self.assertRaises(module.PublishError):
+            module.publish(self.date, source_root=self.source, main_worktree=self.main, push=False)
+
+    def test_dry_run_does_not_fetch_or_sync(self):
+        module = load_script()
+        self.write_source(f"docs/{self.date}-daily-intel.md", "# Daily\n")
+
+        def unexpected_sync(_):
+            self.fail("dry-run must not sync main")
+
+        module.sync_main_from_origin = unexpected_sync
+        result = module.publish(
+            self.date,
+            source_root=self.source,
+            main_worktree=self.main,
+            push=True,
+            dry_run=True,
+        )
+
+        self.assertEqual(result["status"], "dry-run")
+        self.assertFalse((self.main / f"docs/{self.date}-daily-intel.md").exists())
+
     def test_wrong_source_branch_is_rejected(self):
         module = load_script()
         self.write_source(f"docs/{self.date}-daily-intel.md", "# Daily report\n")

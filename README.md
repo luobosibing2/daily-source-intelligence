@@ -29,14 +29,16 @@ Daily Source Intelligence 会围绕预设主题，收集官方博客、RSS、Git
 要求：Python 3.10+、`curl`；如需网页正文 fallback，请安装 `opencli`。
 
 ```bash
-python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD
+python3 scripts/dsi.py run --date YYYY-MM-DD
 ```
 
 已有当天采集结果时，可以只重建确定性派生物：
 
 ```bash
-python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD --skip-collection
+python3 scripts/dsi.py prepare --date YYYY-MM-DD
 ```
+
+统一入口 [`scripts/dsi.py`](scripts/dsi.py#L1) 还提供 `check`、`publish`、`--dry-run`、`--resume`，并可用 `--channel rss|github-releases|github-trending|official-pages|x` 定向运行；定向到单个来源时使用 `--source channel:id`。旧的独立脚本继续保留，便于诊断和兼容既有自动化。
 
 ## 分支与日报发布
 
@@ -48,13 +50,13 @@ python3 scripts/run-dsi-pipeline.py --date YYYY-MM-DD --skip-collection
 git worktree add ../daily-source-intelligence-main main
 ```
 
-每日流程完成并通过检查后，从 `develop` 工作目录运行 [`scripts/publish-daily-to-main.py`](scripts/publish-daily-to-main.py)：
+每日流程完成并通过检查后，从 `develop` 工作目录运行统一入口：
 
 ```bash
-python3 scripts/publish-daily-to-main.py --date YYYY-MM-DD --push
+python3 scripts/dsi.py publish --date YYYY-MM-DD --push
 ```
 
-发布器只复制并提交 `docs/YYYY-MM-DD-daily-intel.md`，显式推送 `origin/main`。它会拒绝脏的 main worktree、错误分支、不同的远端或包含其它文件的暂存区；功能代码从 `develop` 晋升到 `main` 仍是独立的稳定发布动作。
+发布器兼容只含 Markdown 的旧日报；生成静态派生物后，则原子提交当天 Markdown、日期化 JSON 索引、日期化 HTML 和 `docs/index.html` 四件套，仍只显式推送 `origin/main`。它会拒绝不完整 bundle、脏的 main worktree、错误分支、不同的远端或包含其它文件的暂存区；功能代码从 `develop` 晋升到 `main` 仍是独立的稳定发布动作。底层兼容入口见 [`scripts/publish-daily-to-main.py`](scripts/publish-daily-to-main.py#L1)。
 
 开始前建议先阅读 [运行手册](runbook.md)，并按需调整 [关注方向](config/watch.md)、[主题配置](config/topics.yaml) 与 [来源配置](config/sources.yaml)。
 

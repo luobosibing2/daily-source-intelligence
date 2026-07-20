@@ -97,10 +97,7 @@ def sync_main_from_origin(main_worktree):
             not subject.startswith("data: daily source intelligence ") for subject in pending_subjects
         ):
             raise PublishError("main is ahead of origin/main with non-publisher commits; refusing automatic push")
-        if any(
-            not re.fullmatch(r"docs/\d{4}-\d{2}-\d{2}-daily-intel\.md", path)
-            for path in pending_paths
-        ):
+        if any(not is_publisher_path(path) for path in pending_paths):
             raise PublishError("main has pending changes outside dated daily reports; refusing automatic push")
         return True
     if behind:
@@ -108,13 +105,28 @@ def sync_main_from_origin(main_worktree):
     return False
 
 
+def is_publisher_path(value):
+    return bool(
+        value == "docs/index.html"
+        or re.fullmatch(r"docs/\d{4}-\d{2}-\d{2}-daily-intel\.(?:md|html|index\.json)", value)
+    )
+
+
 def report_paths(source_root, main_worktree, run_date):
-    relative = Path("docs") / f"{run_date}-daily-intel.md"
-    source_report = source_root / relative
-    main_report = main_worktree / relative
-    if not source_report.is_file():
-        raise PublishError(f"daily report does not exist: {source_report}")
-    return relative, source_report, main_report
+    markdown = Path("docs") / f"{run_date}-daily-intel.md"
+    derived = [
+        Path("docs") / f"{run_date}-daily-intel.index.json",
+        Path("docs") / f"{run_date}-daily-intel.html",
+        Path("docs") / "index.html",
+    ]
+    if not (source_root / markdown).is_file():
+        raise PublishError(f"daily report does not exist: {source_root / markdown}")
+    present = [path for path in derived if (source_root / path).is_file()]
+    if present and len(present) != len(derived):
+        missing = [path.as_posix() for path in derived if not (source_root / path).is_file()]
+        raise PublishError(f"daily bundle is incomplete; missing: {missing!r}")
+    relatives = [markdown] + derived if present else [markdown]
+    return [(relative, source_root / relative, main_worktree / relative) for relative in relatives]
 
 
 def atomic_copy(source_report, main_report):
@@ -134,8 +146,8 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
     validate_run_date(run_date)
     ensure_source_is_develop(source_root)
     ensure_main_is_safe(source_root, main_worktree)
-    pending_push = sync_main_from_origin(main_worktree)
-    relative, source_report, main_report = report_paths(source_root, main_worktree, run_date)
+    paths = report_paths(source_root, main_worktree, run_date)
+    relative, source_report, main_report = paths[0]
 
     if dry_run:
         return {
@@ -143,14 +155,22 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
             "branch": "main",
             "source_report": str(source_report),
             "target_report": str(main_report),
+            "target_reports": [str(target) for _, _, target in paths],
             "push": bool(push),
         }
 
-    previous = main_report.read_bytes() if main_report.exists() else None
+    pending_push = sync_main_from_origin(main_worktree)
+
+    previous = {
+        target: target.read_bytes() if target.exists() else None
+        for _, _, target in paths
+    }
     committed = False
     try:
-        atomic_copy(source_report, main_report)
-        git(main_worktree, "add", "-f", "--", str(relative))
+        for _, source, target in paths:
+            atomic_copy(source, target)
+        relatives = [item[0].as_posix() for item in paths]
+        git(main_worktree, "add", "-f", "--", *relatives)
         staged = git(main_worktree, "diff", "--cached", "--name-only").splitlines()
         if not staged and pending_push and push:
             commit = git(main_worktree, "rev-parse", "HEAD")
@@ -165,6 +185,7 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
                 "branch": "main",
                 "commit": commit,
                 "target_report": str(main_report),
+                "target_reports": [str(target) for _, _, target in paths],
                 "push": True,
             }
         if not staged:
@@ -172,9 +193,10 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
                 "status": "no-op",
                 "branch": "main",
                 "target_report": str(main_report),
+                "target_reports": [str(target) for _, _, target in paths],
                 "push": False,
             }
-        if staged != [relative.as_posix()]:
+        if sorted(staged) != sorted(relatives):
             raise PublishError(f"unexpected staged paths: {staged!r}")
         if git_exit_code(main_worktree, "diff", "--cached", "--quiet") == 0:
             if pending_push and push:
@@ -190,12 +212,14 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
                     "branch": "main",
                     "commit": commit,
                     "target_report": str(main_report),
+                    "target_reports": [str(target) for _, _, target in paths],
                     "push": True,
                 }
             return {
                 "status": "no-op",
                 "branch": "main",
                 "target_report": str(main_report),
+                "target_reports": [str(target) for _, _, target in paths],
                 "push": False,
             }
         git(main_worktree, "diff", "--cached", "--check")
@@ -214,18 +238,20 @@ def publish(run_date, *, source_root=ROOT, main_worktree=None, push=False, dry_r
             "branch": "main",
             "commit": commit,
             "target_report": str(main_report),
+            "target_reports": [str(target) for _, _, target in paths],
             "push": bool(push),
         }
     except Exception:
         if committed:
             raise
-        if previous is None:
-            if main_report.exists():
-                main_report.unlink()
-        else:
-            main_report.write_bytes(previous)
+        for target, content in previous.items():
+            if content is None:
+                if target.exists():
+                    target.unlink()
+            else:
+                target.write_bytes(content)
         subprocess.run(
-            ["git", "-C", str(main_worktree), "reset", "--quiet", "HEAD", "--", str(relative)],
+            ["git", "-C", str(main_worktree), "reset", "--quiet", "HEAD", "--", *[path.as_posix() for path, _, _ in paths]],
             check=False,
             text=True,
             capture_output=True,

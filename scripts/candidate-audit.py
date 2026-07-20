@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -28,6 +29,11 @@ def read_text(path):
 def write_text(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def write_json(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def compact_text(text, limit=90):
@@ -319,7 +325,16 @@ def build_audit(run_date, root=ROOT):
     existing_tweet_ids.update(tweet_id_from_row(row) for row in topic_rows if tweet_id_from_row(row))
     rows.extend(twitter_topic_summary_link_rows(root, run_date, report_text))
     rows.extend(direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen))
+    for row in rows:
+        identity = "|".join(
+            str(row.get(key) or "")
+            for key in ("category", "tweet_id", "source", "signal")
+        )
+        row["candidate_id"] = f"candidate:{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:20]}"
+        row["disposition"] = "covered_in_report" if row["status"] == "covered" else ""
+        row["disposition_note"] = ""
     counts = {
+        "total": len(rows),
         "covered": sum(1 for row in rows if row["status"] == "covered"),
         "missed": sum(1 for row in rows if row["status"] == "missed"),
     }
@@ -328,6 +343,7 @@ def build_audit(run_date, root=ROOT):
         "run_date": run_date,
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "daily_report": str(report_path.relative_to(root)),
+        "daily_report_sha256": hashlib.sha256(report_text.encode("utf-8")).hexdigest(),
         "counts": counts,
         "rows": rows,
     }
@@ -370,9 +386,19 @@ def render_markdown(audit):
 
 
 def write_audit(run_date, root=ROOT):
+    root = Path(root)
     audit = build_audit(run_date, root=root)
-    output_path = Path(root) / "reviews" / f"{run_date}-candidate-audit.md"
+    json_path = root / "reviews" / f"{run_date}-candidate-audit.json"
+    previous = read_json(json_path, {"rows": []})
+    previous_by_id = {row.get("candidate_id"): row for row in previous.get("rows", []) if row.get("candidate_id")}
+    for row in audit["rows"]:
+        old = previous_by_id.get(row["candidate_id"], {})
+        if old.get("disposition"):
+            row["disposition"] = old["disposition"]
+            row["disposition_note"] = old.get("disposition_note") or ""
+    output_path = root / "reviews" / f"{run_date}-candidate-audit.md"
     write_text(output_path, render_markdown(audit))
+    write_json(json_path, audit)
     return audit
 
 
