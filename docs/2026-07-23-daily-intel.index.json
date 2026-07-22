@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "run_date": "2026-07-23",
-  "generated_at": "2026-07-23T05:31:28+08:00",
+  "generated_at": "2026-07-23T05:48:54+08:00",
   "report": {
     "path": "docs/2026-07-23-daily-intel.md",
-    "sha256": "83d1dcb8a83a2609964c122ac13d7204ce47a7a034dd21d87e1930737177d738"
+    "sha256": "aa95c52d6a35037fe68362e22366f49cad1f2a4e3f125ac904bd0b325e4d942c"
   },
   "signals": {
     "path": "raw/2026-07-23/signals.json",
@@ -21,7 +21,7 @@
       "covered": 17,
       "missed": 58
     },
-    "report_sha256": "83d1dcb8a83a2609964c122ac13d7204ce47a7a034dd21d87e1930737177d738"
+    "report_sha256": "aa95c52d6a35037fe68362e22366f49cad1f2a4e3f125ac904bd0b325e4d942c"
   },
-  "trend_report": ""
+  "trend_report": "trend/reports/2026-07-23-trend-report.md"
 }
