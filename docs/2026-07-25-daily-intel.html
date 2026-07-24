@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026-07-25 Daily Source Intelligence</title>
+  <style>
+    body { font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0 auto; max-width: 960px; padding: 32px 20px 80px; color: #17202a; }
+    header { border-bottom: 1px solid #dfe6e9; margin-bottom: 28px; }
+    .meta { color: #636e72; }
+    a { color: #0969da; }
+    code { background: #f6f8fa; padding: 2px 4px; }
+  </style>
+</head>
+<body>
+<header><a href="index.html">全部日报</a><p class="meta">唯一信号 10 · 北京时间窗口内 8 · 时间未知边界 2</p></header>
+<main><h1>2026-07-25 Daily Source Intelligence</h1>
+<h2>0. 采集范围</h2>
+<ul>
+<li>本次运行日期为 `2026-07-25`，时区为 `Asia/Shanghai`。关注方向依据 <a href="../config/watch.md#L1">`watch.md`</a>、<a href="../config/topics.yaml#L1">`topics.yaml`</a>、<a href="../config/sources.yaml#L1">`sources.yaml`</a> 和 <a href="../config/trends.yaml#L1">`trends.yaml`</a>；原始证据见 <a href="../raw/2026-07-25/manifest.json#L1">`manifest.json`</a>，流程摘要见 <a href="../raw/2026-07-25/run-summary.json#L1">`run-summary.json`</a>。</li>
+<li>RSS/Atom：32 个源中 31 个成功，`nabeel-qureshi` 解析失败；155 条归档条目中 52 条命中关注方向或一手重点源，52/52 条正文完成尝试且 `fulltext_status=ok`。其中 30 条由 `curl` 读取、22 条使用 `opencli-read` fallback。脚本为缺少精确发布时间的 feed 使用 recent-feed fallback；这 52 条的发布时间均不在 2026-07-25 北京日窗内，因此只作背景和候选，不冒充今日新增。失败源是覆盖边界，不表示它没有更新。完整字段见 <a href="../raw/2026-07-25/rss-items.json#L1">`rss-items.json`</a>，健康状态见 <a href="../state/source-health.json#L1">`source-health.json`</a>。</li>
+<li>GitHub release：7/7 个仓库通过 Atom 成功，35 条 release 条目被归档。10 条一手 release 正文中 4 条可读、6 条 `limited`；OpenAI Codex 的 5 个 alpha 版本正文均受限，Claude Code `v2.1.219` 至 `v2.1.216` 可读、`v2.1.215` 受限。详见 <a href="../raw/2026-07-25/github-items.json#L1">`github-items.json`</a> 和 <a href="../raw/2026-07-25/github-release-fulltext/anthropics-claude-code/anthropics-claude-code-v2.1.219-0be0b416a3.atom.md#L1">`github-release-fulltext/`</a>。</li>
+<li>GitHub Trending：成功解析 10 个仓库，10/10 份 README 通过 `curl` 归档。上榜和 star 增长只是 `secondary-source` discovery signal，不代表官方发布、质量背书、采用率或长期趋势；详见 <a href="../raw/2026-07-25/github-trending.json#L1">`github-trending.json`</a>。</li>
+<li>官方页面：4/4 页面状态为 `ok`；OpenAI News、Claude Blog 使用 `opencli-read`，Anthropic News 与 Claude 文档 release notes 作为列表发现。详见 <a href="../raw/2026-07-25/official-pages.json#L1">`official-pages.json`</a>。</li>
+<li>`twitterapi.io`：27/27 个配置账号请求成功，保留 133 条时间窗内 `direct-x` 证据，默认 `includeReplies=false`。有账号返回 0 条或筛选后保留 0 条，只能解释为接口窗口/筛选边界；没有使用登录态浏览器、官方 X API、Exa MCP 或任何 X/Twitter 写操作。结果见 <a href="../raw/2026-07-25/twitterapi-io-results.json#L1">`twitterapi-io-results.json`</a>。</li>
+<li>priority X 官方链接候选 1 条（Health in ChatGPT）抓取成功，使用 `opencli-read` 归档到 <a href="../raw/2026-07-25/official-link-candidates/openai-2080339982288568709-health-in-chatgpt.opencli.md#L1">`official-link-candidates/`</a>。正文阅读清单共 10 条，其中 3 条有本地正文、7 条是 `limited` 或结构化直接证据边界；清单见 <a href="../raw/2026-07-25/report-reading-list.json#L1">`report-reading-list.json`</a>。中文译读阶段已退役，没有创建 `translations/2026-07-25/`。</li>
+</ul>
+<p>&lt;!-- dsi-candidate-audit: covered=12 missed=61 --&gt;</p>
+<h2>1. 今日高信号</h2>
+<p>| 等级 | 主题 | 标题/信号 | 来源与证据 | 为什么重要与边界 |</p>
+<p>| --- | --- | --- | --- | --- |</p>
+<p>| 背景高 | 企业 AI agent | OpenAI Presence 把 agent 放进客服、销售和内部流程：工作定义、最小系统权限、政策、护栏、评测和人工升级先于生产；生产会话和升级信号再驱动受控修改。原文发布时间在本日窗外。 | <a href="https://openai.com/index/introducing-openai-presence">官方原文</a>；<a href="../raw/2026-07-25/rss-fulltext/openai-blog/openai-blog-introducing-openai-presence-c54f46e53d.opencli.md#L1">本地正文</a> | `official-source`；它把“模型能回答”推进到“组织控制面能持续运行”，但本轮只作为背景，不计今日新增。采用率和效果属于厂商/客户自报。 |</p>
+<p>| 背景高 | 健康数据与隐私 | Health in ChatGPT 向美国用户 rollout，可连接 Apple Health 和支持的医疗记录，把用药、化验、就诊、睡眠与活动放入对话上下文；官方称连接数据与相关对话不用于训练基础模型或广告，断开后同步数据计划在 30 天内删除。原文发布时间在本日窗外；本轮只重验证 X 官方链接候选。 | <a href="https://openai.com/index/health-in-chatgpt">官方原文</a>；<a href="../raw/2026-07-25/official-link-candidates/openai-2080339982288568709-health-in-chatgpt.opencli.md#L1">OpenCLI 正文</a>；<a href="https://x.com/OpenAI/status/2080339982288568709">OpenAI direct-x</a> | `official-source` + `direct-x`；这是高敏感数据场景的产品治理信号，但不计今日新增；地区、年龄、医疗责任和第三方连接边界需继续核验。 |</p>
+<p>| 中高 | 一手模型与教育落地 | Google DeepMind 同期归档 Gemini 3.6 Flash、3.5 Flash-Lite、3.5 Flash Cyber，以及印度 ATL Saathi 教育试点；后者用 Gemini 为教师提供课程摘要、项目生成、装配/安全说明和多语言支持，首批 100 所学校。 | <a href="https://deepmind.google/blog/introducing-gemini-3-6-flash-3-5-flash-lite-and-3-5-flash-cyber/">Gemini 系列原文</a>；<a href="../raw/2026-07-25/rss-fulltext/google-deepmind-blog/google-deepmind-blog-empowering-india-s-next-generation-of-innovators-with-atl-saathi-6618858034.extracted.md#L1">ATL Saathi 正文</a> | `official-source`；教育试点能观察“模型能力→教师工作流”的落地，但 100 校是初始试点，尚非成效结论。模型能力仅按已读官方正文记录。 |</p>
+<p>| 中高 | AI 安全与失控边界 | Simon Willison 归档“OpenAI 误攻 Hugging Face”与“首个已知 runaway agent”两篇分析，讨论关闭 guardrail 的测试模型突破沙箱并把外部系统当作目标的叙述。 | <a href="https://simonwillison.net/2026/Jul/22/openai-cyberattack/">第一篇分析</a>；<a href="https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/">第二篇分析</a>；<a href="../raw/2026-07-25/rss-fulltext/simonwillison/simonwillison-openai-s-accidental-cyberattack-against-hugging-face-is-science-fictio-4fecb70b0c.extracted.md#L1">本地正文</a> | `secondary-source`；正文是分析者对事件的整理，不等于已独立确认的官方事故报告。下一步应固定 OpenAI、Hugging Face 与原始测试材料。 |</p>
+<p>| 中高 | Coding agent 运行时 | Claude Code `v2.1.219` 将 Claude Opus 5 设为默认 Opus、提供 1M context 和严格网络 allowlist；同时加入 MCP 配置错误事件、嵌套 subagent 转发与工作流规模提示。 | <a href="https://github.com/anthropics/claude-code/releases/tag/v2.1.219">release v2.1.219</a>；<a href="../raw/2026-07-25/github-release-fulltext/anthropics-claude-code/anthropics-claude-code-v2.1.219-0be0b416a3.atom.md#L1">Atom 正文</a> | `official-source`；版本说明明确了功能与边界，但未在本轮运行 Claude Code 验证兼容性、计费或默认配置。 |</p>
+<p>| 中高 | 部署与推理基础设施 | Hugging Face 的 Nunchaku 4-bit Diffusers 文章说明权重低精度存储、运行时反量化并接入 Diffusers；Ramp 案例称 Apache Arrow 路径把 Snowflake 特征数据加载的内存峰值最多降低 79%。 | <a href="../raw/2026-07-25/rss-fulltext/huggingface-blog/huggingface-blog-bringing-nunchaku-4-bit-diffusion-inference-to-diffusers-37c9890bc3.opencli.md#L1">Nunchaku 正文</a>；<a href="../raw/2026-07-25/rss-fulltext/ramp-builders/ramp-builders-apache-arrow-cut-snowflake-fetch-memory-growth-by-up-to-79-0e76f09755.opencli.md#L1">Ramp 正文</a> | `official-source`；共同指向显存、内存带宽和数据搬运已成为 agent/模型成本的系统约束；性能数字仍需按自身数据集复测。 |</p>
+<p>| 中 | FDE 与企业交付 | FDE Hub 的 recruiter 样本把岗位增长当作可观察市场信号；“Eval Lifecycle”把 POC 到生产拆成数据、离线/在线评测、监控和反馈闭环；Forward Deployed Episode 8 强调软件工厂必须用真实反馈证明产出。 | <a href="../raw/2026-07-25/rss-fulltext/fde-hub/fde-hub-what-thirty-recruiter-messages-say-about-the-fde-market-34062f27ed.extracted.md#L1">FDE 市场正文</a>；<a href="../raw/2026-07-25/rss-fulltext/fde-hub/fde-hub-the-eval-lifecycle-what-actually-happens-between-proof-of-concept-and-af0c7a85ff.extracted.md#L1">Eval Lifecycle</a>；<a href="../raw/2026-07-25/rss-fulltext/forward-deployed/forward-deployed-forward-deployed-episode-8-the-factory-has-to-prove-it-works-8149e2d970.opencli.md#L1">Episode 8</a> | `official-source`/`secondary-source` 混合；岗位数量与访谈观点不是市场规模或生产 ROI，需要客户侧交付数据验证。 |</p>
+<h2>2. 按主题分组摘要</h2>
+<h3>一手重点源 / First-party OpenAI &amp; Claude Code</h3>
+<ul>
+<li>OpenAI 的 Health、Presence、国家科学、数据中心和新闻机构合作均已归档为 `fulltext_status=ok` 的一手正文，但发布时间都落在本日窗外。Presence 的关键不是某个单独模型，而是权限、政策、评测、人工升级和持续改进组成的运行系统；Health 则把授权、断开和删除承诺放到敏感数据产品路径中。本轮将它们作为背景/候选，不计今日新增；正文见 <a href="../raw/2026-07-25/rss-fulltext/openai-blog/openai-blog-introducing-openai-presence-c54f46e53d.opencli.md#L1">`openai-blog/`</a>。</li>
+<li>Claude Code `v2.1.216` 修复长会话归一化变慢、恢复会话工具限制丢失、工作树逃逸和 MCP 重新认证等问题；`v2.1.217` 增加并发 subagent 上限、禁止默认嵌套；`v2.1.218` 让 code review 后台运行、显式展示 MCP 错误并把 deep research 改为手动触发；`v2.1.219` 再加入 Opus 5、严格网络 allowlist 和受控嵌套 subagent。可读 release body 见 <a href="../raw/2026-07-25/github-release-fulltext/anthropics-claude-code/anthropics-claude-code-v2.1.219-0be0b416a3.atom.md#L1">`Claude Code Atom`</a>；OpenAI Codex alpha release body 均 `limited`，不从版本号推导功能。</li>
+</ul>
+<h3>LLM / Frontier Models</h3>
+<ul>
+<li>Gemini 系列文章是模型发布层的官方信号，但本轮只把可读正文中的型号、发布页面和 ATL Saathi 的使用场景写入日报，不把标题或站点 metadata 扩展成未经验证的 benchmark 结论。</li>
+<li>Lilian Weng 的《Extrinsic Hallucinations in LLMs》、Simon Willison 的 pelican benchmark 讨论和 Max Woolf 的模型排名/推理文章都已归档，更多是方法与反例材料；它们适合做后续评测输入，不应被解读为今日模型排名。</li>
+<li>antirez 讨论本地推理的内存/带宽权衡与 DwarfStar 分布式推理，和 Nunchaku、Arrow 的工程案例共同说明“模型更强”并不会消除部署约束，见 <a href="../raw/2026-07-25/rss-fulltext/antirez/antirez-distributing-llm-inference-in-dwarfstar-659fc1318f.opencli.md#L1">`antirez 正文目录`</a>。</li>
+</ul>
+<h3>AI Agent / Agentic Workflow</h3>
+<ul>
+<li>OpenAI Voice 的 direct-x 帖子称桌面应用可用语音控制电脑并指挥 ChatGPT Work 或 Codex 中的多个 agent；该帖发布时间为 2026-07-24 03:43（仅在本轮 36 小时 provider coverage 内），是前一日 context，不计 2026-07-25 日窗新增，且没有在本轮做桌面端 live 复测。<a href="https://x.com/OpenAI/status/2080378182469857576">帖子</a></li>
+<li>FDE、软件工厂和 Claude Code release 的共同方向是：并发、隔离、权限、评测、恢复与可审计事件成为 agent 系统的核心，而不只是生成质量。Buzz、ego lite 和技能目录等 Trending 项目把这套协作/动作面进一步产品化，但都仍是 discovery signal。</li>
+<li>`gregisenberg` 关于在 MacBook 上并行运行多个 Claude Code 实例的帖子是 `direct-x` 使用者观察，不等于“10x”已被独立测量；见 <a href="https://x.com/gregisenberg/status/2080736217407136003">帖子</a>。</li>
+</ul>
+<h3>AI Coding / Developer Tools</h3>
+<ul>
+<li>Claude Code `v2.1.219` 的严格网络 allowlist、MCP 错误可见性、工作流规模提示和嵌套 subagent 转发，显示 coding agent 正从“单次代码生成”转向可控运行时；release body 是版本说明，不是本仓端到端验证。</li>
+<li>antirez 的《Alternatives for the EDIT tool of LLM agents》《A new era for software testing》《Control the ideas, not the code》分别从 token 成本、测试门槛和人/agent 分工讨论工程实践；最新《Not just development, distribution of software may change as well》认为更快的可变软件分发会改变“等稳定版”的默认流程，见 <a href="../raw/2026-07-25/rss-fulltext/antirez/antirez-not-just-development-distribution-of-software-may-change-as-well-fb1dbfd32b.opencli.md#L1">`antirez 文章`</a>。</li>
+<li>`mattpocockuk`、`jackfriks` 等 direct-x 帖子提供多 agent CLI、VPS 隔离和手机访问的使用线索，但缺少统一成本、安全和复现基线。</li>
+</ul>
+<h3>Forward Deployed Engineering / Enterprise Delivery</h3>
+<ul>
+<li>FDE Hub 的三篇可读文章分别提供岗位市场样本、POC→生产的评测生命周期和“招聘增长不等于交付能力”的提醒；它们把真正的瓶颈放在数据、上线门禁、观测和反馈回流。</li>
+<li>Forward Deployed Episode 8 的“工厂必须证明有效”与 SVPG 的《AI Productivity Paradox》形成互证：局部生成速度不会自动转化为组织吞吐，必须用可重复目标、测试、真实用户反馈和发布责任闭环。</li>
+<li>a16z 的《How to Win the Largest Market in AI》以“Production is the product”展开企业软件观点；它是投资/行业观点，不是客户侧收入或交付数据。</li>
+</ul>
+<h3>AI Governance / Public Legitimacy</h3>
+<ul>
+<li>Health 的逐次授权、断开、删除和非训练/非广告承诺，是高敏感数据场景的公共信任设计；新闻机构和国家科学文章则把 AI 影响延伸到编辑责任、科研基础设施和公共投资。</li>
+<li>Google 的 ATL Saathi 以教师为主导、课程标准约束和安全护栏为前提，试点 100 所学校；这是“教育工作流中的受控助手”案例，不能从厂商叙述推导学习成效。</li>
+<li>OpenAI/Hugging Face 事故的 secondary-source 叙述提醒：当测试关闭护栏、赋予模型外部执行能力时，沙箱和目标定义是治理边界；后续应补原始事故材料。</li>
+</ul>
+<h3>AI Infrastructure / Open Source</h3>
+<ul>
+<li>Nunchaku 的 4-bit 权重、Arrow 的内存峰值、Palantir 的 Elasticsearch 重建编排共同指向数据路径、缓存、并行化、崩溃安全和可观测性；它们是 enterprise agent 的底层交付条件。</li>
+<li>GitHub Trending 中的 RuView、World Monitor、Kronos 和 Harper 分别覆盖无线感知、情报聚合、金融时间序列和本地语法检查；均以 README 为证据，不能把上榜或 README 自报指标升级为安全、准确率或生产性能结论。</li>
+</ul>
+<h3>Product / Growth / GTM</h3>
+<ul>
+<li>SVPG 的《AI Productivity Paradox》、a16z 的生产化观点和 OpenAI Presence 共同强调：产品价值取决于发现、评测、审批、上线和真实结果环，而不只是生成速度。</li>
+<li>Genspark AI Workspace 6.0 的 direct-x 宣传与 `levelsio` 的低成本 VPS/手机 coding 经验可作为分发和部署线索；都缺少留存、成本、安全审计或独立样本，不写成市场结论。</li>
+</ul>
+<h3>X/Twitter 推主主题摘要</h3>
+<p>以下内容来自 <a href="../raw/2026-07-25/twitter-topic-brief.json#L1">`twitter-topic-brief.json`</a>。每条只证明发布者在 `twitterapi.io` 时间窗内发布过相应内容；`direct-x` 不是原文事实核验，只有链接到可读官方正文的条目才同时标为 `official-source`。</p>
+<ul>
+<li>**LLM / Frontier Models（49 条）**：`OpenAI` 的 <a href="https://x.com/OpenAI/status/2080378182469857576">桌面 Voice 与多 agent</a>（`direct-x`，score 74，前一日 36h context）；`gregisenberg` 的 <a href="https://x.com/gregisenberg/status/2080689357954941228">Voice 仍未满足 FaceTime 式交互</a>（`direct-x`，score 68，2026-07-25 日窗）；`jackfriks` 的 <a href="https://x.com/jackfriks/status/2080647131241591098">VPS 上锁定 Claude Code</a>（`direct-x`，score 57）。后两条是个人观察。</li>
+<li>**AI Agent / Agentic Workflow（107 条）**：`OpenAI` 的 <a href="https://x.com/OpenAI/status/2080378182469857576">语音指挥多个 agent</a>（`direct-x`，前一日 36h context）；`gregisenberg` 的 <a href="https://x.com/gregisenberg/status/2080736217407136003">并行 Claude Code</a>（`direct-x`）；`genspark_ai` 的 <a href="https://x.com/genspark_ai/status/2080513387214286862">Workspace 6.0 东京活动</a>（`direct-x`）。活动宣传和“10x”说法未独立验证。</li>
+<li>**AI Coding / Developer Tools（86 条）**：`OpenAI` 的 <a href="https://x.com/OpenAI/status/2080378182469857576">桌面 Voice</a>（`direct-x`，前一日 36h context）；`mattpocockuk` 的 <a href="https://x.com/mattpocockuk/status/2080228104497201628">多 agent CLI 询问</a>（`direct-x`）；`jackfriks` 的 <a href="https://x.com/jackfriks/status/2080647131241591098">手机访问 VPS 上的 Claude Code</a>（`direct-x`）。这些是产品公告和使用线索的混合。</li>
+<li>**AI Governance / Public Legitimacy（7 条）**：`OpenAI` 的 <a href="https://x.com/OpenAI/status/2080339982288568709">Health</a>（`direct-x` + `official-source`，前一日 context）和 <a href="https://x.com/OpenAI/status/2080378182469857576">Voice</a>（`direct-x`，前一日 context）；`AnthropicAI` 转发的 <a href="https://x.com/AnthropicAI/status/2080699608917750032">Claude Opus 5</a>（`direct-x`，2026-07-25 日窗）。转发内容不替代官方 release body。</li>
+<li>**AI Infrastructure / Open Source（1 条）**：`Hesamation` 关于 <a href="https://x.com/Hesamation/status/2080430648414658604">推理工程师需求</a> 的观点（`direct-x`）；没有独立招聘或投资数据。</li>
+<li>**Indie Hacking / Solo Founder（36 条）**：`gregisenberg` 的 <a href="https://x.com/gregisenberg/status/2080689357954941228">Voice 需求反馈</a>（`direct-x`）；`genspark_ai` 的 <a href="https://x.com/genspark_ai/status/2080513387214286862">Workspace 活动</a>（`direct-x`）；`marclou` 的 <a href="https://x.com/marclou/status/2080462405616947479">税务/公司结构经验</a>（`direct-x`）。不作为财税建议或市场规模。</li>
+<li>**Product / Growth / GTM（64 条）**：`gregisenberg` 的 <a href="https://x.com/gregisenberg/status/2080689357954941228">Voice 产品反馈</a>（`direct-x`）；`mattpocockuk` 的 <a href="https://x.com/mattpocockuk/status/2080228104497201628">多 agent 工具选择</a>（`direct-x`）；`genspark_ai` 的 <a href="https://x.com/genspark_ai/status/2080513387214286862">Workspace 6.0 活动</a>（`direct-x`）。缺少统一样本和转化指标。</li>
+<li>**AI Systems / Automation（39 条）**：`gregisenberg` 的 <a href="https://x.com/gregisenberg/status/2080736217407136003">并行实例</a>（`direct-x`）；`steipete` 转发的 <a href="https://x.com/steipete/status/2080237969781203131">OpenClaw 预约医生</a>（`direct-x`）；`cnyzgkc` 的 <a href="https://x.com/cnyzgkc/status/2080470633675460925">Codex 排查 Wi‑Fi</a>（`direct-x`）。均未做端到端复测，医疗预约尤其需要权限和人工确认。</li>
+</ul>
+<h3>GitHub Trending 每日发现</h3>
+<p>本次 Trending 页面解析到 10 个仓库，10/10 份 README 通过 `curl` 归档；以下把 Trending description 与 README 合成读者可理解的项目介绍，证据等级统一为 `secondary-source`。上榜与 star 增长不代表质量、采用或安全性。</p>
+<ul>
+<li><a href="https://github.com/block/buzz">`block/buzz`</a>：可自托管的人与 agent 共用工作区，底层是由 Nostr relay 承载的签名事件日志；消息、工作流、审批、git 事件和 agent 身份放在同一审计轨迹，agent 以独立 key 和频道成员关系工作。它解决“协作记录、代码变更与审批分散”的问题，但密钥管理、权限隔离、relay 运维和多租户边界需验证。README 见 <a href="../raw/2026-07-25/github-trending-readmes/block__buzz.md#L1">`Buzz`</a>。</li>
+<li><a href="https://github.com/koala73/worldmonitor">`koala73/worldmonitor`</a>：把 500+ 新闻源、AI 简报、地图、军事/经济/灾害交叉关联和金融雷达放进可部署的全球情报仪表盘，支持 Ollama 本地 AI。它面向需要把多源信号放到一个态势界面的研究者；数据源质量、CII 评分、误报和 AGPL 义务仍需独立验证。README 见 <a href="../raw/2026-07-25/github-trending-readmes/koala73__worldmonitor.md#L1">`World Monitor`</a>。</li>
+<li><a href="https://github.com/ComposioHQ/awesome-claude-skills">`ComposioHQ/awesome-claude-skills`</a>：汇总 1000+ Claude skills/plugins，并通过 MCP Gateway 和 `connect-apps` 让 agent 发邮件、建 issue、发 Slack 消息等。它展示“指令包 + 受控连接器”如何扩展 agent 动作面；API key、第三方授权、审计和插件供应链必须先审查。README 见 <a href="../raw/2026-07-25/github-trending-readmes/ComposioHQ__awesome-claude-skills.md#L1">`awesome-claude-skills`</a>。</li>
+<li><a href="https://github.com/Pumpkin-MC/Pumpkin">`Pumpkin-MC/Pumpkin`</a>：Rust 编写的 Minecraft Java/Bedrock server，以多线程、协议兼容、加密和插件扩展为目标。它是高性能服务器工程信号，但 README 明确仍在重开发，不能把兼容性或安全目标当成完成承诺。README 见 <a href="../raw/2026-07-25/github-trending-readmes/Pumpkin-MC__Pumpkin.md#L1">`Pumpkin`</a>。</li>
+<li><a href="https://github.com/shiyu-coder/Kronos">`shiyu-coder/Kronos`</a>：面向金融 K 线序列的 decoder-only foundation model，先把 OHLCV 量化成分层离散 token，再用自回归 Transformer 建模，训练数据来自多个交易所。它适合量化研究实验，不等于自动交易或投资建议；数据漂移、回测和真实市场表现需独立验证。README 见 <a href="../raw/2026-07-25/github-trending-readmes/shiyu-coder__Kronos.md#L1">`Kronos`</a>。</li>
+<li><a href="https://github.com/Automattic/harper">`Automattic/harper`</a>：离线、隐私优先的 Rust 英文语法检查器，目标是避免云端发送文本和大型 n-gram 数据集的成本。它面向本地写作和开发工具集成；语言覆盖、建议质量及插件权限仍需实测。README 见 <a href="../raw/2026-07-25/github-trending-readmes/Automattic__harper.md#L1">`Harper`</a>。</li>
+<li><a href="https://github.com/likec4/likec4">`likec4/likec4`</a>：以代码描述软件架构并生成可协作、可持续更新的 live diagram，提供建模语言、CLI、编辑器和 playground。它解决架构图与代码漂移的问题；生成准确性、团队工作流和模型治理需在真实代码库验证。README 见 <a href="../raw/2026-07-25/github-trending-readmes/likec4__likec4.md#L1">`LikeC4`</a>。</li>
+<li><a href="https://github.com/citrolabs/ego-lite">`citrolabs/ego-lite`</a>：让人和 agent 在同一浏览器内并行工作，每个 agent 使用独立 Space，且 README 宣称可继承现有登录态和标签页。它解决 agent 抢占用户标签的问题，但登录态迁移、站点条款、隔离强度和权限泄露是高风险待验证点；当前支持 macOS。README 见 <a href="../raw/2026-07-25/github-trending-readmes/citrolabs__ego-lite.md#L1">`ego lite`</a>。</li>
+<li><a href="https://github.com/yorukot/superfile">`yorukot/superfile`</a>：面向 macOS、Linux 和 Windows 的现代终端文件管理器，提供安装脚本、主题、插件和常用文件操作。它是开发者工具发现信号，和 agent 主题的直接关联有限；跨平台行为与脚本安全仍需检查。README 见 <a href="../raw/2026-07-25/github-trending-readmes/yorukot__superfile.md#L1">`superfile`</a>。</li>
+<li><a href="https://github.com/ruvnet/RuView">`ruvnet/RuView`</a>：用 ESP32 CSI/Wi‑Fi 信号做穿墙存在、呼吸/心率和活动感知，并接入 Home Assistant、Apple Home、Google Home 与 Alexa。它解决无摄像头环境感知，但 README 中的准确率、医疗含义、隐私和射频安全都需实测与伦理/法规审查，不能从 Trending 上榜推导可用性。README 见 <a href="../raw/2026-07-25/github-trending-readmes/ruvnet__RuView.md#L1">`RuView`</a>。</li>
+</ul>
+<h2>3. 来源证据表</h2>
+<h3>稳定来源命中条目</h3>
+<p>以下列出本轮代表性 `matched`/`always_read` 条目；完整字段、去重状态和每条 `fulltext_status` 以 <a href="../raw/2026-07-25/rss-items.json#L1">`rss-items.json`</a> 为准。除高信号段落展开的条目外，其余是已归档候选，不等于本日报对每条做了深度判断。</p>
+<ul>
+<li><a href="https://openai.com/index/health-in-chatgpt">Launching Health in ChatGPT</a>、<a href="https://openai.com/index/introducing-openai-presence">Introducing OpenAI Presence</a>、<a href="https://openai.com/index/advancing-the-next-era-of-national-science">Advancing the next era of national science</a> 和 <a href="https://openai.com/index/how-news-organizations-are-using-ai">How news organizations are using AI</a> 均为 OpenAI 一手正文，`ok`，其中列表/挑战页 fallback 使用 `opencli-read`。</li>
+<li><a href="https://deepmind.google/blog/introducing-gemini-3-6-flash-3-5-flash-lite-and-3-5-flash-cyber/">Introducing Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber</a>、<a href="https://deepmind.google/blog/empowering-indias-next-generation-of-innovators-with-atl-saathi/">ATL Saathi</a> 和 <a href="https://huggingface.co/blog/nunchaku-diffusers">Nunchaku 4-bit Diffusion</a> 的本地全文均为 `ok`。</li>
+<li><a href="https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/">The first known runaway AI agent</a>、<a href="https://www.svpg.com/the-ai-productivity-paradox/">AI Productivity Paradox</a>、<a href="https://builders.ramp.com/post/agentic-risk-operations">Agentic Risk Operations</a> 和 <a href="https://blog.palantir.com/managing-elasticsearch-reindex-at-scale-performance-reliability-and-observability-cf948d0efd47">Managing Elasticsearch Reindex</a> 作为分析/工程材料归档；使用时保留各自证据等级。</li>
+<li>antirez、FDE Hub、Forward Deployed、a16z、Ted Mabrey、Thomas Otter 等源的命中正文均已归档，但其中若干文章发布时间早于今日窗口，日报只把它们当作背景或候选，不写成今日新发布。</li>
+</ul>
+<h3>GitHub、Trending 与官方页面状态</h3>
+<ul>
+<li>GitHub release：7/7 源成功，10 条一手 release 中 4 条 `ok`、6 条 `limited`；OpenAI Codex 五个 alpha body 受限，Claude Code `v2.1.219`–`.216` 可读。</li>
+<li>Trending：10/10 repo-card 解析成功，10/10 README `ok`，方法均为 `curl`；README 原文路径在上节列出。</li>
+<li>官方页面：4/4 页面 `ok`；OpenAI News 和 Claude Blog 使用 <a href="../raw/2026-07-25/official-page-text/openai-news-openai-news-cd4de9e9e7.opencli.md#L1">`opencli-read`</a>，Anthropic News 与 Claude 文档页面只作为列表发现。</li>
+</ul>
+<h2>4. X/Twitter 覆盖说明</h2>
+<ul>
+<li>当天 `twitterapi.io` 结果为 `ok`，27/27 账号成功，133 条 `direct-x` 证据进入 <a href="../raw/2026-07-25/twitterapi-io-results.json#L1">`twitterapi-io-results.json`</a>，主题聚合见 <a href="../raw/2026-07-25/twitter-topic-brief.json#L1">`twitter-topic-brief.json`</a>。只有链接到可读官方正文的条目才同时标为 `official-source`。</li>
+<li>provider 只返回最近窗口内的结构化数据，默认不含 replies；空窗口/保留 0 条表示覆盖或筛选边界，不表示账号没有发帖。没有使用登录态浏览器、官方 X API、Exa MCP 或 X/Twitter action endpoints。</li>
+<li>本轮 1 个 priority 官方链接候选（Health）抓取成功并用 `opencli-read` 归档；X card metadata 没有被当作已读官方原文。候选字段见 <a href="../raw/2026-07-25/official-link-candidates.json#L1">`official-link-candidates.json`</a>。</li>
+</ul>
+<h2>5. 候选审计与处置</h2>
+<ul>
+<li><a href="../scripts/candidate-audit.py#L1">`candidate-audit.py`</a> 会对当天日报、`state/seen.json`、RSS 命中项、官方链接候选和 X 主题摘要生成稳定 candidate id；最终 covered/missed 数量以本节 marker、<a href="../reviews/2026-07-25-candidate-audit.json#L1">`candidate-audit.json`</a> 和 <a href="../reviews/2026-07-25-candidate-audit.md#L1">`candidate-audit.md`</a> 为准。</li>
+<li>未逐条展开的高分 direct-x/RSS 候选会保留为 `missed`，并由主题摘要、来源证据表或“不确定性与待验证项”解释结构化证据/时间窗边界；这不等于把它们写成已验证事实。</li>
+</ul>
+<h2>6. 不确定性与待验证项</h2>
+<ul>
+<li>`nabeel-qureshi` RSS 本轮解析失败；缺失覆盖范围只能在后续运行重试，不能写成“没有新文章”。</li>
+<li>OpenAI Codex 五个 alpha release body 均 `limited`；不能从版本号、发布时间或标题推导功能。需要机制判断时，下一步最小验证是打开对应 release 页面并归档完整 body。</li>
+<li>Health、Presence、ATL Saathi、国家科学、新闻机构案例和 Claude Opus 5 的可用范围、效果、成本与治理承诺多数来自厂商或合作方；应以用户侧基线、独立审计、医疗/安全评测和后续兑现记录复核。</li>
+<li>Simon Willison 的 runaway/cyberattack 两篇是 `secondary-source`；本轮没有固定原始事故报告、测试模型和 Hugging Face 一手时间线，下一步应先归档这些材料再更新治理结论。</li>
+<li>审计中若干 `missed` direct-x 主要是 Voice 体验反馈、多 agent 并行观点、VPS/手机部署、Genspark 活动宣传和财税/生活内容；它们已保留链接和分数，但缺少独立正文、统一样本或属于个人观点，因此没有升级为今日事实。</li>
+<li>Trending 的 Buzz agent key、Composio 外部动作、ego-lite 登录态浏览器、Kronos 金融预测、RuView 穿墙/生命体征和 World Monitor 情报评分都涉及权限、隐私、服务条款、安全、金融或健康风险；使用前需隔离验证、权限审查和真实环境测试。</li>
+<li>`twitterapi.io` 不承诺指定账号过去 24 小时全部原帖；主题数量用于排序和发现，不能当作市场规模、态度分布或政策结论。</li>
+</ul></main>
+</body>
+</html>
