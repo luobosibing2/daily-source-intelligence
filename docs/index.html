@@ -1,6 +1,283 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Daily Source Intelligence</title><body><h1>Daily Source Intelligence</h1><ul><li><a href="2026-07-26-daily-intel.html">2026-07-26</a></li>
-<li><a href="2026-07-25-daily-intel.html">2026-07-25</a></li>
-<li><a href="2026-07-24-daily-intel.html">2026-07-24</a></li>
-<li><a href="2026-07-23-daily-intel.html">2026-07-23</a></li>
-<li><a href="2026-07-22-daily-intel.html">2026-07-22</a></li>
-<li><a href="2026-07-21-daily-intel.html">2026-07-21</a></li></ul></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Daily Source Intelligence 中文公开信息情报日报">
+  <meta name="theme-color" content="#101c2c">
+  <title>Daily Source Intelligence</title>
+  <style>
+:root {
+  --ink: #17202e;
+  --muted: #697382;
+  --paper: #fbfaf7;
+  --canvas: #f0eee8;
+  --line: #d9d6ce;
+  --navy: #101c2c;
+  --navy-soft: #18283d;
+  --accent: #d5a650;
+  --accent-soft: #f5e8c9;
+  --blue: #356ba6;
+  --white: #ffffff;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { color: #1e4f83; }
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 700;
+  transform: translateY(-180%);
+}
+.skip-link:focus { transform: translateY(0); }
+.shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+.site-header {
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+.site-header .shell {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.brand-mark {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--accent);
+  font: 700 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.header-note {
+  color: #aeb8c5;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font: 700 0.72rem/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 20px;
+  border: 1px solid currentColor;
+  font-weight: 700;
+  text-decoration: none;
+}
+.button-primary { background: var(--accent); border-color: var(--accent); color: var(--navy); }
+.button-primary:hover { background: #e1b766; color: var(--navy); }
+.button-quiet { color: #dbe2eb; }
+.button-quiet:hover { background: rgba(255, 255, 255, 0.08); color: var(--white); }
+.site-footer {
+  background: var(--navy);
+  color: #9ca8b7;
+  padding: 32px 0;
+  font-size: 0.82rem;
+}
+.site-footer .shell { display: flex; justify-content: space-between; gap: 24px; }
+.site-footer a { color: #dce3eb; }
+.local-evidence {
+  display: inline;
+  color: #5f6874;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+}
+.local-evidence small {
+  display: inline-block;
+  margin-left: 0.32em;
+  padding: 0.08em 0.38em;
+  border: 1px solid #c9c4b9;
+  border-radius: 999px;
+  color: #73684f;
+  font-size: 0.68em;
+  line-height: 1.45;
+  text-decoration: none;
+  vertical-align: 0.08em;
+}
+@media (max-width: 680px) {
+  .shell { width: min(100% - 28px, 1160px); }
+  .header-note { display: none; }
+  .site-footer .shell { display: block; }
+}
+
+.landing-hero { background: var(--navy); color: var(--white); padding: 88px 0 96px; }
+.landing-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 90px;
+  align-items: end;
+}
+.landing-hero h1 {
+  margin: 0;
+  max-width: 820px;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(3.4rem, 7.5vw, 7rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+.landing-hero h1 span { color: #cbd5e1; }
+.landing-deck { max-width: 680px; margin: 30px 0 0; color: #b9c4d1; font-size: 1.02rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.edition-panel { border-top: 3px solid var(--accent); padding-top: 22px; }
+.edition-panel strong {
+  display: block;
+  font: 500 clamp(2.5rem, 5vw, 4.6rem)/1 Georgia, "Noto Serif SC", serif;
+  letter-spacing: -0.04em;
+}
+.edition-panel span { display: block; margin-top: 12px; color: #9fabb9; font-size: 0.78rem; letter-spacing: 0.08em; }
+.archive { padding: 78px 0 96px; }
+.archive-head { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: 34px; }
+.archive h2 {
+  margin: 0;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.archive-summary { max-width: 460px; margin: 0; color: var(--muted); font-size: 0.9rem; }
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 1px;
+  background: var(--line);
+  list-style: none;
+}
+.report-card { min-height: 235px; background: var(--paper); }
+.report-card a {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 26px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease;
+}
+.report-card a:hover { background: var(--navy-soft); color: var(--white); }
+.report-card-latest a { background: var(--accent-soft); }
+.card-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: #737c87;
+  font: 700 0.68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.1em;
+}
+.report-card a:hover .card-kicker { color: #aeb8c5; }
+.card-date {
+  display: block;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: clamp(2.4rem, 4vw, 3.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+.card-date small { display: block; margin-top: 12px; font: 500 0.82rem/1.3 ui-sans-serif, sans-serif; letter-spacing: 0.02em; }
+.card-arrow { align-self: flex-end; font-size: 1.4rem; }
+@media (max-width: 900px) {
+  .landing-hero-grid { grid-template-columns: 1fr; gap: 54px; }
+  .report-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .landing-hero { padding: 58px 0 64px; }
+  .landing-hero h1 { font-size: clamp(3.1rem, 16vw, 5rem); }
+  .archive-head { display: block; }
+  .archive-summary { margin-top: 18px; }
+  .report-grid { grid-template-columns: 1fr; }
+  .report-card { min-height: 190px; }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到日报归档</a>
+  <header class="site-header">
+    <div class="shell">
+      <a class="brand" href="index.html"><span class="brand-mark">DSI</span>Daily Source Intelligence</a>
+      <span class="header-note">公开信号 · 来源证据 · 中文简报</span>
+    </div>
+  </header>
+  <main id="content">
+    <section class="landing-hero">
+      <div class="shell landing-hero-grid">
+        <div>
+          <p class="eyebrow">Open-source intelligence / China edition</p>
+          <h1>把公开信号，变成<br><span>可追溯的中文情报。</span></h1>
+          <p class="landing-deck">收集官方博客、RSS、GitHub Releases、GitHub Trending 与公开 X/Twitter 信号，保留来源证据、生成阅读清单，并输出结构化日报。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="2026-07-26-daily-intel.html">阅读最新日报 <span aria-hidden="true">→</span></a>
+            <a class="button button-quiet" href="https://github.com/luobosibing2/daily-source-intelligence">查看 GitHub <span aria-hidden="true">↗</span></a>
+            <a class="button button-quiet" href="https://github.com/luobosibing2/daily-source-intelligence/blob/main/runbook.md">运行手册 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="edition-panel">
+          <p class="eyebrow">Current edition</p>
+          <strong>2026-07-26</strong>
+          <span>BEIJING TIME · 06 EDITIONS ARCHIVED</span>
+        </div>
+      </div>
+    </section>
+    <section class="archive" id="archive">
+      <div class="shell">
+        <div class="archive-head">
+          <div><p class="eyebrow">Archive / 日报归档</p><h2>每一期，都能回到证据。</h2></div>
+          <p class="archive-summary">按日期浏览已发布的中文情报简报。最新一期置顶，历史日报保留原始发布日期与完整内容。</p>
+        </div>
+        <ol class="report-grid"><li class="report-card report-card-latest"><a href="2026-07-26-daily-intel.html"><span class="card-kicker"><span>Latest briefing</span><span>2026</span></span><span class="card-date">07 / 26<small>周日 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li><li class="report-card"><a href="2026-07-25-daily-intel.html"><span class="card-kicker"><span>Daily briefing</span><span>2026</span></span><span class="card-date">07 / 25<small>周六 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li><li class="report-card"><a href="2026-07-24-daily-intel.html"><span class="card-kicker"><span>Daily briefing</span><span>2026</span></span><span class="card-date">07 / 24<small>周五 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li><li class="report-card"><a href="2026-07-23-daily-intel.html"><span class="card-kicker"><span>Daily briefing</span><span>2026</span></span><span class="card-date">07 / 23<small>周四 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li><li class="report-card"><a href="2026-07-22-daily-intel.html"><span class="card-kicker"><span>Daily briefing</span><span>2026</span></span><span class="card-date">07 / 22<small>周三 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li><li class="report-card"><a href="2026-07-21-daily-intel.html"><span class="card-kicker"><span>Daily briefing</span><span>2026</span></span><span class="card-date">07 / 21<small>周二 · 中文情报日报</small></span><span class="card-arrow" aria-hidden="true">↗</span></a></li></ol>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="shell">
+      <span>Daily Source Intelligence · Evidence before interpretation.</span>
+      <a href="https://github.com/luobosibing2/daily-source-intelligence">GitHub repository ↗</a>
+    </div>
+  </footer>
+</body>
+</html>

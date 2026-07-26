@@ -4,7 +4,7 @@
 
 Daily Source Intelligence 会围绕预设主题，收集官方博客、RSS、GitHub Releases、GitHub Trending 和公开 X/Twitter 信号，保留来源证据、生成阅读清单，并输出结构化中文日报。
 
-[查看最新日报](docs/2026-07-15-daily-intel.md) · [浏览全部日报](docs/README.md) · [阅读完整运行手册](runbook.md)
+[打开网页版（自动置顶最新一期）](https://luobosibing2.github.io/daily-source-intelligence/) · [浏览全部 Markdown 日报](docs/README.md) · [阅读完整运行手册](runbook.md)
 
 ## 它解决什么问题
 
@@ -67,4 +67,4 @@ X/Twitter 结构化数据通过 `twitterapi.io` 的只读接口采集。API key 
 python3 -m unittest discover -s tests -v
 ```
 
-如果你只想了解项目产出，直接从 [最新日报](docs/2026-07-15-daily-intel.md) 开始即可。
+如果你只想了解项目产出，直接打开 [Daily Source Intelligence 网页版](https://luobosibing2.github.io/daily-source-intelligence/) 即可。
