@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "run_date": "2026-08-10",
-  "generated_at": "2026-08-10T05:29:41+08:00",
+  "generated_at": "2026-08-10T05:50:59+08:00",
   "report": {
     "path": "docs/2026-08-10-daily-intel.md",
-    "sha256": "371b9321c783f6e9eab82bc3ac922690ab2edcc0d8916b4295cd59d2da77686a"
+    "sha256": "1d044298fba4ff371c260f1820cbde5679e5a50e6ee44893f498e28cd4f1adee"
   },
   "signals": {
     "path": "raw/2026-08-10/signals.json",
@@ -21,7 +21,7 @@
       "covered": 9,
       "missed": 57
     },
-    "report_sha256": "371b9321c783f6e9eab82bc3ac922690ab2edcc0d8916b4295cd59d2da77686a"
+    "report_sha256": "1d044298fba4ff371c260f1820cbde5679e5a50e6ee44893f498e28cd4f1adee"
   },
-  "trend_report": ""
+  "trend_report": "trend/reports/2026-08-10-trend-report.md"
 }

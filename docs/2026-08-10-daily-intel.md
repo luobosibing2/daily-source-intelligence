@@ -165,5 +165,5 @@ GitHub Trending 的 Code-Graph-RAG、WeatherNext、ComfyUI、authentik 和 `witr
 ## 边界与验证
 
 - 已确认：稳定来源、只读 `twitterapi.io`、官方链接候选、X 主题摘要、`update-state.py`、正文/README 归档和本日报均以 2026-08-10 写入；`signals.json` 的 7 条 `inside` 与 5 条 `unknown` 边界可复核。
-- 待完成的闭环验证：candidate audit、严格日报校验、bundle、9 个 enabled trend 的 marker/Phase 1/Phase 2/check、主分支发布和 Gmail 独立发送。
+- 已完成的闭环验证：candidate audit、严格日报校验、bundle、9 个 enabled trend 的 marker/Phase 1/Phase 2/check、主分支发布和 Gmail 独立发送；主分支提交与邮件 MIME 均已独立回读确认。
 - 运行时可能变化：RSS/XML、官方页面、GitHub release、Trending 排名、`twitterapi.io` 覆盖、远端 `origin/main` 和 Gmail 认证状态只以本轮命令输出与后续独立回读为准。
