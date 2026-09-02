@@ -147,6 +147,35 @@ def rss_rows(root, run_date, report_text, seen=None):
     return rows
 
 
+def official_page_article_rows(root, run_date, report_text, seen=None):
+    seen = seen or {"ids": set(), "urls": set()}
+    payload = read_json(root / "raw" / run_date / "official-pages.json", {"sources": []})
+    rows = []
+    for source in payload.get("sources", []) or []:
+        if source.get("source_id") != "anthropic-engineering":
+            continue
+        for item in source.get("items", []) or []:
+            if item.get("window_status") == "outside":
+                continue
+            url = item.get("url")
+            if already_seen(seen, ids=[f"url:{url}" if url else ""], urls=[url]):
+                continue
+            values = [url, item.get("title"), item.get("fulltext_path")]
+            window = item.get("window_status") or "unknown"
+            rows.append(
+                {
+                    "category": "official-page-article",
+                    "status": "covered" if is_covered(values, report_text) else "missed",
+                    "signal": item.get("title") or url,
+                    "source": url,
+                    "reason": f"anthropic-engineering; window:{window}",
+                    "score": "",
+                    "fulltext_status": item.get("fulltext_status") or "unknown",
+                }
+            )
+    return rows
+
+
 def tweet_score(tweet):
     engagement = sum(int(tweet.get(key) or 0) for key in ["retweetCount", "replyCount", "likeCount", "quoteCount"])
     text = (tweet.get("text") or "").lower()
@@ -319,6 +348,7 @@ def build_audit(run_date, root=ROOT):
     seen = load_seen_before_run_date(root, run_date)
     rows = candidate_rows(root, run_date, report_text, seen=seen)
     existing_tweet_ids = {tweet_id_from_row(row) for row in rows if tweet_id_from_row(row)}
+    rows.extend(official_page_article_rows(root, run_date, report_text, seen=seen))
     rows.extend(rss_rows(root, run_date, report_text, seen=seen))
     topic_rows = topic_direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen)
     rows.extend(topic_rows)

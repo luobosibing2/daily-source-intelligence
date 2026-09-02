@@ -100,6 +100,19 @@ def validate(run_date, root=ROOT, strict=False):
     if unresolved:
         errors.append(f"missed official-link candidates require disposition: {', '.join(unresolved)}")
 
+    unresolved_articles = [
+        row.get("candidate_id") or row.get("signal")
+        for row in rows
+        if row.get("status") == "missed"
+        and row.get("category") == "official-page-article"
+        and (not row.get("disposition") or not str(row.get("disposition_note") or "").strip())
+    ]
+    if strict and unresolved_articles:
+        errors.append(
+            "missed official-page articles require disposition and disposition note: "
+            + ", ".join(unresolved_articles)
+        )
+
     for path in (report_path, root / "reviews" / f"{run_date}-candidate-audit.md"):
         broken = broken_local_links(path, root)
         if broken:

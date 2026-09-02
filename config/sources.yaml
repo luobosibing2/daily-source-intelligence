@@ -347,6 +347,16 @@ official_pages:
     priority: true
     topics: [llm, ai-agent, ai-coding, ai-governance]
 
+  - id: anthropic-engineering
+    name: Anthropic Engineering
+    url: https://www.anthropic.com/engineering
+    enabled: true
+    priority: true
+    fulltext_policy: always
+    intelligence_department: first-party-anthropic
+    topics: [llm, ai-agent, ai-coding, infra, ai-systems]
+    note: First-party Anthropic engineering index; discover dated article cards and archive current-day fulltext before reporting.
+
   - id: claude-docs-release-notes
     name: Claude Docs Release Notes
     url: https://docs.claude.com/en/release-notes/overview
@@ -597,6 +607,167 @@ x_accounts:
     enabled: true
     priority: true
     topics: [llm, ai-agent]
+
+  - id: swyx
+    name: Swyx
+    handle: swyx
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: joshwoodward
+    name: Josh Woodward
+    handle: joshwoodward
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: bcherny
+    name: Boris Cherny
+    handle: bcherny
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: thsottiaux
+    name: Thibault Sottiaux
+    handle: thsottiaux
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: petergyang
+    name: Peter Yang
+    handle: petergyang
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: thenanyu
+    name: Nan Yu
+    handle: thenanyu
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: realmadhuguru
+    name: Madhu Guru
+    handle: realmadhuguru
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: amandaaskell
+    name: Amanda Askell
+    handle: AmandaAskell
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: catwu
+    name: Cat Wu
+    handle: _catwu
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: trq212
+    name: Thariq
+    handle: trq212
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: googlelabs
+    name: Google Labs
+    handle: GoogleLabs
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: amasad
+    name: Amjad Masad
+    handle: amasad
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: rauchg
+    name: Guillermo Rauch
+    handle: rauchg
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: alexalbert
+    name: Alex Albert
+    handle: alexalbert__
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: levie
+    name: Aaron Levie
+    handle: levie
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: ryolu
+    name: Ryo Lu
+    handle: ryolu_
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: garrytan
+    name: Garry Tan
+    handle: garrytan
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: mattturck
+    name: Matt Turck
+    handle: mattturck
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: zarazhangrui
+    name: Zara Zhang
+    handle: zarazhangrui
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: nikunj
+    name: Nikunj Kothari
+    handle: nikunj
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: danshipper
+    name: Dan Shipper
+    handle: danshipper
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: adityaag
+    name: Aditya Agarwal
+    handle: adityaag
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
+
+  - id: claudeai
+    name: Claude
+    handle: claudeai
+    enabled: true
+    priority: false
+    note: Discovered via follow-builders snapshot e4efaac15dbd2154dc2f342a439c56cd267339e6; account content remains direct-x evidence.
 
 twitterapi_io:
   enabled: true

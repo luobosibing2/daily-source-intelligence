@@ -281,6 +281,40 @@ def build_signals(run_date, root):
                 seen,
             )
 
+    official_pages = read_json(raw_dir / "official-pages.json", {"sources": []})
+    for source in official_pages.get("sources", []) or []:
+        if source.get("source_id") != "anthropic-engineering":
+            continue
+        for item in source.get("items", []) or []:
+            if item.get("window_status") == "outside":
+                continue
+            status = item.get("fulltext_status") or "unknown"
+            body = relative_body_path(root, status, item.get("fulltext_path"))
+            _append(
+                signals,
+                make_signal(
+                    root=root,
+                    run_date=run_date,
+                    source_type="official-page-article",
+                    source_id=source.get("source_id"),
+                    title=item.get("title") or item.get("url"),
+                    url=item.get("url"),
+                    published_at=item.get("published"),
+                    topics=item.get("topics") or source.get("topics") or [],
+                    evidence_level="official-source",
+                    content_status=status,
+                    content_path=item.get("fulltext_path"),
+                    score_total=70,
+                    score_breakdown={"first_party_article": 70},
+                    why_read=(
+                        "read archived Anthropic Engineering article body"
+                        if body
+                        else "boundary row: Anthropic Engineering article without readable fulltext body"
+                    ),
+                ),
+                seen,
+            )
+
     official = read_json(raw_dir / "official-link-candidates.json", {"candidates": []})
     for item in official.get("candidates", []) or []:
         status = item.get("fulltext_status") or ""
@@ -428,6 +462,7 @@ def build_signals(run_date, root):
         "window": {"start": f"{run_date}T00:00:00+08:00", "end_exclusive": f"{next_date}T00:00:00+08:00"},
         "raw_inputs": [
             f"raw/{run_date}/rss-items.json",
+            f"raw/{run_date}/official-pages.json",
             f"raw/{run_date}/official-link-candidates.json",
             f"raw/{run_date}/github-trending.json",
             f"raw/{run_date}/github-items.json",

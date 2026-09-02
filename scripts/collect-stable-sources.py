@@ -8,10 +8,12 @@ import subprocess
 import sys
 import time
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import date, datetime
 from email.utils import parsedate_to_datetime
 from html import unescape
 from pathlib import Path
+from urllib.parse import urljoin
+from zoneinfo import ZoneInfo
 
 import yaml
 
@@ -20,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "sources.yaml"
 TOPICS_PATH = ROOT / "config" / "topics.yaml"
 RAW_ROOT = ROOT / "raw"
+BEIJING = ZoneInfo("Asia/Shanghai")
 
 MAX_ITEMS_PER_SOURCE = 5
 MAX_TRENDING_REPOS_PER_SOURCE = 10
@@ -883,10 +886,180 @@ def parse_claude_blog_items(html_text):
     return items
 
 
-def collect_official_pages(official_sources, output_dir):
+def parse_anthropic_engineering_items(html_text):
+    decoded = (html_text or "").replace('\\"', '"')
+    embedded_dates = {}
+    embedded_pattern = re.compile(
+        r'"publishedOn"\s*:\s*"(?P<published>[^"]+)"\s*,\s*'
+        r'"slug"\s*:\s*\{[^{}]{0,300}?"current"\s*:\s*"(?P<slug>[^"]+)"',
+        re.DOTALL,
+    )
+    for match in embedded_pattern.finditer(decoded):
+        embedded_dates[match.group("slug").strip().rstrip("/")] = match.group("published").strip()
+
+    items = []
+    seen = set()
+    article_pattern = re.compile(
+        r'<article\b(?=[^>]*class=["\'][^"\']*ArticleList[^"\']*__article[^"\']*["\'])[^>]*>'
+        r"(?P<body>.*?)</article>",
+        re.IGNORECASE | re.DOTALL,
+    )
+    for article_match in article_pattern.finditer(html_text or ""):
+        body = article_match.group("body")
+        href_match = re.search(
+            r'<a\b[^>]*href=["\'](?P<href>(?:https://www\.anthropic\.com)?/engineering/[^"\'?#]+)["\']',
+            body,
+            re.IGNORECASE,
+        )
+        if not href_match:
+            continue
+        href = href_match.group("href").strip().rstrip("/")
+        url = urljoin("https://www.anthropic.com/engineering", href)
+        if url in seen:
+            continue
+
+        title_match = re.search(r"<h[1-4]\b[^>]*>(?P<title>.*?)</h[1-4]>", body, re.IGNORECASE | re.DOTALL)
+        title = strip_html(title_match.group("title")) if title_match else ""
+        if not title:
+            continue
+
+        published_match = re.search(
+            r'<(?:div|span|time)\b[^>]*class=["\'][^"\']*(?:__date|\bdate\b)[^"\']*["\'][^>]*>'
+            r"(?P<published>.*?)</(?:div|span|time)>",
+            body,
+            re.IGNORECASE | re.DOTALL,
+        )
+        published = strip_html(published_match.group("published")) if published_match else ""
+        if not published:
+            slug = href.rsplit("/", 1)[-1]
+            published = embedded_dates.get(slug, "")
+
+        seen.add(url)
+        items.append(
+            {
+                "title": title,
+                "url": url,
+                "published": published,
+            }
+        )
+    return items
+
+
+def published_date(value):
+    text = str(value or "").strip()
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d", "%b %d, %Y", "%B %d, %Y"):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            pass
+
+    normalized = text[:-1] + "+00:00" if text.endswith("Z") else text
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        try:
+            parsed = parsedate_to_datetime(text)
+        except (TypeError, ValueError, OverflowError):
+            return None
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(BEIJING)
+    return parsed.date()
+
+
+def publication_window_status(value, run_date):
+    parsed = published_date(value)
+    if parsed is None:
+        return "unknown"
+    return "inside" if parsed == date.fromisoformat(run_date) else "outside"
+
+
+def collect_anthropic_engineering(source, output_dir, run_date, fetched):
+    source_dir = output_dir / "official-page-text" / safe_slug(source.get("id", "anthropic-engineering"))
+    index_stem = item_file_stem(source["id"], source["name"], source["url"])
+    index_limited = html_looks_limited(fetched.get("body", ""))
+    if not fetched.get("ok") or index_limited:
+        fallback = fetch_readable_page(source["url"], source_dir, f"{index_stem}.index", fetched=fetched)
+        has_snapshot = bool(fallback.get("raw_html_path") or fallback.get("fulltext_path"))
+        record = {
+            "source_id": source["id"],
+            "source_name": source["name"],
+            "url": source["url"],
+            "status": "limited" if has_snapshot else "failed",
+            "index_status": "limited" if has_snapshot else "failed",
+            "index_card_count": 0,
+            "items": [],
+            "article_fulltext_counts": {"ok": 0, "limited": 0, "failed": 0},
+            **source_metadata(source),
+            **fallback,
+        }
+        if fallback.get("raw_html_path"):
+            record["index_snapshot_path"] = fallback["raw_html_path"]
+        if fallback.get("fulltext_path"):
+            record.setdefault("index_snapshot_path", fallback["fulltext_path"])
+            record["index_readable_path"] = fallback["fulltext_path"]
+            record["fetch_method"] = fallback.get("fulltext_method")
+        if not fetched.get("ok"):
+            record["error"] = fetched.get("stderr") or f"curl exit {fetched.get('status')}"
+            record["reason"] = "Engineering index curl fetch failed; readable fallback may be archived, but article cards require raw index HTML."
+        else:
+            record["reason"] = "Engineering index returned limited/challenge HTML; readable fallback may be archived, but article cards were not available."
+        return record
+
+    index_snapshot_path = write_archive_text(source_dir / f"{index_stem}.index.html", fetched.get("body", ""))
+    parsed_items = parse_anthropic_engineering_items(fetched.get("body", ""))
+    record = {
+        "source_id": source["id"],
+        "source_name": source["name"],
+        "url": source["url"],
+        "status": "ok" if parsed_items else "limited",
+        "index_status": "ok" if parsed_items else "limited",
+        "index_card_count": len(parsed_items),
+        "index_snapshot_path": index_snapshot_path,
+        "fetch_method": "curl",
+        "title": parse_html_title(fetched.get("body", "")),
+        "bytes": len(fetched.get("body", "").encode("utf-8")),
+        "items": [],
+        **source_metadata(source),
+    }
+    if not parsed_items:
+        record["reason"] = "Engineering index HTML fetched, but no valid article cards were parsed."
+        record["article_fulltext_counts"] = {"ok": 0, "limited": 0, "failed": 0}
+        return record
+
+    for parsed_item in parsed_items:
+        item = dict(parsed_item)
+        item["window_status"] = publication_window_status(item.get("published"), run_date)
+        if item["window_status"] == "outside":
+            continue
+        if item["window_status"] == "unknown":
+            item["fulltext_status"] = "skipped"
+            item["fulltext_reason"] = (
+                "Article publication date is unknown; fulltext fetch deferred until the daily window can be established."
+            )
+            record["items"].append(item)
+            continue
+
+        stem = item_file_stem(source["id"], item["title"], item["url"])
+        item.update(fetch_readable_page(item["url"], source_dir, stem))
+        record["items"].append(item)
+
+    record["article_fulltext_counts"] = {
+        status: sum(1 for item in record["items"] if item.get("fulltext_status") == status)
+        for status in ("ok", "limited", "failed")
+    }
+    return record
+
+
+def collect_official_pages(official_sources, output_dir, run_date=None):
+    run_date = run_date or output_dir.name
     results = []
     for source in official_sources:
         fetched = curl_text(source["url"])
+        if source["id"] == "anthropic-engineering":
+            results.append(collect_anthropic_engineering(source, output_dir, run_date, fetched))
+            continue
         if not fetched["ok"]:
             stem = item_file_stem(source["id"], source["name"], source["url"])
             fallback = fetch_readable_page(source["url"], output_dir / "official-page-text", stem, fetched=fetched)
@@ -1052,7 +1225,7 @@ def main(argv=None):
     else:
         github_api_status, github_results = {}, []
     trending_results = collect_github_trending(configured["github-trending"], output_dir) if "github-trending" in channels else []
-    official_results = collect_official_pages(configured["official-pages"], output_dir) if "official-pages" in channels else []
+    official_results = collect_official_pages(configured["official-pages"], output_dir, run_date=run_date) if "official-pages" in channels else []
     rss_fulltext = rss_fulltext_summary(rss_results)
     github_release_fulltext = github_release_fulltext_summary(github_results)
 

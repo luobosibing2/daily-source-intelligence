@@ -159,6 +159,27 @@ def github_release_fulltext_counts(github_sources):
     return counts
 
 
+def official_article_counts(official_sources):
+    counts = {
+        "index_cards": 0,
+        "daily_items": 0,
+        "fulltext_ok": 0,
+        "fulltext_limited": 0,
+        "fulltext_failed": 0,
+    }
+    for source in official_sources:
+        if source.get("source_id") != "anthropic-engineering":
+            continue
+        counts["index_cards"] += int(source.get("index_card_count") or 0)
+        items = source.get("items", []) or []
+        counts["daily_items"] += len(items)
+        for item in items:
+            status = item.get("fulltext_status")
+            if status in {"ok", "limited", "failed"}:
+                counts[f"fulltext_{status}"] += 1
+    return counts
+
+
 def twitter_collection_status(twitter):
     provider_status = twitter.get("status")
     if provider_status != "ok":
@@ -273,18 +294,40 @@ def source_health(raw, run_date, previous=None):
         source_id = source.get("source_id")
         if not source_id:
             continue
+        article_counts = official_article_counts([source])
+        article_fields = {}
+        if source_id == "anthropic-engineering":
+            article_fields = {
+                "index_status": source.get("index_status") or source.get("status") or "failed",
+                "index_card_count": article_counts["index_cards"],
+                "daily_item_count": article_counts["daily_items"],
+                "article_fulltext_counts": {
+                    "ok": article_counts["fulltext_ok"],
+                    "limited": article_counts["fulltext_limited"],
+                    "failed": article_counts["fulltext_failed"],
+                },
+            }
         if source.get("status") == "ok":
             sources[source_id] = {
                 "status": "ok",
                 "last_success": run_date,
                 "consecutive_failures": 0,
+                **article_fields,
             }
+            if article_fields:
+                sources[source_id]["note"] = (
+                    f"{article_counts['index_cards']} index cards parsed; "
+                    f"{article_counts['daily_items']} daily article items; "
+                    f"fulltext ok={article_counts['fulltext_ok']}, limited={article_counts['fulltext_limited']}, "
+                    f"failed={article_counts['fulltext_failed']}."
+                )
         elif source.get("status") == "limited":
             sources[source_id] = {
                 "status": "limited",
                 "last_checked": run_date,
                 "consecutive_failures": 1,
                 "note": source.get("reason") or "Official page returned limited content.",
+                **article_fields,
             }
         else:
             sources[source_id] = {
@@ -292,6 +335,7 @@ def source_health(raw, run_date, previous=None):
                 "last_checked": run_date,
                 "consecutive_failures": 1,
                 "note": source.get("error") or "Official page fetch failed.",
+                **article_fields,
             }
 
     twitter = current_twitter(raw["twitter"])
@@ -341,6 +385,7 @@ def manifest(raw, run_date):
     rss_fulltext = rss_fulltext_counts(rss_sources)
     github_release_fulltext = github_release_fulltext_counts(github_sources)
     official_counts = status_counts(official_sources)
+    official_articles = official_article_counts(official_sources)
     trending_counts = status_counts(trending_sources)
     github_api_status = raw["github"].get("api_status", {})
     twitter = current_twitter(raw["twitter"])
@@ -400,6 +445,11 @@ def manifest(raw, run_date):
             "official_pages_ok": official_counts["ok"],
             "official_pages_limited": official_counts["limited"],
             "official_pages_failed": official_counts["failed"],
+            "official_page_index_cards": official_articles["index_cards"],
+            "official_page_article_items": official_articles["daily_items"],
+            "official_page_article_fulltext_ok": official_articles["fulltext_ok"],
+            "official_page_article_fulltext_limited": official_articles["fulltext_limited"],
+            "official_page_article_fulltext_failed": official_articles["fulltext_failed"],
             "twitterapi_io_used": twitter.get("status") == "ok",
             "twitterapi_io_status": twitter_status,
             "x_twitter_direct_count": kept_total,
@@ -418,6 +468,18 @@ def build_limitations(raw):
         if source.get("status") == "limited":
             reason = (source.get("reason") or source.get("observed_title") or "limited content").rstrip(".")
             limitations.append(f"{source.get('source_id')} limited: {reason}.")
+        limited_items = [
+            item.get("title") or item.get("url")
+            for item in source.get("items", []) or []
+            if item.get("fulltext_status") in {"limited", "failed"}
+        ]
+        if limited_items:
+            sample = "; ".join(limited_items[:3])
+            more = f" (+{len(limited_items) - 3} more)" if len(limited_items) > 3 else ""
+            limitations.append(
+                f"{source.get('source_id')} official article fulltext limited/failed for "
+                f"{len(limited_items)} item(s): {sample}{more}."
+            )
     failed_rss = [source.get("source_id") for source in current_sources(raw["rss"]) if source.get("status") != "ok"]
     if failed_rss:
         limitations.append(f"RSS failed sources: {', '.join(failed_rss)}.")
@@ -502,7 +564,10 @@ def stable_seen_items(raw, run_date):
         if source.get("status") != "ok":
             continue
         source_items = source.get("items") or []
-        if not source_items and source.get("url") and source.get("source_id") not in {"anthropic-news-page"}:
+        if not source_items and source.get("url") and source.get("source_id") not in {
+            "anthropic-news-page",
+            "anthropic-engineering",
+        }:
             source_items = [{"title": source.get("title"), "url": source.get("url"), "published": source.get("published")}]
         for item in source_items:
             url = item.get("url")

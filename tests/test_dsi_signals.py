@@ -134,6 +134,71 @@ class DsiSignalsTest(unittest.TestCase):
         self.assertEqual(signal["content"]["path"], f"raw/{self.run_date}/body.md")
         self.assertEqual(signal["topics"], ["codex"])
 
+    def test_anthropic_engineering_articles_keep_body_and_boundary(self):
+        body_path = self.root / "raw" / self.run_date / "anthropic-engineering" / "inside.md"
+        body_path.parent.mkdir(parents=True)
+        body_path.write_text("article body", encoding="utf-8")
+        self.write_json(
+            "official-pages.json",
+            {
+                "sources": [
+                    {
+                        "source_id": "anthropic-engineering",
+                        "topics": ["agents"],
+                        "items": [
+                            {
+                                "title": "Inside article",
+                                "url": "https://www.anthropic.com/engineering/inside",
+                                "published": "2026-07-19",
+                                "window_status": "inside",
+                                "fulltext_status": "ok",
+                                "fulltext_path": f"raw/{self.run_date}/anthropic-engineering/inside.md",
+                            },
+                            {
+                                "title": "Unknown-date article",
+                                "url": "https://www.anthropic.com/engineering/unknown",
+                                "published": "",
+                                "window_status": "unknown",
+                                "fulltext_status": "skipped",
+                            },
+                        ],
+                    },
+                    {
+                        "source_id": "claude-blog",
+                        "items": [
+                            {
+                                "title": "Existing index-only behavior",
+                                "url": "https://claude.com/blog/existing",
+                                "published": "2026-07-19",
+                            }
+                        ],
+                    },
+                ]
+            },
+        )
+
+        payload = self.module.build_signals(self.run_date, self.root)
+        articles = [item for item in payload["signals"] if item["source_type"] == "official-page-article"]
+        by_title = {item["title"]: item for item in articles}
+
+        self.assertEqual(set(by_title), {"Inside article", "Unknown-date article"})
+        self.assertEqual(by_title["Inside article"]["evidence_level"], "official-source")
+        self.assertEqual(
+            by_title["Inside article"]["content"]["path"],
+            f"raw/{self.run_date}/anthropic-engineering/inside.md",
+        )
+        self.assertEqual(by_title["Unknown-date article"]["content"], {"status": "skipped", "path": ""})
+        self.assertIn("boundary row", by_title["Unknown-date article"]["why_read"])
+        self.assertIn(f"raw/{self.run_date}/official-pages.json", payload["raw_inputs"])
+
+        reading = self.module.build_reading_list(payload, "2026-07-19T12:00:00+08:00")
+        reading_by_title = {item["title"]: item for item in reading["entries"]}
+        self.assertEqual(
+            reading_by_title["Inside article"]["local_body_path"],
+            f"raw/{self.run_date}/anthropic-engineering/inside.md",
+        )
+        self.assertEqual(reading_by_title["Unknown-date article"]["local_body_path"], "")
+
 
 if __name__ == "__main__":
     unittest.main()

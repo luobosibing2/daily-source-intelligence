@@ -95,7 +95,24 @@ def parse_accounts():
             current[key] = value
     if current:
         accounts.append(current)
-    return [a for a in accounts if a.get("enabled") is True and a.get("handle")]
+    active_accounts = [a for a in accounts if a.get("enabled") is True and a.get("handle")]
+    handles = {}
+    duplicates = {}
+    for account in active_accounts:
+        normalized = str(account["handle"]).strip().lstrip("@").casefold()
+        if normalized in handles:
+            duplicates.setdefault(normalized, [handles[normalized]]).append(account)
+        else:
+            handles[normalized] = account
+    if duplicates:
+        conflicts = []
+        for handle, matching_accounts in sorted(duplicates.items()):
+            source_ids = ", ".join(str(account.get("id") or "<missing-id>") for account in matching_accounts)
+            conflicts.append(f"@{handle} ({source_ids})")
+        raise ValueError(
+            "duplicate enabled X handle(s), compared case-insensitively: " + "; ".join(conflicts)
+        )
+    return active_accounts
 
 
 def curl_json(url, api_key):
@@ -225,7 +242,11 @@ def main(argv=None):
     output_dir = RAW_ROOT / run_date
     output_path = output_dir / "twitterapi-io-results.json"
 
-    accounts = parse_accounts()
+    try:
+        accounts = parse_accounts()
+    except ValueError as exc:
+        print(f"configuration error: {exc}", file=sys.stderr)
+        return 2
     selected_ids = set(args.source)
     if selected_ids:
         available = {account.get("id") for account in accounts}

@@ -82,6 +82,26 @@ class ValidateDailyReportTest(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertIn("require disposition", "\n".join(result["errors"]))
 
+    def test_strict_missed_official_article_needs_disposition_and_note(self):
+        self.seed(report_counts=(0, 1), audit_counts=(0, 1), disposition="deferred")
+        audit_path = self.root / "reviews" / f"{self.date}-candidate-audit.json"
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        audit["rows"][0]["category"] = "official-page-article"
+        audit["rows"][0]["disposition_note"] = ""
+        audit_path.write_text(json.dumps(audit), encoding="utf-8")
+
+        non_strict = self.module.validate(self.date, root=self.root, strict=False)
+        strict = self.module.validate(self.date, root=self.root, strict=True)
+
+        self.assertTrue(non_strict["ok"])
+        self.assertFalse(strict["ok"])
+        self.assertIn("disposition and disposition note", "\n".join(strict["errors"]))
+
+        audit["rows"][0]["disposition_note"] = "Not material to today's themes."
+        audit_path.write_text(json.dumps(audit), encoding="utf-8")
+        resolved = self.module.validate(self.date, root=self.root, strict=True)
+        self.assertTrue(resolved["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

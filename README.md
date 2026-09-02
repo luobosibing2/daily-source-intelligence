@@ -2,7 +2,7 @@
 
 > 一套可审计、中文优先的每日公开信息采集与阅读工作流。
 
-Daily Source Intelligence 会围绕预设主题，收集官方博客、RSS、GitHub Releases、GitHub Trending 和公开 X/Twitter 信号，保留来源证据、生成阅读清单，并输出结构化中文日报。
+Daily Source Intelligence 会围绕预设主题，收集包括 Anthropic Engineering 在内的官方博客、RSS、GitHub Releases、GitHub Trending 和公开 X/Twitter 信号，保留来源证据、生成阅读清单，并输出结构化中文日报。
 
 [打开网页版（自动置顶最新一期）](https://luobosibing2.github.io/daily-source-intelligence/) · [浏览全部 Markdown 日报](docs/README.md) · [阅读完整运行手册](runbook.md)
 
