@@ -3,6 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -236,6 +237,26 @@ class RunDsiPipelineTest(unittest.TestCase):
         self.assertEqual(summary["reading_list"], f"raw/{self.date}/report-reading-list.json")
         self.assertNotIn("Full body about agents transforming work", json.dumps(summary, ensure_ascii=False))
         self.assertGreaterEqual(summary["counts"]["reading_list_entries"], 5)
+
+    def test_pipeline_collects_podcasts_with_other_channels(self):
+        module = load_script("run-dsi-pipeline.py")
+        commands = []
+
+        def fake_run_command(root, command, env=None):
+            commands.append(command)
+            return {
+                "cmd": " ".join(command),
+                "returncode": 0,
+                "stdout_excerpt": "",
+                "stderr_excerpt": "",
+            }
+
+        with patch.object(module, "run_command", side_effect=fake_run_command):
+            summary = module.run_pipeline(self.date, root=self.root, run_collection=True)
+
+        self.assertEqual(summary["commands"][0]["cmd"], "python3 scripts/collect-stable-sources.py")
+        self.assertIn(["python3", "scripts/collect-podcasts.py", "--date", self.date], commands)
+        self.assertIn(["python3", "scripts/collect-twitterapi-io.py"], commands)
 
 
 if __name__ == "__main__":

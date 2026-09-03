@@ -176,6 +176,55 @@ def official_page_article_rows(root, run_date, report_text, seen=None):
     return rows
 
 
+def podcast_rows(root, run_date, report_text, seen=None):
+    seen = seen or {"ids": set(), "urls": set()}
+    payload = read_json(root / "raw" / run_date / "podcast-items.json", {"episodes": []})
+    rows = []
+    for episode in payload.get("episodes", []) or []:
+        show_id = str(episode.get("show_id") or "").strip()
+        guid = str(episode.get("guid") or "").strip()
+        if (
+            not show_id
+            or not guid
+            or episode.get("allowed") is False
+            or episode.get("episode_status") in {"unconfigured", "invalid"}
+            or episode.get("admission_status") in {"unconfigured", "invalid"}
+            or episode.get("window_status") != "inside"
+        ):
+            continue
+        episode_id = f"podcast:{show_id}:{guid}"
+        canonical_url = episode.get("canonical_url") or episode.get("official_url") or ""
+        if already_seen(
+            seen,
+            ids=[episode_id, f"url:{canonical_url}" if canonical_url else ""],
+            urls=[canonical_url],
+        ):
+            continue
+        transcript_path = episode.get("transcript_path") or ""
+        values = [guid, canonical_url, episode.get("title"), transcript_path]
+        rows.append(
+            {
+                "category": "podcast-transcript",
+                "status": "covered" if is_covered(values, report_text) else "missed",
+                "episode_id": episode_id,
+                "signal": episode.get("title") or guid,
+                "source": (
+                    canonical_url
+                    or payload.get("feed_url")
+                    or payload.get("upstream_url")
+                    or f"raw/{run_date}/podcast-items.json"
+                ),
+                "reason": (
+                    f"show:{show_id}; guid:{guid}; "
+                    f"link:{episode.get('link_status') or 'unknown'}"
+                ),
+                "score": "",
+                "fulltext_status": episode.get("transcript_status") or "unknown",
+            }
+        )
+    return rows
+
+
 def tweet_score(tweet):
     engagement = sum(int(tweet.get(key) or 0) for key in ["retweetCount", "replyCount", "likeCount", "quoteCount"])
     text = (tweet.get("text") or "").lower()
@@ -349,6 +398,7 @@ def build_audit(run_date, root=ROOT):
     rows = candidate_rows(root, run_date, report_text, seen=seen)
     existing_tweet_ids = {tweet_id_from_row(row) for row in rows if tweet_id_from_row(row)}
     rows.extend(official_page_article_rows(root, run_date, report_text, seen=seen))
+    rows.extend(podcast_rows(root, run_date, report_text, seen=seen))
     rows.extend(rss_rows(root, run_date, report_text, seen=seen))
     topic_rows = topic_direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen)
     rows.extend(topic_rows)
@@ -356,10 +406,13 @@ def build_audit(run_date, root=ROOT):
     rows.extend(twitter_topic_summary_link_rows(root, run_date, report_text))
     rows.extend(direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen))
     for row in rows:
-        identity = "|".join(
-            str(row.get(key) or "")
-            for key in ("category", "tweet_id", "source", "signal")
-        )
+        if row.get("category") == "podcast-transcript":
+            identity = f"podcast-transcript|{row.get('episode_id') or ''}"
+        else:
+            identity = "|".join(
+                str(row.get(key) or "")
+                for key in ("category", "tweet_id", "source", "signal")
+            )
         row["candidate_id"] = f"candidate:{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:20]}"
         row["disposition"] = "covered_in_report" if row["status"] == "covered" else ""
         row["disposition_note"] = ""

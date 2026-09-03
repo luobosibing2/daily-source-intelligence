@@ -199,6 +199,123 @@ class DsiSignalsTest(unittest.TestCase):
         )
         self.assertEqual(reading_by_title["Unknown-date article"]["local_body_path"], "")
 
+    def test_podcast_transcript_uses_guid_identity_and_only_emits_inside_readable_items(self):
+        transcript = self.root / "raw" / self.run_date / "podcasts" / "ai-i" / "episode-1.md"
+        transcript.parent.mkdir(parents=True)
+        transcript.write_text("# Transcript\n\nSpeaker 1 | 00:00 - 00:30\nUseful evidence.", encoding="utf-8")
+        self.write_json(
+            "podcast-items.json",
+            {
+                "source_id": "follow-builders",
+                "feed_url": "https://raw.githubusercontent.com/example/feed-podcasts.json",
+                "raw_feed_path": f"raw/{self.run_date}/podcasts/feed-podcasts.json",
+                "episodes": [
+                    {
+                        "allowed": True,
+                        "episode_status": "ok",
+                        "show_id": "ai-i-by-every",
+                        "show_name": "AI & I by Every",
+                        "guid": "episode-1",
+                        "title": "Inside readable episode",
+                        "published_at": "2026-07-18T16:00:00Z",
+                        "window_status": "inside",
+                        "canonical_url": "https://example.com/episodes/1",
+                        "link_status": "ok",
+                        "transcript_status": "ok",
+                        "transcript_path": f"raw/{self.run_date}/podcasts/ai-i/episode-1.md",
+                        "topics": ["agents"],
+                    },
+                    {
+                        "allowed": True,
+                        "episode_status": "ok",
+                        "show_id": "ai-i-by-every",
+                        "guid": "episode-2",
+                        "title": "Inside limited episode",
+                        "published_at": "2026-07-19T03:00:00Z",
+                        "window_status": "inside",
+                        "transcript_status": "limited",
+                    },
+                    {
+                        "allowed": True,
+                        "episode_status": "ok",
+                        "show_id": "ai-i-by-every",
+                        "guid": "episode-3",
+                        "title": "Outside episode",
+                        "published_at": "2026-07-17T03:00:00Z",
+                        "window_status": "outside",
+                        "transcript_status": "ok",
+                        "transcript_path": f"raw/{self.run_date}/podcasts/ai-i/episode-1.md",
+                    },
+                ],
+            },
+        )
+
+        payload = self.module.build_signals(self.run_date, self.root)
+        podcasts = [item for item in payload["signals"] if item["source_type"] == "podcast-transcript"]
+
+        self.assertEqual(len(podcasts), 1)
+        signal = podcasts[0]
+        self.assertEqual(signal["signal_id"], "podcast:ai-i-by-every:episode-1")
+        self.assertEqual(signal["evidence_level"], "secondary-source")
+        self.assertEqual(signal["content"]["path"], f"raw/{self.run_date}/podcasts/ai-i/episode-1.md")
+        self.assertEqual(signal["topics"], ["agents"])
+        self.assertTrue(any(item.get("source_type") == "podcast-aggregator-feed" for item in signal["provenance"]))
+        self.assertIn(f"raw/{self.run_date}/podcast-items.json", payload["raw_inputs"])
+
+        reading = self.module.build_reading_list(payload, "2026-07-19T12:00:00+08:00")
+        self.assertEqual(reading["entries"][0]["signal_id"], "podcast:ai-i-by-every:episode-1")
+        self.assertEqual(reading["entries"][0]["provenance"], signal["provenance"])
+
+    def test_podcast_seen_dedup_uses_episode_identity_not_shared_feed_url(self):
+        transcript = self.root / "raw" / self.run_date / "podcasts" / "new.md"
+        transcript.parent.mkdir(parents=True)
+        transcript.write_text("Speaker 1 | 00:00\nNew episode transcript.", encoding="utf-8")
+        (self.root / "state").mkdir()
+        (self.root / "state" / "seen.json").write_text(
+            json.dumps(
+                {
+                    "items": [
+                        {
+                            "id": "podcast:ai-i-by-every:old-guid",
+                            "first_seen": "2026-07-18",
+                            "url": "https://raw.githubusercontent.com/example/feed-podcasts.json",
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        self.write_json(
+            "podcast-items.json",
+            {
+                "source_id": "follow-builders",
+                "feed_url": "https://raw.githubusercontent.com/example/feed-podcasts.json",
+                "episodes": [
+                    {
+                        "allowed": True,
+                        "episode_status": "ok",
+                        "show_id": "ai-i-by-every",
+                        "guid": "new-guid",
+                        "title": "New unresolved-link episode",
+                        "published_at": "2026-07-19T03:00:00Z",
+                        "window_status": "inside",
+                        "canonical_url": "",
+                        "link_status": "limited",
+                        "transcript_status": "ok",
+                        "transcript_path": f"raw/{self.run_date}/podcasts/new.md",
+                    }
+                ],
+            },
+        )
+
+        podcasts = [
+            item
+            for item in self.module.build_signals(self.run_date, self.root)["signals"]
+            if item["source_type"] == "podcast-transcript"
+        ]
+
+        self.assertEqual([item["signal_id"] for item in podcasts], ["podcast:ai-i-by-every:new-guid"])
+
 
 if __name__ == "__main__":
     unittest.main()

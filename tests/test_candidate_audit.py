@@ -154,6 +154,60 @@ class CandidateAuditTest(unittest.TestCase):
 
         self.assertEqual(payload["rows"], [])
 
+    def test_podcast_candidates_use_guid_identity_and_report_evidence_anchors(self):
+        transcript_path = f"raw/{self.date}/podcasts/ai-i/guid-1.md"
+        canonical_url = "https://example.com/episodes/guid-1"
+        self.write_text(
+            f"docs/{self.date}-daily-intel.md",
+            f"# Daily\n\n- Covered by transcript: {transcript_path}\n",
+        )
+        self.write_json(
+            f"raw/{self.date}/podcast-items.json",
+            {
+                "source_id": "follow-builders-podcasts",
+                "upstream_url": "https://raw.githubusercontent.com/example/feed-podcasts.json",
+                "episodes": [
+                    {
+                        "show_id": "ai-i-by-every",
+                        "guid": "guid-1",
+                        "episode_id": "podcast:ai-i-by-every:guid-1",
+                        "title": "Covered episode",
+                        "window_status": "inside",
+                        "canonical_url": canonical_url,
+                        "transcript_status": "ok",
+                        "transcript_path": transcript_path,
+                    },
+                    {
+                        "show_id": "latent-space",
+                        "guid": "guid-2",
+                        "title": "Missed episode",
+                        "window_status": "inside",
+                        "transcript_status": "limited",
+                    },
+                    {
+                        "show_id": "latent-space",
+                        "guid": "guid-outside",
+                        "title": "Outside episode",
+                        "window_status": "outside",
+                        "transcript_status": "ok",
+                    },
+                ],
+            },
+        )
+
+        module = load_script("candidate-audit.py")
+        first = module.build_audit(self.date, root=self.root)
+        second = module.build_audit(self.date, root=self.root)
+        podcasts = [row for row in first["rows"] if row["category"] == "podcast-transcript"]
+
+        self.assertEqual([row["status"] for row in podcasts], ["covered", "missed"])
+        self.assertEqual(podcasts[0]["episode_id"], "podcast:ai-i-by-every:guid-1")
+        self.assertEqual(podcasts[1]["fulltext_status"], "limited")
+        self.assertEqual(
+            [row["candidate_id"] for row in podcasts],
+            [row["candidate_id"] for row in second["rows"] if row["category"] == "podcast-transcript"],
+        )
+
     def test_write_audit_writes_json_sha_and_preserves_disposition(self):
         report = self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n\n- Other signal.\n")
         self.write_json(

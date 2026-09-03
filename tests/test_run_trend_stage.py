@@ -271,6 +271,40 @@ class RunTrendStageTest(unittest.TestCase):
         self.assertEqual(rows[2]["evidence_level"], "secondary-source")
         self.assertEqual(len(rows[2]["source_content_hash"]), 64)
 
+    def test_podcast_paths_are_always_secondary_even_when_company_name_looks_official(self):
+        module = load_script("run-trend-stage.py")
+
+        self.assertEqual(
+            module.infer_evidence_level(
+                f"raw/{self.date}/podcasts/openai-show/guid.md",
+                f"trend/raw/{self.date}/memory-dream/openai-podcast.md",
+            ),
+            "secondary-source",
+        )
+        self.assertEqual(
+            module.infer_evidence_level(
+                f"raw/{self.date}/generic/guid.md",
+                f"trend/raw/{self.date}/memory-dream/guid.md",
+                "podcast-transcript",
+            ),
+            "secondary-source",
+        )
+
+        transcript = self.write_text(f"raw/{self.date}/generic/guid.md", "# Episode\n\nTranscript body.\n")
+        candidate = module.candidate_from_entry(
+            self.root,
+            self.date,
+            {"id": "memory-dream", "label": "Memory & Dream"},
+            {"status": "new-signal"},
+            {
+                "source_type": "podcast-transcript",
+                "source_path": str(transcript.relative_to(self.root)),
+                "status": "ok",
+            },
+        )
+        self.assertEqual(candidate["evidence_level"], "secondary-source")
+        self.assertIn("not audio-verified", candidate["boundary_note"])
+
     def test_verifier_fails_when_status_note_is_missing_for_non_active_claim(self):
         module = load_script("run-trend-stage.py")
         with module.connect_db(self.root) as conn:

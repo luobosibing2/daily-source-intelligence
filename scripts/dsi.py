@@ -12,13 +12,15 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-STABLE_CHANNELS = {"rss", "github-releases", "github-trending", "official-pages"}
+STABLE_CHANNELS = {"rss", "github-releases", "github-trending", "official-pages", "podcasts"}
+COLLECT_STABLE_CHANNELS = STABLE_CHANNELS - {"podcasts"}
 ALL_CHANNELS = STABLE_CHANNELS | {"x"}
 OUTPUT_BY_CHANNEL = {
     "rss": "rss-items.json",
     "github-releases": "github-items.json",
     "github-trending": "github-trending.json",
     "official-pages": "official-pages.json",
+    "podcasts": "podcast-items.json",
     "x": "twitterapi-io-results.json",
 }
 PREPARE_INPUTS = [
@@ -26,6 +28,7 @@ PREPARE_INPUTS = [
     "github-items.json",
     "github-trending.json",
     "official-pages.json",
+    "podcast-items.json",
     "twitterapi-io-results.json",
     "official-link-candidates.json",
     "twitter-topic-brief.json",
@@ -236,12 +239,17 @@ def run_collection(args):
     env = dict(os.environ)
     env["RUN_DATE"] = args.date
     codes = []
-    stable = sorted(channels & STABLE_CHANNELS)
+    stable = sorted(channels & COLLECT_STABLE_CHANNELS)
     if stable:
         command = ["python3", "scripts/collect-stable-sources.py", "--date", args.date]
         for channel in stable:
             command.extend(["--channel", channel])
         for source_id in selected.get(stable[0], []) if len(stable) == 1 else []:
+            command.extend(["--source", source_id])
+        codes.append(run_command(root, command, env=env))
+    if "podcasts" in channels:
+        command = ["python3", "scripts/collect-podcasts.py", "--date", args.date]
+        for source_id in selected.get("podcasts", []):
             command.extend(["--source", source_id])
         codes.append(run_command(root, command, env=env))
     if "x" in channels:

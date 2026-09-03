@@ -102,6 +102,22 @@ class ValidateDailyReportTest(unittest.TestCase):
         resolved = self.module.validate(self.date, root=self.root, strict=True)
         self.assertTrue(resolved["ok"])
 
+    def test_strict_missed_podcast_needs_disposition(self):
+        self.seed(report_counts=(0, 1), audit_counts=(0, 1), disposition="")
+        audit_path = self.root / "reviews" / f"{self.date}-candidate-audit.json"
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        audit["rows"][0]["category"] = "podcast-transcript"
+        audit_path.write_text(json.dumps(audit), encoding="utf-8")
+
+        self.assertTrue(self.module.validate(self.date, root=self.root, strict=False)["ok"])
+        strict = self.module.validate(self.date, root=self.root, strict=True)
+        self.assertFalse(strict["ok"])
+        self.assertIn("missed podcast transcripts require disposition", "\n".join(strict["errors"]))
+
+        audit["rows"][0]["disposition"] = "read_not_relevant"
+        audit_path.write_text(json.dumps(audit), encoding="utf-8")
+        self.assertTrue(self.module.validate(self.date, root=self.root, strict=True)["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

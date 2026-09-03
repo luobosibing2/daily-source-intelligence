@@ -2,7 +2,7 @@
 
 ## 目标
 
-每天收集过去 24 小时内与 `config/watch.md` 相关的公开资讯，优先覆盖官方博客、RSS、GitHub 发布、GitHub 每日热门项目，以及 `twitterapi.io` 能返回的结构化 X/Twitter 数据。第一版不使用官方 X API，不使用 Exa MCP，不承诺完整抓取某个 X 账号的所有推文。
+每天收集过去 24 小时内与 `config/watch.md` 相关的公开资讯，优先覆盖官方博客、RSS、GitHub 发布、GitHub 每日热门项目、follow-builders 提供的播客 transcript，以及 `twitterapi.io` 能返回的结构化 X/Twitter 数据。第一版不使用官方 X API，不使用 Exa MCP，不承诺完整抓取某个 X 账号的所有推文或 follow-builders 所配置节目的完整单集目录。
 
 输出必须符合本仓库的主题归档规则：
 
@@ -18,22 +18,25 @@
 python3 scripts/dsi.py run --date YYYY-MM-DD
 ```
 
-该入口会从原始归档派生 `raw/YYYY-MM-DD/signals.json`、`report-reading-list.json` 与 `run-summary.json`。`signals.json` 统一执行北京时间日窗口、canonical URL 去重、tweet/repo 去重、多主题合并和评分解释，但不是新的证据真相源；原始归档仍是权威证据。`run-summary.json` 只用于流程状态与路径索引，日报写作仍必须按 `report-reading-list.json` 读取其中列出的正文、官方页面文章、README、release body、official-link fulltext 和 direct-X evidence。
+该入口会从原始归档派生 `raw/YYYY-MM-DD/signals.json`、`report-reading-list.json` 与 `run-summary.json`。`signals.json` 统一执行北京时间日窗口、canonical URL 去重、tweet/repo/podcast GUID 去重、多主题合并和评分解释，但不是新的证据真相源；原始归档仍是权威证据。`run-summary.json` 只用于流程状态与路径索引，日报写作仍必须按 `report-reading-list.json` 读取其中列出的正文、播客 transcript、官方页面文章、README、release body、official-link fulltext 和 direct-X evidence。
 
 按来源重跑示例：`python3 scripts/dsi.py run --date YYYY-MM-DD --channel rss --source rss:openai-blog --dry-run`。`--dry-run` 不联网、不创建文件；`--resume` 只有在配置指纹和目标输出哈希都一致时才跳过采集。
 
 1. 读取配置
    - 读取 `config/watch.md` 理解关注方向和高信号定义。
    - 读取 `config/topics.yaml` 获取主题、关键词、排除词和输出分组。
-   - 读取 `config/sources.yaml` 获取 RSS、GitHub releases、GitHub Trending、官方页面、`official_link_candidates`、`twitterapi_io` 配置和 X/Twitter handles。
-   - 读取 `state/seen.json`，避免重复记录已经处理过的 URL、tweet id 或 GitHub release id。
+   - 读取 `config/sources.yaml` 获取 RSS、podcasts、GitHub releases、GitHub Trending、官方页面、`official_link_candidates`、`twitterapi_io` 配置和 X/Twitter handles。
+   - 读取 `state/seen.json`，避免重复记录已经处理过的 URL、tweet id、podcast GUID 或 GitHub release id。
 
 2. 采集稳定来源
-   - 优先运行 `daily-source-intelligence/scripts/collect-stable-sources.py`，统一写出 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
+   - 稳定来源运行写出 `rss-items.json`、`podcast-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`；播客使用独立 collector，以免把第三方 transcript 伪装成普通 RSS 正文。
    - 脚本不再内置或自动补本机代理。网络路径优先使用系统/TUN 级代理；如需显式代理，运行前手动设置 `http_proxy`、`https_proxy` 或 `all_proxy`，`curl` 会自动读取这些环境变量。
    - RSS/Atom：读取 `rss` sources 中启用的 feed，收集过去 24 小时的新条目。脚本默认用 [`config/topics.yaml`](config/topics.yaml) 与每个 source 的 `topics` 判断 feed 条目是否命中关注方向；命中的 RSS 条目必须继续打开原文 URL，归档到 `raw/YYYY-MM-DD/rss-fulltext/<source-id>/`，并在 `rss-items.json` 条目上写入 `relevance_status`、`matched_topics`、`matched_keywords`、`fulltext_status`、`fulltext_method`、`fulltext_path`、`raw_html_path` 或失败原因。不能只凭 feed title/RSS summary 写强判断。
    - 一手重点源不走 topic 过滤。凡是 source 配置了 `fulltext_policy: always`，例如 `openai-blog`、`openai-codex`、`anthropics-claude-code`，只要 feed/release Atom 里出现条目就尝试提取正文，并写入 `relevance_status=always_read` 与 `intelligence_department`。日报里把这些条目放到“一手重点源 / First-party OpenAI & Claude Code”部门，不因关键词未命中而跳过。
    - RSS 原文抓取先用 `curl` 保存 HTML/提取文本；如果 `curl` 失败、返回 Cloudflare/JS challenge、正文太短或不可读，必须自动尝试 `opencli web read --url <url> --stdout true --download-images false -f md`。`opencli` 成功时将 Markdown 归档为 `.opencli.md`，证据方法标为 `opencli-read`；仍失败时标为 `limited`/`failed`，日报和 trend 只能写边界，不得把摘要升级成全文证据。
+   - Podcasts：`podcasts` 通道只读取配置中的 follow-builders 公共 `feed-podcasts.json`，不运行 pod2txt、不要求 transcript credential、不下载音频、不调用 ASR。先保存完整上游 JSON 快照和 hash，再把本地允许节目中 GUID 有效的单集规范化到 `podcast-items.json`，并把可读 transcript 拆到 `podcast-transcripts/<show-id>/`。身份固定为 `podcast:<show-id>:<guid>`；标题、频道和 playlist URL 都不能代替 GUID。
+   - follow-builders JSON 的 `url` 只是 alias：若不是明确单集 URL，按配置的节目 RSS 用 GUID 精确查找 episode permalink；不做标题模糊匹配。RSS 补链失败时 transcript 仍可归档，但 `link_status=limited`，日报不得把频道或 playlist 冒充单集链接。
+   - follow-builders 的 14 天 `lookbackHours` 只代表上游提供范围。所有返回单集可以写入 raw，但只有 `publishedAt` 落在目标运行日北京时间窗口的单集进入 signals、reading list 和 candidate audit；窗口外或时间未知只保留覆盖边界。合法空 feed 表示“上游本轮提供 0 集”，不表示六个节目逐一检查后均无更新。
    - GitHub：第一版无 `GITHUB_TOKEN` 时优先读取 `https://github.com/{repo}/releases.atom`；REST API 只作为增强路径。若 REST API 返回 rate limit 或 403，不视为整体失败，降级到 Atom feed 并写入 `source-health.json`。配置了 `fulltext_policy: always` 的 release Atom 源必须保留 release Atom content 全文到 `raw/YYYY-MM-DD/github-release-fulltext/<source-id>/`；内容过短时标为 `limited`，不能假装读到了 release body。
    - GitHub Trending：读取 `github_trending` sources，默认采集 `https://github.com/trending?since=daily` 的前 10 个项目，写入 `github-trending.json`。每个 repo 必须保留 GitHub Trending 页面上的 `trending_description`，也必须继续打开并归档 README，保存到 `raw/YYYY-MM-DD/github-trending-readmes/`，并在 `github-trending.json` 中写入 `readme_status`、`readme_method`、`readme_path`、`readme_title` 和 `readme_excerpt`。README raw 抓取失败时尝试 `opencli web read`；Trending 页面自身若 curl 失败但 `opencli` 可读，只能归档诊断快照，仍不能替代 repo-card HTML 解析。Trending 只作为发现/研究线索，证据等级默认 `secondary-source`；不要把“上榜”写成官方发布、质量背书或长期趋势。
    - 官方页面：读取 `official_pages`，优先发现新 blog、changelog、release note 或 docs update。官方页面抓取失败、limited 或 challenge 时同样尝试 `opencli web read`，并把 `fetch_method` / `fulltext_method` 写入 `official-pages.json`。
@@ -61,7 +64,8 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
 5. 归档 raw
    - 当天目录：`raw/YYYY-MM-DD/`
    - 保存一份 `manifest.json`，记录采集时间、查询范围、来源、命中数量、失败来源。
-   - 保存稳定来源条目为 `rss-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
+   - 保存稳定来源条目为 `rss-items.json`、`podcast-items.json`、`github-items.json`、`github-trending.json`、`official-pages.json`。
+   - 保存 follow-builders 完整响应和抓取 metadata；可读单集 transcript 独立写入 `podcast-transcripts/<show-id>/`，记录 provider、method、字符数、hash、speaker/timestamp 覆盖和本地路径。完整 transcript 只作为本地 raw 阅读材料，不复制到公开日报或 HTML bundle。
    - 保存 RSS 命中关注方向的原文归档到 `rss-fulltext/<source-id>/`；`.html` 是 `curl` 原始响应，`.extracted.md` 是本地文本提取，`.opencli.md` 是 `opencli web read` 可读正文。
    - 保存一手 release Atom 全文归档到 `github-release-fulltext/<source-id>/`；`.atom.md` 是从 GitHub release Atom `<content>` 提取的可读正文。
    - 保存 GitHub Trending README 原文到 `github-trending-readmes/`；如果 README 缺失、raw URL 不可访问或下载失败，必须在 `github-trending.json` 和日报“不确定性与待验证项”里说明。
@@ -72,7 +76,7 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
    - 对高信号原文，尽量保存 HTML、Markdown 或文本提取文件；无法归档时在日报“不确定性与待验证项”说明。
 
 6. 去重和评分
-   - 去重键优先级：`tweet_id` > canonical URL > normalized title + source。
+   - 去重键优先级：`tweet_id` / `podcast:<show-id>:<guid>` > canonical URL > normalized title + source。
    - 已存在于 `state/seen.json` 的条目不重复写入日报，除非有新的重要后续。
    - 评分只用于排序，不用于删除高优先级来源：
      - priority source: +3
@@ -85,8 +89,9 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
 
 7. 更新状态
    - 优先运行 `daily-source-intelligence/scripts/update-state.py`，根据当天 raw 文件生成/更新 `manifest.json`、`state/source-health.json` 和 `state/seen.json`。
-   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
-   - 运行 [`scripts/dsi.py`](scripts/dsi.py#L1) `prepare --date YYYY-MM-DD` 派生当天 `signals.json`、`report-reading-list.json` 和 `run-summary.json`。已知发布时间必须落在北京时间当天；时间字段缺失时仅保留为 `window_status=unknown` 的覆盖边界。`Anthropic Engineering` 当日 article 以 `source_type=official-page-article`、`evidence_level=official-source` 进入阅读清单；正文不可读时只保留边界行。`report-reading-list.json` 是正文阅读清单，不得替代正文阅读；`run-summary.json` 只记录流程状态、失败源、路径和候选数量。
+   - `seen.json` 的脚本更新采用保守策略：稳定来源只记录日报窗口内条目；播客用 `podcast:<show-id>:<guid>`，首次 transcript limited 后同一目标日期重跑变为 ok 时仍允许进入阅读清单；GitHub Trending 用 `github-trending:{owner}/{repo}` 作为去重键并标记为 `secondary-source`；X/Twitter 只记录强关键词或互动明显的 direct-x 条目，默认最多自动记录 40 条；人工已有记录不覆盖标题。
+   - `manifest.json` 与 `source-health.json` 必须单列 podcast fetch 状态、upstream offered、allowed、inside/outside/unknown、transcript ok/limited、link ok/limited 和 upstream errors。不能把 `offered` 写成 `checked shows`。
+   - 运行 [`scripts/dsi.py`](scripts/dsi.py#L1) `prepare --date YYYY-MM-DD` 派生当天 `signals.json`、`report-reading-list.json` 和 `run-summary.json`。已知发布时间必须落在北京时间当天；时间字段缺失时仅保留为 `window_status=unknown` 的覆盖边界。`Anthropic Engineering` 当日 article 以 `source_type=official-page-article`、`evidence_level=official-source` 进入阅读清单；播客 transcript 以 `source_type=podcast-transcript`、`evidence_level=secondary-source` 进入，正文路径必须指向本地拆分 transcript。`report-reading-list.json` 是正文阅读清单，不得替代正文阅读；`run-summary.json` 只记录流程状态、失败源、路径和候选数量。
 
 8. 生成日报
    - 写入 `docs/YYYY-MM-DD-daily-intel.md`。
@@ -104,6 +109,9 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
      - `direct-x`
      - `secondary-source`
    - 日报必须在“按主题分组摘要”中包含 `### X/Twitter 推主主题摘要`，读取 `raw/YYYY-MM-DD/twitter-topic-brief.json`，按 [`config/topics.yaml`](config/topics.yaml) 的主题 label 汇总推主推文。每个有内容的主题默认选 1-3 条最高分 tweet，保留 tweet 链接、`direct-x` 证据等级和边界说明。
+   - 日报必须在“按主题分组摘要”中包含 `### 播客 / 长对话`。有当日可读 transcript 时逐项读取并形成紧凑洞察卡：一句话核心结论、明确的节目/标题/说话人上下文、2–4 条具体洞察、speaker/timestamp 锚点、命中的既有主题、官方单集与本地 transcript 链接、`secondary-source` 边界；无可读单集时只写本轮 offered/inside/limited/failed 覆盖，不解释为节目无更新。
+   - 播客默认做中文转述。不得照搬 follow-builders prompt 的“必须直接引语”：如使用短摘录，必须逐字来自本地 transcript、附 speaker/timestamp，并明确它是聚合 transcript、未做音频复核。说话人姓名/职位缺失时保持未知；嘉宾或主持人主张不得改写为厂商事实、产品运行时事实或行业共识。
+   - 播客覆盖还必须进入“采集范围”“来源证据表”“不确定性与待验证项”和“当天产物”；只有阅读全文后确认与 `watch.md`/topics 高相关的洞察才进入“今日高信号”或既有主题段，不能因 transcript 很长自动获得高优先级。
    - 每条 RSS/Atom 高信号必须检查 `rss-items.json` 中对应条目的 `fulltext_status`。只有 `fulltext_status=ok` 且 `fulltext_path` 指向本地归档时，才能写成已读原文；`limited`、`failed` 或 `skipped` 只能按摘要/发现线索写边界。
    - 日报必须有“一手重点源 / First-party OpenAI & Claude Code”部门，优先汇总 `intelligence_department` 为 `first-party-openai` 或 `first-party-claude-code` 的条目；这些条目不受普通 topic match 限制，但仍必须写清 fulltext 是否 ok/limited。
    - GitHub Trending 每日热门项目必须单独说明覆盖状态、解析到的 repo 数、Trending description 覆盖状态、README 归档覆盖状态，以及它只是 discovery signal 的边界。
@@ -116,7 +124,7 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
    - 项目归纳必须把 Trending description 和 README 原文/摘录合成一段自然语言总结。不要写成 `Trending description:` / `README 归纳:` 这种字段式拆分，不要把两份来源割裂成两段，也不要用 `agent-native / workflow / harness / infra` 等术语堆成一句话就结束。
    - 若 README 缺失，不能写机制总结，只能写“待读 README 的候选项目”，并说明缺失原因和下一步最小验证路径。
    - 日报初稿完成后运行 [`scripts/candidate-audit.py`](scripts/candidate-audit.py#L1) `--date YYYY-MM-DD`，同时写入 Markdown 与 `reviews/YYYY-MM-DD-candidate-audit.json`。JSON 记录日报 SHA、稳定 candidate id、计数和处置状态；重跑会保留已有人工 disposition。日报中应写稳定 marker：`<!-- dsi-candidate-audit: covered=N missed=M -->`。
-   - 运行 [`scripts/validate-daily-report.py`](scripts/validate-daily-report.py#L1) `--date YYYY-MM-DD --strict`，核对日报 SHA、报告/审计计数、审计行计数、本地链接，以及 missed official-link candidate / `Anthropic Engineering` official-page article 是否已有处置。凡是高分 direct-x/RSS 条目为 `missed`，仍必须在“今日高信号”或“不确定性与待验证项”中处理或解释边界。
+   - 运行 [`scripts/validate-daily-report.py`](scripts/validate-daily-report.py#L1) `--date YYYY-MM-DD --strict`，核对日报 SHA、报告/审计计数、审计行计数、本地链接，以及 missed official-link candidate / `Anthropic Engineering` official-page article / podcast transcript 是否已有处置。播客可用 `read_not_relevant`、`duplicate` 或 `insufficient_evidence` 解释未进入正文；没有覆盖也没有处置时 strict validation 失败。
    - 校验通过后，[`scripts/build-daily-bundle.py`](scripts/build-daily-bundle.py#L1) 派生 `docs/YYYY-MM-DD-daily-intel.index.json`、日期化 HTML 与 `docs/index.html`；Markdown 日报仍是可读内容真相源，JSON/HTML 保存它的 SHA，不得反向覆盖 Markdown。
 
 9. 更新长期 trend
@@ -127,6 +135,7 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
    - 凡是被选入 trend 的 RSS / Atom / 官方博客 / 博文 / newsletter 条目，必须先下载并归档原文，再阅读原文后写入 trend 判断；不能只凭 feed title、RSS summary、站点 metadata 或聊天中的印象更新专题结论。优先复用当天 `raw/YYYY-MM-DD/rss-fulltext/` 中已归档的 fulltext；缺失时再补抓并归档到 trend raw。
    - 原文归档写入 `trend/raw/YYYY-MM-DD/<trend-id>/`，优先保存 HTML 原文、Markdown/文本提取版和一个简短 manifest；如果 `curl` 下载失败、付费墙、反爬、正文不可读或只有 RSS 摘要，必须尝试 `opencli web read`。`opencli` 仍失败时，在当天 trend report 中标为 `needs-fulltext` / `limited`，且不能把该条提升为强 trend 结论。
    - GitHub Trending / GitHub repo 信号必须至少读取并归档 README 或 release body；README 缺失或正文不可读时，只能列为 discovery candidate，不能写机制判断。
+   - 播客只有在日报选中且明确命中 enabled trend 时才进入 trend；其本地 transcript 可以作为 evidence ref，但证据等级固定为 `secondary-source`，必须保留说话人归属、聚合 transcript 和未做音频复核的边界，不能因节目涉及某家公司而升级为 `official-source`。
    - trend 扩充不得重跑 `twitterapi.io`，不得使用 X/Twitter 写操作、posting、liking、following 或 DM。公开网页正文可用 `opencli web read` 作为失败 fallback，但必须记录 `opencli-read` 方法和归档路径，不得把登录态社交内容当作替代证据。
    - 扩充得到的官方页面、docs、README、release body、摘录或 manifest 写入 `trend/raw/YYYY-MM-DD/<trend-id>/`。
    - 写入当天趋势分析报告：`trend/reports/YYYY-MM-DD-trend-report.md`。报告必须回答“今天这些情报对长期趋势意味着什么”，不能只写 audit 表。
@@ -160,6 +169,8 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
 - 不使用 Exa MCP 作为 fallback discovery layer。
 - `twitterapi.io` 仅使用 read endpoints；不使用发帖、点赞、关注、DM 等 action endpoints。
 - 不承诺完整 Twitter/X 时间线覆盖。
+- 不承诺 follow-builders 六个节目的逐节目或完整单集覆盖；只报告中央 feed 实际 offered 的内容。
+- 不运行 follow-builders 的 transcript 生成链，不调用 ASR，不下载播客音频，不把第三方 transcript 公开成完整日报内容。
 - 不自动发送 Discord、Telegram 或邮件。
 - 不把未验证的二手线索写成确定事实。
 

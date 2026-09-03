@@ -23,6 +23,7 @@ class SourceHealthTest(unittest.TestCase):
             "github_trending": {"sources": []},
             "official": {"sources": []},
             "twitter": {"status": "ok", "accounts": []},
+            "podcasts": {"status": "missing", "episodes": []},
         }
 
     def test_failure_increments_and_keeps_last_success(self):
@@ -136,6 +137,109 @@ class SourceHealthTest(unittest.TestCase):
         seen = self.module.stable_seen_items(self.raw, "2026-09-03")
 
         self.assertEqual(seen, [])
+
+    def test_podcast_health_manifest_and_seen_use_offered_denominator_and_guid_identity(self):
+        self.raw["podcasts"] = {
+            "source_id": "follow-builders",
+            "status": "partial",
+            "collected_at": "2026-07-19T12:00:00+08:00",
+            "upstream_generated_at": "2026-07-19T01:00:00Z",
+            "lookback_hours": 336,
+            "errors": ["one upstream show failed"],
+            "episodes": [
+                {
+                    "show_id": "ai-i-by-every",
+                    "guid": "guid-1",
+                    "title": "Readable",
+                    "published_at": "2026-07-19T01:00:00+08:00",
+                    "window_status": "inside",
+                    "canonical_url": "https://example.com/episodes/1",
+                    "link_status": "ok",
+                    "transcript_status": "ok",
+                    "allowed": True,
+                },
+                {
+                    "show_id": "latent-space",
+                    "guid": "guid-2",
+                    "title": "Outside",
+                    "window_status": "outside",
+                    "link_status": "limited",
+                    "transcript_status": "limited",
+                    "allowed": True,
+                },
+                {
+                    "show_id": "",
+                    "guid": "guid-3",
+                    "title": "Unconfigured",
+                    "window_status": "unknown",
+                    "admission_status": "unconfigured",
+                    "episode_status": "unconfigured",
+                    "allowed": False,
+                    "transcript_status": "ok",
+                },
+            ],
+        }
+
+        health = self.module.source_health(self.raw, "2026-07-19")
+        source = health["sources"]["follow-builders"]
+        self.assertEqual(source["status"], "partial")
+        self.assertEqual(source["offered_count"], 3)
+        self.assertEqual(source["inside_count"], 1)
+        self.assertEqual(source["transcript_counts"], {"ok": 1, "limited": 1})
+
+        manifest = self.module.manifest(self.raw, "2026-07-19")
+        self.assertEqual(manifest["summary"]["podcast_offered"], 3)
+        self.assertEqual(manifest["summary"]["podcast_inside"], 1)
+        self.assertEqual(manifest["summary"]["podcast_outside"], 1)
+        self.assertEqual(manifest["summary"]["podcast_unknown"], 0)
+        self.assertEqual(manifest["summary"]["podcast_transcript_ok"], 1)
+        self.assertEqual(manifest["summary"]["podcast_upstream_errors"], 1)
+        self.assertEqual(manifest["summary"]["podcast_unconfigured"], 1)
+
+        seen = self.module.stable_seen_items(self.raw, "2026-07-19")
+        self.assertEqual(len(seen), 1)
+        self.assertEqual(seen[0]["id"], "podcast:ai-i-by-every:guid-1")
+        self.assertEqual(seen[0]["transcript_status"], "ok")
+        self.assertEqual(seen[0]["evidence_level"], "secondary-source")
+
+    def test_same_day_podcast_seen_record_upgrades_from_limited_to_ok(self):
+        with __import__("tempfile").TemporaryDirectory() as tmp:
+            state_root = Path(tmp) / "state"
+            state_root.mkdir()
+            self.module.STATE_ROOT = state_root
+            (state_root / "seen.json").write_text(
+                __import__("json").dumps(
+                    {
+                        "schema_version": 1,
+                        "items": [
+                            {
+                                "id": "podcast:ai-i-by-every:guid-1",
+                                "first_seen": "2026-07-19",
+                                "transcript_status": "limited",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.raw["podcasts"] = {
+                "source_id": "follow-builders",
+                "status": "ok",
+                "episodes": [
+                    {
+                        "show_id": "ai-i-by-every",
+                        "guid": "guid-1",
+                        "title": "Now readable",
+                        "window_status": "inside",
+                        "transcript_status": "ok",
+                    }
+                ],
+            }
+
+            self.module.update_seen(self.raw, "2026-07-19")
+            payload = __import__("json").loads((state_root / "seen.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(payload["items"][0]["transcript_status"], "ok")
 
 
 if __name__ == "__main__":

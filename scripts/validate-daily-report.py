@@ -113,6 +113,19 @@ def validate(run_date, root=ROOT, strict=False):
             + ", ".join(unresolved_articles)
         )
 
+    unresolved_podcasts = [
+        row.get("candidate_id") or row.get("signal")
+        for row in rows
+        if row.get("status") == "missed"
+        and row.get("category") == "podcast-transcript"
+        and not row.get("disposition")
+    ]
+    if strict and unresolved_podcasts:
+        errors.append(
+            "missed podcast transcripts require disposition: "
+            + ", ".join(unresolved_podcasts)
+        )
+
     for path in (report_path, root / "reviews" / f"{run_date}-candidate-audit.md"):
         broken = broken_local_links(path, root)
         if broken:

@@ -154,6 +154,8 @@ def load_seen(root, run_date):
 def is_seen(seen, item):
     if item["signal_id"] in seen["ids"]:
         return True
+    if item["signal_id"].startswith("podcast:"):
+        return False
     canonical = item.get("canonical_url") or ""
     return bool(canonical and canonical in seen["urls"])
 
@@ -176,6 +178,7 @@ def make_signal(
     score_total=0,
     score_breakdown=None,
     why_read="",
+    identity="",
 ):
     canonical = canonicalize_url(url)
     status, normalized_time = window_status(published_at, run_date)
@@ -184,7 +187,8 @@ def make_signal(
     if content_status == "ok" and not body_path:
         content_status = "missing"
     signal = {
-        "signal_id": signal_id(
+        "signal_id": identity
+        or signal_id(
             url=canonical,
             tweet_id=tweet_id,
             repo=repo,
@@ -246,11 +250,97 @@ def _append(signals, signal, seen):
     signals[signal["signal_id"]] = merge_signal(current, signal) if current else signal
 
 
+def podcast_episode_id(item):
+    show_id = str(item.get("show_id") or "").strip()
+    guid = str(item.get("guid") or "").strip()
+    if (
+        not show_id
+        or not guid
+        or item.get("allowed") is False
+        or item.get("episode_status") in {"unconfigured", "invalid"}
+        or item.get("admission_status") in {"unconfigured", "invalid"}
+    ):
+        return ""
+    return f"podcast:{show_id}:{guid}"
+
+
 def build_signals(run_date, root):
     root = Path(root)
     raw_dir = root / "raw" / run_date
     seen = load_seen(root, run_date)
     signals = {}
+
+    podcast_feed = read_json(raw_dir / "podcast-items.json", {"episodes": []})
+    podcast_source_id = podcast_feed.get("source_id") or "follow-builders"
+    podcast_feed_url = podcast_feed.get("feed_url") or podcast_feed.get("upstream_url") or ""
+    podcast_snapshot = (
+        podcast_feed.get("raw_feed_path")
+        or podcast_feed.get("feed_snapshot_path")
+        or podcast_feed.get("snapshot_path")
+        or ""
+    )
+    for item in podcast_feed.get("episodes", []) or []:
+        episode_id = podcast_episode_id(item)
+        if not episode_id or item.get("window_status") != "inside":
+            continue
+        transcript_status = item.get("transcript_status") or "unknown"
+        transcript_path = relative_body_path(root, transcript_status, item.get("transcript_path"))
+        if transcript_status != "ok" or not transcript_path:
+            continue
+        episode_url = item.get("canonical_url") or item.get("official_url") or podcast_feed_url
+        signal = make_signal(
+            root=root,
+            run_date=run_date,
+            source_type="podcast-transcript",
+            source_id=item.get("show_id"),
+            title=item.get("title") or episode_id,
+            url=episode_url,
+            published_at=item.get("published_at"),
+            topics=item.get("topics") or [],
+            evidence_level="secondary-source",
+            content_status=transcript_status,
+            content_path=item.get("transcript_path"),
+            score_total=45,
+            score_breakdown={"podcast_transcript": 45},
+            why_read="read archived follow-builders podcast transcript; verify speaker claims against the transcript timestamps",
+            identity=episode_id,
+        )
+        signal["podcast"] = {
+            "show_id": item.get("show_id") or "",
+            "show_name": item.get("show_name") or "",
+            "guid": item.get("guid") or "",
+            "link_status": item.get("link_status") or "unknown",
+            "transcript_sha256": item.get("transcript_sha256") or "",
+            "provider": item.get("transcript_provider") or "follow-builders",
+            "method": item.get("transcript_method") or "aggregator-transcript",
+        }
+        signal["provenance"] = [
+            {
+                "source_type": "podcast-aggregator-feed",
+                "source_id": podcast_source_id,
+                "url": podcast_feed_url,
+                "path": podcast_snapshot or f"raw/{run_date}/podcast-items.json",
+                "evidence_level": "secondary-source",
+            },
+            {
+                "source_type": "podcast-transcript",
+                "source_id": item.get("show_id") or "",
+                "url": item.get("upstream_url") or podcast_feed_url,
+                "path": transcript_path,
+                "evidence_level": "secondary-source",
+            },
+        ]
+        official_url = item.get("canonical_url") or item.get("official_url") or ""
+        if official_url:
+            signal["provenance"].append(
+                {
+                    "source_type": "podcast-official-episode",
+                    "source_id": item.get("show_id") or "",
+                    "url": official_url,
+                    "evidence_level": "secondary-source",
+                }
+            )
+        _append(signals, signal, seen)
 
     rss = read_json(raw_dir / "rss-items.json", {"sources": []})
     for source in rss.get("sources", []) or []:
@@ -461,6 +551,7 @@ def build_signals(run_date, root):
         "timezone": "Asia/Shanghai",
         "window": {"start": f"{run_date}T00:00:00+08:00", "end_exclusive": f"{next_date}T00:00:00+08:00"},
         "raw_inputs": [
+            f"raw/{run_date}/podcast-items.json",
             f"raw/{run_date}/rss-items.json",
             f"raw/{run_date}/official-pages.json",
             f"raw/{run_date}/official-link-candidates.json",
@@ -498,6 +589,7 @@ def build_reading_list(signals_payload, generated_at):
                 "local_body_path": content.get("path") or "",
                 "fulltext_status": content.get("status") or "",
                 "why_read": signal.get("why_read") or "",
+                "provenance": signal.get("provenance") or [],
             }
         )
     return {

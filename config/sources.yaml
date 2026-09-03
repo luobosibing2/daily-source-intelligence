@@ -268,6 +268,58 @@ rss:
     topics: [fde, ai-systems]
     note: Thought source; keep data-integration and enterprise systems essays when they connect to FDE.
 
+podcasts:
+  - id: follow-builders
+    name: follow-builders Podcast Transcript Feed
+    url: https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json
+    enabled: true
+    provider: follow-builders
+    priority: false
+    topics: [llm, ai-agent, ai-coding, ai-systems, product-growth]
+    note: Public transcript feed consumed directly; no pod2txt generation, audio download, or ASR.
+    shows:
+      - id: latent-space
+        name: Latent Space
+        rss_url: https://api.substack.com/feed/podcast/1084089.rss
+        url: https://www.youtube.com/@LatentSpacePod
+        enabled: true
+        topics: [llm, ai-agent, ai-coding]
+
+      - id: training-data
+        name: Training Data
+        rss_url: https://feeds.megaphone.fm/trainingdata
+        url: https://www.youtube.com/playlist?list=PLOhHNjZItNnMm5tdW61JpnyxeYH5NDDx8
+        enabled: true
+        topics: [llm, ai-agent, ai-systems]
+
+      - id: no-priors
+        name: No Priors
+        rss_url: https://feeds.megaphone.fm/nopriors
+        url: https://www.youtube.com/@NoPriorsPodcast
+        enabled: true
+        topics: [llm, ai-agent, ai-coding, product-growth]
+
+      - id: unsupervised-learning
+        name: Unsupervised Learning
+        rss_url: https://feeds.simplecast.com/dOSE_bdP
+        url: https://www.youtube.com/@RedpointAI
+        enabled: true
+        topics: [llm, ai-agent, ai-systems]
+
+      - id: mad-podcast
+        name: The MAD Podcast with Matt Turck
+        rss_url: https://anchor.fm/s/f2ee4948/podcast/rss
+        url: https://www.youtube.com/@DataDrivenNYC/videos
+        enabled: true
+        topics: [ai-agent, ai-systems, product-growth]
+
+      - id: ai-and-i
+        name: AI & I by Every
+        rss_url: https://anchor.fm/s/ed1f5584/podcast/rss
+        url: https://www.youtube.com/playlist?list=PLuMcoKK9mKgHtW_o9h5sGO2vXrffKHwJL
+        enabled: true
+        topics: [llm, ai-agent, ai-coding, product-growth]
+
 github_repos:
   - id: openai-codex
     name: OpenAI Codex

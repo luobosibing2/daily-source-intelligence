@@ -25,6 +25,7 @@ class DsiCliTest(unittest.TestCase):
     def test_channel_aliases_expand(self):
         self.assertEqual(self.module.expand_channels(["stable"]), self.module.STABLE_CHANNELS)
         self.assertEqual(self.module.expand_channels(["all"]), self.module.ALL_CHANNELS)
+        self.assertIn("podcasts", self.module.STABLE_CHANNELS)
 
     def test_source_requires_one_concrete_channel(self):
         with self.assertRaises(ValueError):
@@ -45,6 +46,29 @@ class DsiCliTest(unittest.TestCase):
         payload = json.loads(output.getvalue())
         self.assertEqual(code, 0)
         self.assertEqual(payload["channels"], ["rss"])
+        self.assertEqual(state.exists(), before)
+
+    def test_podcast_dry_run_accepts_follow_builders_source(self):
+        state = ROOT / "raw" / "2099-01-02" / "run-state.json"
+        before = state.exists()
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = self.module.main(
+                [
+                    "run",
+                    "--date",
+                    "2099-01-02",
+                    "--channel",
+                    "podcasts",
+                    "--source",
+                    "podcasts:follow-builders",
+                    "--dry-run",
+                ]
+            )
+        payload = json.loads(output.getvalue())
+        self.assertEqual(code, 0)
+        self.assertEqual(payload["channels"], ["podcasts"])
+        self.assertEqual(payload["sources"], {"podcasts": ["follow-builders"]})
         self.assertEqual(state.exists(), before)
 
     def test_resume_requires_matching_output_hashes(self):

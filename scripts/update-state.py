@@ -108,6 +108,7 @@ def load_raw(run_date):
         "github_trending": read_json(raw_dir / "github-trending.json", {"sources": []}),
         "official": read_json(raw_dir / "official-pages.json", {"sources": []}),
         "twitter": read_json(raw_dir / "twitterapi-io-results.json", {"status": "missing", "accounts": []}),
+        "podcasts": read_json(raw_dir / "podcast-items.json", {"status": "missing", "episodes": []}),
     }
 
 
@@ -180,6 +181,68 @@ def official_article_counts(official_sources):
     return counts
 
 
+def podcast_counts(payload):
+    episodes = payload.get("episodes", []) or []
+    coverage = payload.get("coverage") or {}
+    if coverage:
+        return {
+            "offered": int(coverage.get("offered") or 0),
+            "configured": int(coverage.get("allowed") or 0),
+            "inside": int(coverage.get("inside") or 0),
+            "outside": int(coverage.get("outside") or 0),
+            "unknown": int(coverage.get("unknown") or 0),
+            "transcript_ok": int(coverage.get("transcript_ok") or 0),
+            "transcript_limited": int(coverage.get("transcript_limited") or 0),
+            "link_ok": int(coverage.get("link_ok") or 0),
+            "link_limited": int(coverage.get("link_limited") or 0),
+            "upstream_errors": int(coverage.get("upstream_error_count") or 0),
+            "unconfigured": int(coverage.get("unconfigured") or 0),
+            "missing_guid": int(coverage.get("missing_guid") or 0),
+        }
+    counts = {
+        "offered": len(episodes),
+        "configured": 0,
+        "inside": 0,
+        "outside": 0,
+        "unknown": 0,
+        "transcript_ok": 0,
+        "transcript_limited": 0,
+        "link_ok": 0,
+        "link_limited": 0,
+        "upstream_errors": len(payload.get("errors", []) or []),
+        "unconfigured": 0,
+        "missing_guid": 0,
+    }
+    for episode in episodes:
+        allowed = (
+            episode.get("show_id")
+            and episode.get("guid")
+            and episode.get("allowed") is not False
+            and episode.get("episode_status") not in {"unconfigured", "invalid"}
+            and episode.get("admission_status") not in {"unconfigured", "invalid"}
+        )
+        if not allowed:
+            if episode.get("episode_status") == "unconfigured" or not episode.get("show_id"):
+                counts["unconfigured"] += 1
+            if not episode.get("guid"):
+                counts["missing_guid"] += 1
+            continue
+        counts["configured"] += 1
+        window = episode.get("window_status")
+        counts[window if window in {"inside", "outside"} else "unknown"] += 1
+        transcript = episode.get("transcript_status")
+        if transcript == "ok":
+            counts["transcript_ok"] += 1
+        elif transcript:
+            counts["transcript_limited"] += 1
+        link = episode.get("link_status")
+        if link == "ok":
+            counts["link_ok"] += 1
+        elif link:
+            counts["link_limited"] += 1
+    return counts
+
+
 def twitter_collection_status(twitter):
     provider_status = twitter.get("status")
     if provider_status != "ok":
@@ -217,6 +280,41 @@ def current_twitter(twitter):
 
 def source_health(raw, run_date, previous=None):
     sources = {}
+
+    podcasts = raw.get("podcasts", {"status": "missing", "episodes": []})
+    podcast_status = podcasts.get("status") or "failed"
+    if podcast_status != "missing":
+        source_id = podcasts.get("source_id") or "follow-builders"
+        counts = podcast_counts(podcasts)
+        podcast_health = {
+            "status": podcast_status,
+            "last_success" if podcast_status == "ok" else "last_checked": run_date,
+            "consecutive_failures": 0 if podcast_status == "ok" else 1,
+            "upstream_generated_at": podcasts.get("upstream_generated_at") or "",
+            "lookback_hours": podcasts.get("lookback_hours"),
+            "offered_count": counts["offered"],
+            "configured_count": counts["configured"],
+            "inside_count": counts["inside"],
+            "outside_count": counts["outside"],
+            "unknown_count": counts["unknown"],
+            "transcript_counts": {
+                "ok": counts["transcript_ok"],
+                "limited": counts["transcript_limited"],
+            },
+            "link_counts": {
+                "ok": counts["link_ok"],
+                "limited": counts["link_limited"],
+            },
+            "upstream_error_count": counts["upstream_errors"],
+            "unconfigured_count": counts["unconfigured"],
+            "missing_guid_count": counts["missing_guid"],
+            "note": (
+                f"follow-builders offered {counts['offered']} episode(s); configured={counts['configured']}, "
+                f"inside={counts['inside']}, outside={counts['outside']}, unknown={counts['unknown']}; "
+                f"transcript ok={counts['transcript_ok']}, limited={counts['transcript_limited']}."
+            ),
+        }
+        sources[source_id] = podcast_health
 
     for source in current_sources(raw["rss"]):
         source_id = source.get("source_id")
@@ -391,12 +489,15 @@ def manifest(raw, run_date):
     twitter = current_twitter(raw["twitter"])
     twitter_status = twitter_collection_status(twitter)
     kept_total = sum(account.get("kept_count", 0) for account in twitter.get("accounts", []))
+    podcasts = raw.get("podcasts", {"status": "missing", "episodes": []})
+    podcast_summary = podcast_counts(podcasts)
     collected_times = [
         raw["rss"].get("collected_at"),
         raw["github"].get("collected_at"),
         raw["github_trending"].get("collected_at"),
         raw["official"].get("collected_at"),
         twitter.get("collected_at"),
+        podcasts.get("collected_at"),
     ]
     collected_at = max([value for value in collected_times if value], default=now_local().isoformat(timespec="seconds"))
 
@@ -418,6 +519,7 @@ def manifest(raw, run_date):
             "github_trending": f"daily-source-intelligence/raw/{run_date}/github-trending.json",
             "official_pages": f"daily-source-intelligence/raw/{run_date}/official-pages.json",
             "twitterapi_io_results": f"daily-source-intelligence/raw/{run_date}/twitterapi-io-results.json",
+            "podcast_items": f"daily-source-intelligence/raw/{run_date}/podcast-items.json",
             "twitter_topic_brief": f"daily-source-intelligence/raw/{run_date}/twitter-topic-brief.json",
             "signals": f"daily-source-intelligence/raw/{run_date}/signals.json",
             "daily_report": f"daily-source-intelligence/docs/{run_date}-daily-intel.md",
@@ -454,6 +556,19 @@ def manifest(raw, run_date):
             "twitterapi_io_status": twitter_status,
             "x_twitter_direct_count": kept_total,
             "x_twitter_used": twitter_status in {"ok", "partial"},
+            "podcast_status": podcasts.get("status") or "missing",
+            "podcast_offered": podcast_summary["offered"],
+            "podcast_configured": podcast_summary["configured"],
+            "podcast_inside": podcast_summary["inside"],
+            "podcast_outside": podcast_summary["outside"],
+            "podcast_unknown": podcast_summary["unknown"],
+            "podcast_transcript_ok": podcast_summary["transcript_ok"],
+            "podcast_transcript_limited": podcast_summary["transcript_limited"],
+            "podcast_link_ok": podcast_summary["link_ok"],
+            "podcast_link_limited": podcast_summary["link_limited"],
+            "podcast_upstream_errors": podcast_summary["upstream_errors"],
+            "podcast_unconfigured": podcast_summary["unconfigured"],
+            "podcast_missing_guid": podcast_summary["missing_guid"],
         },
         "notable_limitations": build_limitations(raw),
     }
@@ -461,6 +576,22 @@ def manifest(raw, run_date):
 
 def build_limitations(raw):
     limitations = []
+    podcasts = raw.get("podcasts", {"status": "missing", "episodes": []})
+    podcast_status = podcasts.get("status") or "missing"
+    if podcast_status in {"partial", "failed", "limited"}:
+        limitations.append(
+            f"follow-builders podcasts {podcast_status}: "
+            f"{len(podcasts.get('errors', []) or [])} upstream error(s)."
+        )
+    podcast_summary = podcast_counts(podcasts)
+    if podcast_summary["transcript_limited"]:
+        limitations.append(
+            f"follow-builders podcast transcript limited for {podcast_summary['transcript_limited']} allowed episode(s)."
+        )
+    if podcast_summary["link_limited"]:
+        limitations.append(
+            f"follow-builders podcast canonical link limited for {podcast_summary['link_limited']} offered episode(s)."
+        )
     github_status = raw["github"].get("api_status", {})
     if github_status.get("status") == "failed":
         limitations.append("GitHub REST API failed or was rate-limited; GitHub releases Atom feeds were used as fallback.")
@@ -520,6 +651,32 @@ def build_limitations(raw):
 
 def stable_seen_items(raw, run_date):
     items = []
+    podcasts = raw.get("podcasts", {"status": "missing", "episodes": []})
+    if podcasts.get("status") in {"ok", "partial", "limited"}:
+        for episode in podcasts.get("episodes", []) or []:
+            show_id = str(episode.get("show_id") or "").strip()
+            guid = str(episode.get("guid") or "").strip()
+            if (
+                not show_id
+                or not guid
+                or episode.get("allowed") is False
+                or episode.get("episode_status") in {"unconfigured", "invalid"}
+                or episode.get("admission_status") in {"unconfigured", "invalid"}
+                or episode.get("window_status") != "inside"
+            ):
+                continue
+            url = episode.get("canonical_url") or episode.get("official_url") or ""
+            items.append(
+                {
+                    "id": f"podcast:{show_id}:{guid}",
+                    "first_seen": run_date,
+                    "source": f"podcast:{show_id}",
+                    "title": episode.get("title") or guid,
+                    "url": url,
+                    "evidence_level": "secondary-source",
+                    "transcript_status": episode.get("transcript_status") or "unknown",
+                }
+            )
     for source in current_sources(raw["rss"]):
         if source.get("status") != "ok":
             continue
@@ -691,6 +848,11 @@ def update_seen(raw, run_date):
         if existing:
             existing.setdefault("url", item.get("url"))
             existing.setdefault("evidence_level", item.get("evidence_level"))
+            if item["id"].startswith("podcast:"):
+                old_status = existing.get("transcript_status") or "unknown"
+                new_status = item.get("transcript_status") or "unknown"
+                if old_status != "ok" and new_status == "ok":
+                    existing["transcript_status"] = "ok"
             continue
         by_id[item["id"]] = item
         items.append(item)

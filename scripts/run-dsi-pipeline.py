@@ -98,6 +98,7 @@ def run_pipeline(run_date, root=ROOT, run_collection=True):
     results = []
     if run_collection:
         results.append(run_command(root, ["python3", "scripts/collect-stable-sources.py"], env=env))
+        results.append(run_command(root, ["python3", "scripts/collect-podcasts.py", "--date", run_date], env=env))
         results.append(run_command(root, ["python3", "scripts/collect-twitterapi-io.py"], env=env))
     results.append(run_command(root, ["python3", "scripts/official-link-candidates.py", "--date", run_date, "--root", str(root)], env=env))
     results.append(run_command(root, ["python3", "scripts/build-twitter-topic-brief.py", "--date", run_date, "--root", str(root)], env=env))

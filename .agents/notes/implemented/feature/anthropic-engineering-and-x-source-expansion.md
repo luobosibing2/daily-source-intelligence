@@ -1,5 +1,7 @@
 # Anthropic Engineering and X source expansion
 
+> Partial supersession (2026-09-04): the podcast/feed portion of this record's non-goals is replaced by [`podcast-transcript-ingestion.md`](../architecture/podcast-transcript-ingestion.md), which consumes only the follow-builders podcast feed as archived `secondary-source` transcript input. The Anthropic Engineering collector, 23-account X expansion, and all other boundaries in this record remain current.
+
 - Status: implemented
 - Class: feature
 - Owner: Daily Source Intelligence maintainers
