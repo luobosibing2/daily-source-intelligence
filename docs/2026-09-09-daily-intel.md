@@ -18,7 +18,7 @@
 - GitHub release 共 7/7 个 Atom 源成功、35 条记录，REST API 为 `skipped`。OpenAI Codex 与 Claude Code 一手 release 共尝试 10 条，5 条 `ok`、5 条 `limited`；最新 Codex `0.154.0-alpha.7` 在窗口内但正文仅为 `Release 0.154.0-alpha.7`，Claude Code `v2.1.265` 的正文可读。入口见 [`github-items.json`](../raw/2026-09-09/github-items.json) 和 [`github-release-fulltext/`](../raw/2026-09-09/github-release-fulltext/)。
 - GitHub Trending 1/1 源成功，解析 10 个 repo；10/10 有 Trending description，10/10 README 归档为 `ok`。Trending 项目时间、stars、性能和安全能力没有在本轮独立复测，全部按 `secondary-source` discovery signal 处理。入口见 [`github-trending.json`](../raw/2026-09-09/github-trending.json) 与 [`github-trending-readmes/`](../raw/2026-09-09/github-trending-readmes/)。
 - 官方页面 4/4 成功；OpenAI News 的 `curl` 页面受限后用 `opencli-read` 保存了索引正文，Anthropic News、Claude Docs Release Notes 和 Claude Blog 也已写入 raw。priority X 官方链接候选 2 条，均由 `opencli-read` 归档正文：GPT TV 与 ChatGPT Images 2.5，见 [`official-link-candidates.json`](../raw/2026-09-09/official-link-candidates.json)。
-- `twitterapi.io` 只读接口 27/27 个账号请求 `ok`，返回 509 条原始 tweet，保留 149 条 `direct-x`；使用 `includeReplies=false` 和有限滚动窗口。`rryssf_`、`Yangyixxxx`、`zhaogua61654931`、`lidang` 返回 raw=0；这不是“没有更新”的证明。原始数据和主题摘要见 [`twitterapi-io-results.json`](../raw/2026-09-09/twitterapi-io-results.json) 与 [`twitter-topic-brief.json`](../raw/2026-09-09/twitter-topic-brief.json)。
+- `twitterapi.io` 只读接口 27/27 个账号请求 `ok`，返回 449 条原始 tweet，保留 149 条 `direct-x`；使用 `includeReplies=false` 和有限滚动窗口。`rryssf_`、`Yangyixxxx`、`zhaogua61654931`、`lidang` 返回 raw=0；这不是“没有更新”的证明。原始数据和主题摘要见 [`twitterapi-io-results.json`](../raw/2026-09-09/twitterapi-io-results.json) 与 [`twitter-topic-brief.json`](../raw/2026-09-09/twitter-topic-brief.json)。
 - [`report-reading-list.json`](../raw/2026-09-09/report-reading-list.json) 共 14 条：2 条官方链接正文、1 条 RSS 正文、2 条 GitHub release 条目、9 条结构化 X 条目。所有带 `local_body_path` 的正文/README 已逐项读取；没有本地正文的 X 条目只按结构化 `direct-x` 证据处理。
 
 ## 今日高信号
@@ -139,12 +139,12 @@
 | GitHub Trending | 1/1 成功；10 个 repo；10/10 description、10/10 README `ok` | [`github-trending.json`](../raw/2026-09-09/github-trending.json) 与 [`github-trending-readmes/`](../raw/2026-09-09/github-trending-readmes/)。全部是 `secondary-source` discovery signal。 |
 | 官方页面 | 4/4 成功；OpenAI News 使用 `opencli-read` | [`official-pages.json`](../raw/2026-09-09/official-pages.json)。索引页/卡片不能替代单篇正文。 |
 | 官方链接候选 | 2 条；GPT TV 与 ChatGPT Images 2.5 均 `fulltext_status=ok` | [`official-link-candidates.json`](../raw/2026-09-09/official-link-candidates.json) 与两个 `opencli.md` 归档；组合证据仍不能替代账户或实验复核。 |
-| X/Twitter | 27/27 账号请求 `ok`；509 条原始、149 条保留 `direct-x` | [`twitterapi-io-results.json`](../raw/2026-09-09/twitterapi-io-results.json) 与 [`twitter-topic-brief.json`](../raw/2026-09-09/twitter-topic-brief.json)。是有限窗口和相关性筛选，不是完整时间线。 |
+| X/Twitter | 27/27 账号请求 `ok`；449 条原始、149 条保留 `direct-x` | [`twitterapi-io-results.json`](../raw/2026-09-09/twitterapi-io-results.json) 与 [`twitter-topic-brief.json`](../raw/2026-09-09/twitter-topic-brief.json)。是有限窗口和相关性筛选，不是完整时间线。 |
 | 日报阅读清单 | 14 条；4 条有本地正文，10 条为结构化 X 或受限 release | [`report-reading-list.json`](../raw/2026-09-09/report-reading-list.json)。本地正文/README 均已逐项读取。 |
 
 ## X/Twitter 覆盖说明
 
-本轮 X 由 `twitterapi.io` 的 `GET /twitter/user/last_tweets` 只读接口采集，27 个账号请求均为 `ok`，原始 509 条，保留 149 条 `direct-x`。主题 brief 的计数为 `llm=55`、`ai-agent=122`、`ai-coding=99`、`ai-governance=4`、`infra=3`、`indie-founder=41`、`product-growth=74`、`ai-systems=40`，主题相互重叠，不能相加成 149；当前 brief 没有独立 `fde` 条目。
+本轮 X 由 `twitterapi.io` 的 `GET /twitter/user/last_tweets` 只读接口采集，27 个账号请求均为 `ok`，原始 449 条，保留 149 条 `direct-x`。主题 brief 的计数为 `llm=55`、`ai-agent=122`、`ai-coding=99`、`ai-governance=4`、`infra=3`、`indie-founder=41`、`product-growth=74`、`ai-systems=40`，主题相互重叠，不能相加成 149；当前 brief 没有独立 `fde` 条目。
 
 账号级边界必须与“无更新”分开：`rryssf_`、`Yangyixxxx`、`zhaogua61654931`、`lidang` raw=0；`karpathy`、`AnthropicAI`、`simonw`、`oviswang`、`_LuoFuli` 有请求但 kept=0。它们可能是有限窗口、筛选或相关性过滤结果，不构成账号没有更新的证明。本轮没有使用登录态 X 浏览器、官方 X API、发帖/点赞/关注/私信或 Exa MCP，也没有用其它发现层补漏。
 
