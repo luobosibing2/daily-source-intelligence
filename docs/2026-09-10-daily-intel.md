@@ -13,7 +13,7 @@
 
 ## 采集范围
 
-- 主窗口按北京时间 **2026-09-10 00:00 至 2026-09-11 00:00** 解释；稳定来源采集时间为 `2026-09-10T05:19:44+08:00`，派生阅读清单生成于 `2026-09-10T05:21:01+08:00`。原始归档是证据真相源，`signals.json`、`report-reading-list.json` 和 `run-summary.json` 只负责路由、去重和流程索引。
+- 本轮以 `run_date=2026-09-10` 为主，稳定来源按源配置的近期窗口处理，X/Twitter 接口使用 36 小时窗口；稳定来源采集时间为 `2026-09-10T05:19:44+08:00`，派生阅读清单生成于 `2026-09-10T05:21:01+08:00`。原始归档是证据真相源，`signals.json`、`report-reading-list.json` 和 `run-summary.json` 只负责路由、去重和流程索引。
 - RSS/Atom 共 32 个启用源，31 个成功、1 个失败；47 条命中主题或一手 `always_read` 策略的正文全部尝试且 `fulltext_status=ok`，其余 108 条被过滤或跳过。失败源、正文状态和方法见 [`rss-items.json`](../raw/2026-09-10/rss-items.json) 与 [`manifest.json`](../raw/2026-09-10/manifest.json)。失败不表示对应源没有更新。
 - GitHub release 共 7/7 个 Atom 源成功，REST API 为 `skipped`；一手 release body 共尝试 10 条，4 条 `ok`、6 条 `limited`。最新 Claude Code `v2.1.267` 正文可读，受限条目不能从版本号补写功能，见 [`github-items.json`](../raw/2026-09-10/github-items.json) 和 [`github-release-fulltext/`](../raw/2026-09-10/github-release-fulltext/)。
 - GitHub Trending 1/1 源成功，解析 10 个 repo；10/10 有 Trending description，9/10 README 归档成功，`liquidslr/system-design-notes` 缺 README。Trending 只作为 `secondary-source` discovery signal，不是质量背书，见 [`github-trending.json`](../raw/2026-09-10/github-trending.json) 和 [`github-trending-readmes/`](../raw/2026-09-10/github-trending-readmes/)。
