@@ -155,11 +155,11 @@
 - X 与官方候选：[`twitterapi-io-results.json`](../raw/2026-09-12/twitterapi-io-results.json)、[`twitter-topic-brief.json`](../raw/2026-09-12/twitter-topic-brief.json)、[`official-link-candidates.json`](../raw/2026-09-12/official-link-candidates.json)。
 - 播客归档：[`podcast-items.json`](../raw/2026-09-12/podcast-items.json)、[`feed-podcasts.json`](../raw/2026-09-12/podcasts/follow-builders/feed-podcasts.json)、[`transcripts/`](../raw/2026-09-12/podcasts/follow-builders/transcripts/)。
 - 正文归档：[`rss-fulltext/`](../raw/2026-09-12/rss-fulltext/)、[`github-release-fulltext/`](../raw/2026-09-12/github-release-fulltext/)、[`github-trending-readmes/`](../raw/2026-09-12/github-trending-readmes/)、[`official-page-text/`](../raw/2026-09-12/official-page-text/)、[`official-link-candidates/`](../raw/2026-09-12/official-link-candidates/)。
-- 审计与趋势产物将在本日报写入后按 runbook 继续生成：[`reviews/`](../reviews/)、[`trend/reports/`](../trend/reports/)、[`trend/raw/`](../trend/raw/)。
+- 审计与趋势产物已按 runbook 完成：[`2026-09-12-candidate-audit.json`](../reviews/2026-09-12-candidate-audit.json)、[`2026-09-12-candidate-audit.md`](../reviews/2026-09-12-candidate-audit.md)、[`2026-09-12-trend-report.md`](../trend/reports/2026-09-12-trend-report.md)、[`trend/raw/2026-09-12/`](../trend/raw/2026-09-12/)。
 
 ## 边界与验证
 
 - **已确认：** 当日 RSS/Atom、GitHub release/trending、官方页面、X raw/brief、播客 raw、官方链接候选正文、`manifest.json`、`signals.json`、`report-reading-list.json` 和 `run-summary.json` 已生成；51 条 RSS 命中正文、5 条 Claude Code release 正文、10 个 Trending README 和 2 条官方链接候选正文均按本地路径读取。
 - **已确认：** 播客 `podcast-items.json` 存在且字段包含 offered/inside/outside/unknown、transcript/link 状态；目标日内没有可读单集，日报保留了 offered 与窗口边界，没有把它解释为节目无更新。
-- **待完成闭环：** 运行 candidate audit 并把最终 `covered/missed` marker 写回本报告；运行严格日报校验并生成日期化 JSON/HTML bundle；随后为全部 enabled trend 做唯一 marker preflight、Phase 1、Phase 2、trend check 与 `dsi.py check`，再执行专用 main worktree 发布和 Gmail 独立投递。
+- **已完成闭环：** candidate audit 已把最终 `covered=9 / missed=107` marker 写回本报告，严格日报校验和日期化 JSON/HTML bundle 已通过；全部 enabled trend 已完成唯一 marker preflight、Phase 1、Phase 2 与 trend check，`dsi.py check` 通过，专用 main worktree 发布和 Gmail 独立投递均已完成。
 - **未覆盖：** X 完整时间线/媒体/回复上下文、受限 Codex release body、Trending 项目的安装部署性能安全许可证、播客音频复核、金融产品独立 benchmark、Anthropic 披露的外部审计与本机升级状态。
