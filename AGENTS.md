@@ -1,12 +1,4 @@
-# Repository guidance
+# Daily Source Intelligence Agent Notes
 
-## Decision records
-
-- Durable proposed and shipped decisions are owned by [`.agents/notes/README.md`](.agents/notes/README.md).
-
-## Standing orders
-
-- Keep root standing orders short and link the detailed owner.
-- Route rationale, incidents, and ordinary history to their owning decision or evidence record.
-- Give each explanation one owner while retaining consumer-required local obligations.
-- Use direct, concrete terms that preserve complete consumer-relevant propositions without restating implementation, tests, or review narration.
+- 继续遵循父目录 [`AGENTS.md`](../AGENTS.md) 和本主题的 [`runbook.md`](runbook.md)。
+- 行为与架构决策记录由 [`.agents/notes/README.md`](.agents/notes/README.md) 管理。

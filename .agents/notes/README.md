@@ -1,20 +1,11 @@
-# Decision records
+# DSI 决策记录
 
-This directory is the authority for durable Daily Source Intelligence decisions that are not already owned by a more specific ADR, RFC, or repository document.
+本目录是 Daily Source Intelligence 行为、架构、流程和测试决策的最小权威记录。
 
-## Lifecycle
-
-- `proposed/`: an active proposal that is not yet shipped or accepted.
-- `implemented/`: the present-tense decision after implementation and verification.
-- `rejected/`: a considered proposal that was explicitly rejected.
-- `archived/`: frozen history that has been superseded or is no longer active.
-
-## Classes
-
-Use one of: `feature`, `bug-fix`, `simplification`, `architecture`, `process`, or `testing`. Create a class directory only when it contains a record.
-
-## Record contract
-
-A proposed record states its status, class, owner, problem, proposal, actually considered alternatives, consequences or risks, durable boundaries or non-goals, related `REQ-*` semantics, and required verification. An implemented record rewrites those sections in present tense and contains only verification actually obtained.
-
-The owner updates the same proposed record while the decision is still active. Before creating another record, search active records by decision semantics. Full or partial supersession must cross-link the new and old records, state the replaced scope, and leave unaffected decisions current. Archived records are not rewritten.
+- `proposed/<class>/`：尚未实施或验收的提案。
+- `implemented/<class>/`：已经实施并按记录中的验证方式验收的当前决策。
+- `rejected/<class>/`：明确拒绝且保留原因的提案。
+- `archived/`：已冻结的历史记录；不得原地改写。
+- 可用 class：`feature`、`bug-fix`、`simplification`、`architecture`、`process`、`testing`。
+- DSI 维护者拥有记录；同一语义的 proposed 决策原地更新。完整或部分替代必须交叉链接，写清替代范围，未被替代部分继续有效。
+- proposed 记录写真实 Problem、Proposal、考虑过的 Alternatives、Consequences/Risks、边界和预期验证；implemented 记录改写成已交付的当前时事实，只保留实际获得的验证。
