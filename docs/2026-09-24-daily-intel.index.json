@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "run_date": "2026-09-24",
+  "generated_at": "2026-09-24T05:25:49+08:00",
+  "report": {
+    "path": "docs/2026-09-24-daily-intel.md",
+    "sha256": "437309bd1781f4942794ac444d21d0ff550faecd77f678f1672ceddbaa087a58"
+  },
+  "signals": {
+    "path": "raw/2026-09-24/signals.json",
+    "counts": {
+      "total": 7,
+      "inside_window": 6,
+      "unknown_time_boundary": 1
+    }
+  },
+  "candidate_audit": {
+    "path": "reviews/2026-09-24-candidate-audit.json",
+    "counts": {
+      "total": 22,
+      "covered": 2,
+      "missed": 20
+    },
+    "report_sha256": "437309bd1781f4942794ac444d21d0ff550faecd77f678f1672ceddbaa087a58"
+  },
+  "trend_report": ""
+}
