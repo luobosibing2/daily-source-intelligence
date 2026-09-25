@@ -83,7 +83,7 @@ SVPG 的 “Experts Lead Experts” 把 AI 时代的组织变化解释为：熟�
 
 - `dwarkesh-patel` RSS 源失败；若后续命中关注方向，应按 runbook 的 OpenCLI fallback 重新抓取。
 - RSS 匹配/一手必读共 49 条，只有本日报展开的 Proaction、SVPG 与 Simon Willison 三条进入正文阅读；另外 3 条匹配正文 limited（`forward-deployed`、`svpg`、`ted-mabrey` 各一条）只能作覆盖边界，其他条目保留在 raw 供去重与追溯。
-- 5 条窗口内 OpenAI Codex alpha release 的 Atom body 为 `limited`；版本、时间和链接可确认，功能变化不可确认。
+- 4 条窗口内 OpenAI Codex alpha release 的 Atom body 为 `limited`；另 1 条同批条目在窗口外。版本、时间和链接可确认，功能变化不可确认。
 - Anthropic Engineering 只确认索引 25 张卡片，没有目标日 article 正文；Claude Blog 的 5 个 metadata 卡片没有进入正文阅读清单，不能据标题下结论。
 - GitHub Trending 10 个仓库的 README 全部缺失；不能从榜单描述推断 paperclip、Hindsight、skills、Univer、starnet、wifit3 等项目的机制、权限、安全性或生产成熟度。`wifit3` 涉及无线安全，必须先确认授权与 README，再考虑任何运行。
 - twitterapi.io 额度不足导致 50 个账号全部失败，当前无 direct-x，不能代表账号无更新。
