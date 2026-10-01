@@ -105,7 +105,7 @@ follow-builders 工件存在且为 `partial`：中央 feed 本轮实际 offered=
 
 ### 候选审计处置
 
-本轮日报初稿后由 `scripts/candidate-audit.py --date 2026-10-02` 重新扫描，审计结果以 [`2026-10-02-candidate-audit.md`](../reviews/2026-10-02-candidate-audit.md) 和 JSON 为准。RSS 历史/背景候选、受限正文和官方页面发现项若未在正文展开，均须在审计中保留稳定 candidate id 和 `outside_window`、`insufficient_evidence` 或等效 disposition；目标窗口 podcast offered=0 inside candidate，因此不存在被无解释省略的 podcast 候选。
+本轮日报初稿后由 `scripts/candidate-audit.py --date 2026-10-02` 重新扫描，审计结果以 [`2026-10-02-candidate-audit.md`](../reviews/2026-10-02-candidate-audit.md) 和 JSON 为准。RSS 历史/背景候选、受限正文和官方页面发现项若未在正文展开，均须在审计中保留稳定 candidate id 和 `outside_window`、`insufficient_evidence` 或等效 disposition；本轮 podcast offered=1、inside=0，没有进入窗口的 podcast candidate，因此不存在被无解释省略的 podcast 候选。
 
 本轮审计实际得到 17 条 matched-RSS candidate：covered=2、missed=15。missed 项集中在历史/背景的 AI 与 IDE 文章、模型价格/benchmark 讨论、隐私工具、Rust/编码评论、AI coding 课程、产品/创业材料、SaaS webhook 与私有包分发，以及一条 FDE 文章；它们未纳入今日正文，保留稳定 candidate id 和原始链接，不升级为今日高信号。FDE 候选正文为 `limited`，仅作为覆盖边界。没有 inside-window podcast candidate，因此不需要额外的 podcast disposition。
 
