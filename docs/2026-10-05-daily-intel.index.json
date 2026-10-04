@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "run_date": "2026-10-05",
-  "generated_at": "2026-10-05T05:27:27+08:00",
+  "generated_at": "2026-10-05T05:33:23+08:00",
   "report": {
     "path": "docs/2026-10-05-daily-intel.md",
     "sha256": "be1e3e46b01f32fb627b2e87aa8cf88e657e0007bc7e59b757a049ae2ca0fa8c"
@@ -23,5 +23,5 @@
     },
     "report_sha256": "be1e3e46b01f32fb627b2e87aa8cf88e657e0007bc7e59b757a049ae2ca0fa8c"
   },
-  "trend_report": ""
+  "trend_report": "trend/reports/2026-10-05-trend-report.md"
 }
