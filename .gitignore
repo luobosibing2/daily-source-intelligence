@@ -1,6 +1,9 @@
 .DS_Store
 **/.DS_Store
 
+# Isolated feature worktrees.
+.worktrees/
+
 .env
 .env.*
 !.env.example

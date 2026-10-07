@@ -22,6 +22,7 @@ Daily Source Intelligence 会围绕预设主题，收集包括 Anthropic Enginee
 - **证据可追溯**：重要判断回到官方正文、Release、README 或结构化公开数据。
 - **失败不伪装**：抓取受限、凭据缺失或来源失败时明确记录覆盖边界。
 - **来源分级**：区分官方来源、直接 X 证据，以及播客聚合 transcript、GitHub Trending 等二手或发现线索。
+- **AIHOT 精选**：通过官方 RSS 补充 AI 资讯线索，沿原文链接归档正文，保留聚合出处并标为二手来源。接入方式和验证边界见 [AIHOT 来源说明](.agents/notes/implemented/feature/aihot-rss-source.md)。
 - **播客长文本**：无额外 transcript key 读取 follow-builders 公共 feed；按 GUID 去重并保留说话人/时间戳，明确不做 ASR 和完整节目覆盖承诺。
 - **可重复运行**：采集、状态更新、阅读清单和日报路径都有固定约定。
 

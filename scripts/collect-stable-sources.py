@@ -12,7 +12,7 @@ from datetime import date, datetime
 from email.utils import parsedate_to_datetime
 from html import unescape
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 from zoneinfo import ZoneInfo
 
 import yaml
@@ -274,7 +274,7 @@ def source_metadata(source):
     return metadata
 
 
-def fetch_readable_page(url, output_dir, stem, fetched=None):
+def fetch_readable_page(url, output_dir, stem, fetched=None, allow_opencli=True):
     result = {
         "fulltext_attempted": True,
         "fulltext_url": url,
@@ -305,6 +305,16 @@ def fetch_readable_page(url, output_dir, stem, fetched=None):
         curl_reason = "curl returned limited/challenge content" if html_looks_limited(fetched.get("body", "")) else "curl returned short or unreadable content"
     else:
         curl_reason = fetched.get("stderr") or f"curl exit {fetched.get('status')}"
+
+    if not allow_opencli:
+        result.update(
+            {
+                "fulltext_status": "limited" if html_path else "failed",
+                "fulltext_method": "curl",
+                "fulltext_error": f"{curl_reason}; browser fallback disabled for AIHOT X originals: public HTTP only.",
+            }
+        )
+        return result
 
     fallback = opencli_read_markdown(url)
     if fallback.get("ok"):
@@ -393,11 +403,25 @@ def rss_item_relevance(source, item, topics_by_id):
     }
 
 
-def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id):
+def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id, run_date=None):
     source_dir = output_dir / "rss-fulltext" / safe_slug(source.get("id", "rss-source"))
     enriched = []
     for item in items:
         item = dict(item)
+        if source.get("id") == "aihot-selected":
+            item["window_status"] = publication_window_status(item.get("published"), run_date or now_local().strftime("%Y-%m-%d"))
+            if item["window_status"] != "inside":
+                item.update(
+                    {
+                        "relevance_status": f"{item['window_status']}_window",
+                        "matched_topics": [],
+                        "matched_keywords": [],
+                        "fulltext_status": "skipped",
+                        "fulltext_reason": "AIHOT feed publication time is outside the Beijing run day or unknown; original fetch deferred.",
+                    }
+                )
+                enriched.append(item)
+                continue
         relevance = rss_item_relevance(source, item, topics_by_id)
         item.update({key: value for key, value in relevance.items() if key != "is_relevant"})
         item.update(source_metadata(source))
@@ -409,13 +433,18 @@ def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id):
 
         url = item.get("url")
         if not url:
-            item["fulltext_status"] = "failed"
-            item["fulltext_error"] = "RSS item has no URL to fetch."
+            item["fulltext_status"] = "limited" if source.get("id") == "aihot-selected" else "failed"
+            item["fulltext_error"] = item.get("original_link_error") or "RSS item has no URL to fetch."
             enriched.append(item)
             continue
 
         stem = item_file_stem(source.get("id", "rss-source"), item.get("title", ""), url)
-        item.update(fetch_readable_page(url, source_dir, stem))
+        if source.get("id") == "aihot-selected":
+            host = (urlsplit(url).hostname or "").lower()
+            is_x_original = host in {"x.com", "twitter.com"} or host.endswith((".x.com", ".twitter.com"))
+            item.update(fetch_readable_page(url, source_dir, stem, allow_opencli=not is_x_original))
+        else:
+            item.update(fetch_readable_page(url, source_dir, stem))
         enriched.append(item)
     return enriched
 
@@ -481,6 +510,46 @@ def parse_feed_items(xml_text):
     return items
 
 
+def parse_aihot_feed_items(xml_text, feed_url):
+    channel = ET.fromstring(xml_text).find("channel")
+    if channel is None:
+        raise ValueError("AIHOT selected feed has no RSS channel.")
+    items = []
+    for node in channel.findall("item")[:50]:
+        description = first_text(node, ["description"])
+        original_url = ""
+        for match in re.finditer(r'<a\b[^>]*\bhref\s*=\s*([\'\"])(.*?)\1[^>]*>(.*?)</a>', description, flags=re.IGNORECASE | re.DOTALL):
+            if strip_html(match.group(3)) != "阅读原文":
+                continue
+            candidate = unescape(match.group(2)).strip()
+            try:
+                parts = urlsplit(candidate)
+                host = (parts.hostname or "").lower()
+            except ValueError:
+                continue
+            if parts.scheme.lower() in {"http", "https"} and host and host != "aihot.news" and not host.endswith(".aihot.news"):
+                original_url = candidate
+                break
+        item = {
+            "title": first_text(node, ["title"]),
+            "url": original_url,
+            "published": first_text(node, ["pubDate"]),
+            "published_basis": "aihot-feed-pubdate",
+            "summary": strip_html(description),
+            "aggregator_url": first_text(node, ["link"]),
+            "guid": first_text(node, ["guid"]),
+            "feed_url": feed_url,
+            "feed_author": first_text(node, ["author"]),
+            "feed_categories": [category.text.strip() for category in node.findall("category") if category.text],
+            "original_link_status": "ok" if original_url else "limited",
+            "evidence_level": "secondary-source",
+        }
+        if not original_url:
+            item["original_link_error"] = "AIHOT description has no valid external 阅读原文 link; station summary is not original fulltext."
+        items.append(item)
+    return items
+
+
 def summarize_github_entry(item):
     title = item.get("title", "")
     summary = item.get("summary", "")
@@ -491,7 +560,7 @@ def summarize_github_entry(item):
     return f"Release {title}"
 
 
-def collect_rss(rss_sources, output_dir, topics_by_id):
+def collect_rss(rss_sources, output_dir, topics_by_id, run_date=None):
     results = []
     for source in rss_sources:
         fetched = curl_text(source["url"])
@@ -507,8 +576,20 @@ def collect_rss(rss_sources, output_dir, topics_by_id):
             )
             continue
         try:
-            items = parse_feed_items(fetched["body"])
-            items = enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id)
+            feed_metadata = {}
+            if source["id"] == "aihot-selected":
+                snapshot = output_dir / "rss-feeds" / "aihot-selected.xml"
+                snapshot.parent.mkdir(parents=True, exist_ok=True)
+                snapshot.write_text(fetched["body"], encoding="utf-8")
+                feed_metadata = {
+                    "feed_snapshot_path": str(snapshot.relative_to(ROOT)),
+                    "feed_sha256": hashlib.sha256(fetched["body"].encode("utf-8")).hexdigest(),
+                    "evidence_level": "secondary-source",
+                }
+                items = parse_aihot_feed_items(fetched["body"], source["url"])
+            else:
+                items = parse_feed_items(fetched["body"])
+            items = enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id, run_date=run_date)
             results.append(
                 {
                     "source_id": source["id"],
@@ -516,6 +597,7 @@ def collect_rss(rss_sources, output_dir, topics_by_id):
                     "url": source["url"],
                     "status": "ok",
                     "items": items,
+                    **feed_metadata,
                     **source_metadata(source),
                 }
             )
@@ -1219,7 +1301,7 @@ def main(argv=None):
 
     output_dir.mkdir(parents=True, exist_ok=True)
     topics_by_id = load_topics()
-    rss_results = collect_rss(configured["rss"], output_dir, topics_by_id) if "rss" in channels else []
+    rss_results = collect_rss(configured["rss"], output_dir, topics_by_id, run_date=run_date) if "rss" in channels else []
     if "github-releases" in channels:
         github_api_status, github_results = collect_github(configured["github-releases"], output_dir)
     else:

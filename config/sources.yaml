@@ -37,6 +37,14 @@ rss:
     priority: true
     topics: [llm, ai-agent, ai-coding, ai-governance]
 
+  - id: aihot-selected
+    name: AIHOT Selected
+    url: https://aihot.news/feed.xml
+    enabled: true
+    priority: false
+    topics: [llm, ai-agent, ai-coding, ai-governance, infra, ai-systems]
+    note: LLM-curated secondary-source discovery feed; preserve AIHOT attribution and read linked originals before making claims.
+
   - id: lilian-weng
     name: Lilian Weng
     url: https://lilianweng.github.io/index.xml

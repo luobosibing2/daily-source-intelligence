@@ -223,6 +223,11 @@ def make_signal(
 
 
 def merge_signal(existing, incoming):
+    # An independently collected official item represents the merged signal;
+    # the AIHOT discovery remains in provenance with its secondary evidence.
+    has_aihot_discovery = any(row.get("source_id") == "aihot-selected" for row in existing.get("provenance", []))
+    if has_aihot_discovery and existing.get("evidence_level") != "official-source" and incoming.get("evidence_level") == "official-source":
+        existing, incoming = incoming, existing
     existing["topics"] = sorted(set(existing.get("topics", [])) | set(incoming.get("topics", [])))
     existing_score = int(existing.get("score", {}).get("total") or 0)
     incoming_score = int(incoming.get("score", {}).get("total") or 0)
@@ -237,7 +242,7 @@ def merge_signal(existing, incoming):
     provenance = existing.get("provenance", []) + incoming.get("provenance", [])
     unique = {}
     for item in provenance:
-        key = (item.get("source_type"), item.get("source_id"), item.get("url"))
+        key = (item.get("source_type"), item.get("source_id"), item.get("url"), item.get("guid"), item.get("aggregator_url"))
         unique[key] = item
     existing["provenance"] = list(unique.values())
     return existing
@@ -350,24 +355,39 @@ def build_signals(run_date, root):
                 continue
             status = item.get("fulltext_status") or ""
             body = relative_body_path(root, status, item.get("fulltext_path"))
+            signal = make_signal(
+                root=root,
+                run_date=run_date,
+                source_type="rss-fulltext",
+                source_id=source.get("source_id"),
+                title=item.get("title") or item.get("url"),
+                url=item.get("url"),
+                published_at=item.get("published"),
+                topics=item.get("matched_topics") or source.get("topics") or [],
+                evidence_level="official-source" if item.get("intelligence_department") and source.get("source_id") != "aihot-selected" else "secondary-source",
+                content_status=status,
+                content_path=item.get("fulltext_path"),
+                score_total=70 if relevance == "always_read" else 50,
+                score_breakdown={"relevance": 70 if relevance == "always_read" else 50},
+                why_read="read matched RSS fulltext body" if body else "boundary row: matched RSS item without readable fulltext body",
+            )
+            if source.get("source_id") == "aihot-selected":
+                signal["provenance"][0].update(
+                    {
+                        "aggregator_name": "AIHOT",
+                        "aggregator_url": item.get("aggregator_url") or "",
+                        "discovery_title": item.get("title") or "",
+                        "guid": item.get("guid") or "",
+                        "feed_url": item.get("feed_url") or source.get("url") or "",
+                        "feed_snapshot_path": source.get("feed_snapshot_path") or "",
+                        "feed_sha256": source.get("feed_sha256") or "",
+                        "feed_author": item.get("feed_author") or "",
+                        "published_basis": item.get("published_basis") or "aihot-feed-pubdate",
+                    }
+                )
             _append(
                 signals,
-                make_signal(
-                    root=root,
-                    run_date=run_date,
-                    source_type="rss-fulltext",
-                    source_id=source.get("source_id"),
-                    title=item.get("title") or item.get("url"),
-                    url=item.get("url"),
-                    published_at=item.get("published"),
-                    topics=item.get("matched_topics") or source.get("topics") or [],
-                    evidence_level="official-source" if item.get("intelligence_department") else "secondary-source",
-                    content_status=status,
-                    content_path=item.get("fulltext_path"),
-                    score_total=70 if relevance == "always_read" else 50,
-                    score_breakdown={"relevance": 70 if relevance == "always_read" else 50},
-                    why_read="read matched RSS fulltext body" if body else "boundary row: matched RSS item without readable fulltext body",
-                ),
+                signal,
                 seen,
             )
 

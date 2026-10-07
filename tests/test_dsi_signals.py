@@ -36,6 +36,96 @@ class DsiSignalsTest(unittest.TestCase):
         right = "https://example.com/post?a=1&b=2"
         self.assertEqual(self.module.canonicalize_url(left), right)
 
+    def test_aihot_signals_dedup_originals_keep_secondary_discovery_provenance(self):
+        original = "https://www.microsoft.com/en-us/research/blog/agent-lightning-v1-0/"
+        item = {
+            "title": "AIHOT: Agent Lightning 中文摘要",
+            "url": original + "?utm_source=aihot&ref=feed",
+            "published": "2026-07-18T16:00:00Z",
+            "published_basis": "aihot-feed-pubdate",
+            "relevance_status": "matched",
+            "matched_topics": ["ai-agent"],
+            "fulltext_status": "limited",
+            "aggregator_url": "https://aihot.news/items/first",
+            "guid": "first",
+            "feed_url": "https://aihot.news/feed.xml",
+            "feed_author": "noreply@aihot.news (Microsoft Research 博客)",
+            "intelligence_department": "should-not-upgrade-aggregator",
+        }
+        second = {**item, "url": original, "guid": "second", "aggregator_url": "https://aihot.news/items/second"}
+        self.write_json("rss-items.json", {"sources": [{
+            "source_id": "aihot-selected",
+            "topics": ["llm", "ai-agent"],
+            "feed_snapshot_path": "raw/2026-07-19/rss-feeds/aihot-selected.xml",
+            "feed_sha256": "feed-hash",
+            "items": [item, second],
+        }]})
+
+        payload = self.module.build_signals(self.run_date, self.root)
+
+        self.assertEqual(len(payload["signals"]), 1)
+        signal = payload["signals"][0]
+        self.assertEqual(signal["canonical_url"], original.rstrip("/"))
+        self.assertEqual(signal["signal_id"], "url:" + original.rstrip("/"))
+        self.assertEqual(signal["evidence_level"], "secondary-source")
+        self.assertEqual(signal["topics"], ["ai-agent"])
+        self.assertEqual(signal["content"], {"status": "limited", "path": ""})
+        self.assertEqual({row["guid"] for row in signal["provenance"]}, {"first", "second"})
+        discovery = signal["provenance"][0]
+        self.assertEqual(discovery["aggregator_name"], "AIHOT")
+        self.assertEqual(discovery["feed_url"], "https://aihot.news/feed.xml")
+        self.assertEqual(discovery["feed_sha256"], "feed-hash")
+        self.assertEqual(discovery["discovery_title"], item["title"])
+        self.assertEqual(discovery["published_basis"], "aihot-feed-pubdate")
+        self.assertEqual(discovery["evidence_level"], "secondary-source")
+        reading_list = self.module.build_reading_list(payload, "now")
+        self.assertEqual(reading_list["entries"][0]["provenance"], signal["provenance"])
+        self.assertEqual(reading_list["entries"][0]["local_body_path"], "")
+
+    def test_aihot_official_duplicates_keep_independent_official_item(self):
+        original = "https://openai.com/index/new-model"
+        aihot = {"source_id": "aihot-selected", "items": [{
+            "title": "AIHOT 中文模型摘要",
+            "url": original + "/?utm_source=aihot",
+            "published": "2026-07-18T16:00:00Z",
+            "relevance_status": "matched",
+            "matched_topics": ["llm"],
+            "fulltext_status": "limited",
+            "aggregator_url": "https://aihot.news/items/model",
+            "guid": "model",
+        }]}
+        official = {"source_id": "openai-blog", "items": [{
+            "title": "Official model announcement",
+            "url": original,
+            "published": "2026-07-18T16:00:00Z",
+            "relevance_status": "always_read",
+            "matched_topics": ["ai-agent"],
+            "intelligence_department": "first-party-openai",
+            "fulltext_status": "limited",
+        }]}
+        other_rss = {"source_id": "another-discovery-feed", "items": [{
+            "title": "Another secondary discovery",
+            "url": original,
+            "published": "2026-07-18T16:00:00Z",
+            "relevance_status": "matched",
+            "matched_topics": ["llm"],
+        }]}
+        for sources in ([aihot, official], [official, aihot], [other_rss, aihot, official]):
+            with self.subTest(first_source=sources[0]["source_id"]):
+                self.write_json("rss-items.json", {"sources": sources})
+
+                signal = self.module.build_signals(self.run_date, self.root)["signals"][0]
+
+                self.assertEqual(signal["title"], "Official model announcement")
+                self.assertEqual(signal["source_id"], "openai-blog")
+                self.assertEqual(signal["evidence_level"], "official-source")
+                self.assertEqual(signal["topics"], ["ai-agent", "llm"])
+                self.assertEqual(len(signal["provenance"]), len(sources))
+                by_source = {row["source_id"]: row for row in signal["provenance"]}
+                self.assertEqual(by_source["aihot-selected"]["evidence_level"], "secondary-source")
+                self.assertEqual(by_source["openai-blog"]["evidence_level"], "official-source")
+                self.assertEqual(by_source["aihot-selected"]["discovery_title"], "AIHOT 中文模型摘要")
+
     def test_exact_beijing_day_excludes_outside_timestamp(self):
         self.write_json(
             "rss-items.json",
