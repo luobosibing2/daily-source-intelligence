@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026-09-01 Daily Source Intelligence 中文日报">
+  <meta name="theme-color" content="#101c2c">
+  <title>2026-09-01 Daily Source Intelligence</title>
+  <style>
+:root {
+  --ink: #17202e;
+  --muted: #697382;
+  --paper: #fbfaf7;
+  --canvas: #f0eee8;
+  --line: #d9d6ce;
+  --navy: #101c2c;
+  --navy-soft: #18283d;
+  --accent: #d5a650;
+  --accent-soft: #f5e8c9;
+  --blue: #356ba6;
+  --white: #ffffff;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { color: #1e4f83; }
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 700;
+  transform: translateY(-180%);
+}
+.skip-link:focus { transform: translateY(0); }
+.shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+.site-header {
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+.site-header .shell {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.brand-mark {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--accent);
+  font: 700 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.header-note {
+  color: #aeb8c5;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font: 700 0.72rem/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 20px;
+  border: 1px solid currentColor;
+  font-weight: 700;
+  text-decoration: none;
+}
+.button-primary { background: var(--accent); border-color: var(--accent); color: var(--navy); }
+.button-primary:hover { background: #e1b766; color: var(--navy); }
+.button-quiet { color: #dbe2eb; }
+.button-quiet:hover { background: rgba(255, 255, 255, 0.08); color: var(--white); }
+.site-footer {
+  background: var(--navy);
+  color: #9ca8b7;
+  padding: 32px 0;
+  font-size: 0.82rem;
+}
+.site-footer .shell { display: flex; justify-content: space-between; gap: 24px; }
+.site-footer a { color: #dce3eb; }
+.local-evidence {
+  display: inline;
+  color: #5f6874;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+}
+.local-evidence small {
+  display: inline-block;
+  margin-left: 0.32em;
+  padding: 0.08em 0.38em;
+  border: 1px solid #c9c4b9;
+  border-radius: 999px;
+  color: #73684f;
+  font-size: 0.68em;
+  line-height: 1.45;
+  text-decoration: none;
+  vertical-align: 0.08em;
+}
+@media (max-width: 680px) {
+  .shell { width: min(100% - 28px, 1160px); }
+  .header-note { display: none; }
+  .site-footer .shell { display: block; }
+}
+
+.report-hero {
+  background: var(--navy);
+  color: var(--white);
+  padding: 72px 0 78px;
+}
+.report-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+  gap: 80px;
+  align-items: end;
+}
+.report-hero h1 {
+  max-width: 720px;
+  margin: 0;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(3rem, 7vw, 6.4rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+.report-hero h1 span { display: block; color: #cfd8e4; }
+.report-deck {
+  max-width: 620px;
+  margin: 26px 0 0;
+  color: #b9c4d1;
+  font-size: 1rem;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.metric { min-height: 122px; padding: 22px; border-right: 1px solid rgba(255, 255, 255, 0.14); }
+.metric:last-child { border-right: 0; }
+.metric strong {
+  display: block;
+  color: var(--white);
+  font: 500 clamp(1.7rem, 4vw, 2.6rem)/1 Georgia, "Noto Serif SC", serif;
+}
+.metric span {
+  display: block;
+  margin-top: 12px;
+  color: #9eabba;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+}
+.report-layout {
+  width: min(1160px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  gap: 70px;
+  padding: 64px 0 100px;
+}
+.report-rail { align-self: start; position: sticky; top: 28px; }
+.rail-date {
+  display: block;
+  padding-top: 15px;
+  border-top: 3px solid var(--accent);
+  font: 700 0.76rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.08em;
+}
+.rail-note { margin: 14px 0 26px; color: var(--muted); font-size: 0.78rem; }
+.rail-link { font-size: 0.82rem; font-weight: 700; }
+.rail-toc { margin: 28px 0; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.rail-toc strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #7b705c;
+  font: 700 0.68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.1em;
+}
+.rail-toc a {
+  display: block;
+  padding: 5px 0;
+  color: #5d6875;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  text-decoration: none;
+}
+.rail-toc a:hover { color: var(--blue); }
+.report-content {
+  min-width: 0;
+  padding: 8px 0 0;
+  font-size: 1rem;
+}
+.report-content > h2 {
+  margin: 72px 0 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+.report-content > h2:first-child { margin-top: 0; }
+.report-content h3 {
+  margin: 46px 0 17px;
+  color: #24354a;
+  font-size: 1.18rem;
+  line-height: 1.4;
+}
+.report-content p { margin: 0 0 20px; }
+.report-content ul, .report-content ol { margin: 0 0 26px; padding-left: 1.3em; }
+.report-content li { margin: 0 0 12px; padding-left: 0.28em; }
+.report-content li::marker { color: #b8852e; }
+.report-content code {
+  padding: 0.12em 0.38em;
+  border: 1px solid #e0ddd5;
+  border-radius: 3px;
+  background: #f5f2eb;
+  color: #28486b;
+  font: 0.88em/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.report-content pre {
+  overflow-x: auto;
+  margin: 28px 0;
+  padding: 22px;
+  border-left: 3px solid var(--accent);
+  background: var(--navy);
+  color: #e7edf4;
+}
+.report-content pre code { padding: 0; border: 0; background: transparent; color: inherit; }
+.report-content blockquote {
+  margin: 28px 0;
+  padding: 4px 0 4px 22px;
+  border-left: 3px solid var(--accent);
+  color: #4e5b69;
+}
+.table-wrap {
+  overflow-x: auto;
+  margin: 30px 0 42px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 14px 34px rgba(28, 37, 48, 0.06);
+}
+table { width: 100%; border-collapse: collapse; min-width: 820px; }
+th, td { padding: 16px 17px; border-bottom: 1px solid #e3e0d9; text-align: left; vertical-align: top; }
+th {
+  background: #e9e6de;
+  color: #4f5964;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+td { font-size: 0.9rem; line-height: 1.62; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: #f8f5ee; }
+td:first-child { color: #8b631e; font-weight: 750; white-space: nowrap; }
+@media (max-width: 900px) {
+  .report-hero { padding: 54px 0 60px; }
+  .report-hero-grid { grid-template-columns: 1fr; gap: 44px; }
+  .report-layout { grid-template-columns: 1fr; gap: 36px; }
+  .report-rail { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 36px; align-items: end; }
+  .rail-toc { grid-column: 1 / -1; margin: 4px 0; }
+  .rail-toc a { display: inline-block; margin-right: 16px; }
+  .rail-note { margin-bottom: 0; }
+}
+@media (max-width: 680px) {
+  .report-hero h1 { font-size: clamp(3rem, 16vw, 4.6rem); }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .metric { min-height: auto; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+  .metric:last-child { border-bottom: 0; }
+  .report-layout { width: min(100% - 28px, 1160px); padding-top: 42px; }
+  .report-rail { display: block; }
+  .report-content { font-size: 0.96rem; }
+}
+@media print {
+  .site-header, .report-rail, .site-footer { display: none; }
+  body { background: #fff; }
+  .report-hero { padding: 24px 0; background: #fff; color: #000; }
+  .report-hero h1, .report-hero h1 span { color: #000; }
+  .report-deck, .eyebrow { color: #444; }
+  .metrics-grid { border-color: #aaa; }
+  .metric, .metric strong, .metric span { color: #000; border-color: #aaa; }
+  .report-layout { display: block; width: 100%; padding: 24px 0; }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到日报正文</a>
+  <header class="site-header">
+    <div class="shell">
+      <a class="brand" href="index.html"><span class="brand-mark">DSI</span>Daily Source Intelligence</a>
+      <span class="header-note">公开信号 · 来源证据 · 中文简报</span>
+    </div>
+  </header>
+  <section class="report-hero">
+    <div class="shell report-hero-grid">
+      <div>
+        <p class="eyebrow">Daily briefing / 2026-09-01</p>
+        <h1>Daily Source <span>Intelligence</span></h1>
+        <p class="report-deck">围绕预设主题整理公开信号，保留证据边界，并转化为结构化中文日报。</p>
+      </div>
+      <div class="metrics-grid" aria-label="本期信号统计">
+        <div class="metric"><strong>12</strong><span>唯一信号<br>UNIQUE SIGNALS</span></div>
+        <div class="metric"><strong>10</strong><span>北京时间窗口内<br>IN WINDOW</span></div>
+        <div class="metric"><strong>2</strong><span>时间未知边界<br>TIME UNKNOWN</span></div>
+      </div>
+    </div>
+  </section>
+  <main class="report-layout" id="content">
+    <aside class="report-rail">
+      <div>
+        <span class="rail-date">2026-09-01</span>
+        <p class="rail-note">Asia / Shanghai<br>Evidence-backed</p>
+      </div>
+      <nav class="rail-toc" aria-label="日报目录"><strong>CONTENTS</strong><a href="#采集范围">采集范围</a><a href="#今日高信号">今日高信号</a><a href="#按主题分组摘要">按主题分组摘要</a><a href="#来源证据表">来源证据表</a><a href="#x-twitter-覆盖说明">X/Twitter 覆盖说明</a><a href="#候选审计与处置">候选审计与处置</a><a href="#不确定性与待验证项">不确定性与待验证项</a><a href="#候选与当天产物">候选与当天产物</a><a href="#边界与验证">边界与验证</a></nav>
+      <a class="rail-link" href="index.html">← 返回日报归档</a>
+    </aside>
+    <article class="report-content"><h2 id="采集范围">采集范围</h2>
+<ul>
+<li>时间口径：北京时间 2026-09-01；日报判断以当天 00:00–次日 00:00 为主，GitHub Trending 没有可靠发布时间的项目标为 <code>window_status=unknown</code>，不会把上榜时间写成项目发布日。RSS/官方页面脚本同时保留各源最近条目，以便记录滚动背景；这些旧日期材料不自动升级为今日发布。</li>
+<li>稳定来源：32 个 RSS/Atom 源中 31 个返回成功，1 个失败（<code>dwarkesh-patel</code>，<code>curl: (52) Empty reply from server</code>）；成功源归档 155 条 feed 记录。57 条命中关注方向或一手重点源的 RSS 正文均已尝试且 <code>ok</code>，另有 98 条不相关条目未抓正文。7 个 GitHub release Atom 源全部返回，35 条 release 记录中 10 条一手 release 正文尝试，4 条 <code>ok</code>、6 条 <code>limited</code>。GitHub Trending 1/1，10 个 repo 的 Trending description 与 README 均已归档。官方页面 4/4 成功，OpenAI News 页面通过 <code>opencli-read</code> 读取。</li>
+<li>X/Twitter：只使用 <code>twitterapi.io</code> 的 <code>GET /twitter/user/last_tweets</code> 只读端点，27 个账号、36 小时窗口、<code>includeReplies=false</code>；接口原始返回 449 条，筛选并归档 136 条 <code>direct-x</code>。没有使用官方 X API、登录态 X 浏览器、账号密码、发帖/点赞/关注/私信写操作，也没有使用 Exa MCP。</li>
+<li>原始与派生控制：<span class="local-evidence" title="本地证据归档未随公开站点发布">manifest.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">signals.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">report-reading-list.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">run-summary.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">official-link-candidates.json<small>本地证据</small></span> 和 <span class="local-evidence" title="本地证据归档未随公开站点发布">twitter-topic-brief.json<small>本地证据</small></span>。阅读清单有 12 项，其中 3 项有本地可读正文、9 项为结构化 <code>direct-x</code>、limited release 或 Trending 边界；正文判断只引用当天归档的 Markdown、Atom body、README、官方页面正文或结构化 direct-x 证据。</li>
+</ul>
+<h2 id="今日高信号">今日高信号</h2>
+<ol>
+<li><strong>Claude Code v2.1.252 集中修复长会话与权限边界。</strong> <span class="local-evidence" title="本地证据归档未随公开站点发布">官方 release Atom 正文<small>本地证据</small></span>记录 Bash 命令的 task output swap、项目尚无 <code>.claude/settings.local.json</code> 时 <code>always allow</code> 不持久化、Remote Control 在连接降级时卡顿，以及超大后台任务失败输出导致 API 请求过大的修复。这是 <code>official-source</code>、可读 release body，说明可靠性与设置持久化在持续被加固，但仍需在目标安装版本、权限组合和断网场景回归。</li>
+<li><strong>Codex `0.152.0-alpha.7` 在本日窗口出现，但功能证据仍受限。</strong> <span class="local-evidence" title="本地证据归档未随公开站点发布">release Atom 归档<small>本地证据</small></span>只能确认版本条目，<code>fulltext_status=limited</code>；不能把相邻 alpha 的传闻、版本号或短说明写成具体功能、稳定性或兼容性结论。</li>
+<li><strong>ChatGPT Ads 的商业化和地区扩展成为 OpenAI 的近期产品信号。</strong> <span class="local-evidence" title="本地证据归档未随公开站点发布">OpenAI 官方正文<small>本地证据</small></span>称上线不到 200 天达到 10 亿美元年化收入运行率，并向印度、欧洲、中东和北非开放自助投放；同时声称广告与答案分离、广告主不能访问私聊、用户可控制个性化。文章日期是 2026-08-31，属于本轮稳定源的滚动背景而非严格 9 月 1 日新发；收入、广告效果与隐私承诺仍是厂商自述，不能替代独立财务或隐私验证。</li>
+<li><strong>ChatGPT Work 的可操作能力与安全边界被一次独立实测同时暴露。</strong> <span class="local-evidence" title="本地证据归档未随公开站点发布">Simon Willison 的正文<small>本地证据</small></span>区分 Work Cloud/Local，记录联网代码执行、无头 Chrome、跨会话持久文件系统、Sites、子 agent 和计划自动化，也提醒“私有数据 + 非可信内容 + 外发通道”的 prompt injection 组合风险。它是 <code>secondary-source</code> 的用户侧实测，不能替代官方产品合同、权限配置或 threat model。</li>
+<li><strong>“营销工程师”被个人创作者重新命名为下一代 FDE。</strong> <a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 `direct-x` 帖文</a>把嵌入团队、使用 AI 构建解决方案的角色称为 marketing engineer，并预测顶尖者收入可达百万美元。这支持“交付角色向增长与实现混合”这一待验证线索，但没有客户嵌入样本、交付周期、成本或收入分母，不能当作 FDE 行业事实。</li>
+<li><strong>代码减量、持续审查和跨消息渠道触达正在被包装成个人 agent 工作流。</strong> <a href="https://x.com/mattpocockuk/status/2094500508224409852" target="_blank" rel="noopener noreferrer">@mattpocockuk</a>建议用持续 code review 和控制 cyclomatic complexity 减少 slop；<a href="https://x.com/EXM7777/status/2094531424280023371" target="_blank" rel="noopener noreferrer">@EXM7777</a>称 PhotonHQ 可通过 iMessage 触达 Claude Code、Codex 和 Hermes 会话；<a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">@jackfriks</a>称为 OpenClaw 2 做了可跨 TikTok、Instagram、YouTube 排程发布的插件。它们都是 <code>direct-x</code> 个人或产品宣传，涉及凭据、外发和自动执行，需在隔离账号、权限门禁和回滚条件下复测。</li>
+<li><strong>本日 Trending 更像“可部署的 AI 组合件”目录，而非单一模型竞赛。</strong> ODS 把本地推理、界面、工作流、RAG 和代理装进一套私有服务器；MiniMind 把从零训练小模型、Tool Use 与 Agentic RL 做成教程；ECC、Scientific Agent Skills 与 reverse-skill 则把技能、记忆、路由和安全工具链打包。所有项目都只是 <code>secondary-source</code> discovery signal，上榜不代表质量、采用率或安全背书。</li>
+</ol>
+<h2 id="按主题分组摘要">按主题分组摘要</h2>
+<h3 id="一手重点源-first-party-openai-claude-code">一手重点源 / First-party OpenAI &amp; Claude Code</h3>
+<ul>
+<li><strong>OpenAI Blog：</strong> 5 条一手条目都按 <code>fulltext_policy=always</code> 尝试并归档为 <code>ok</code>，包括 ChatGPT Ads 商业化、Cursor 收购后的合同决定、泰国 AI 初创支持、ChatGPT 与批判性思维训练、巴西布局。Ads 文章明确给出地区扩展、投放与隐私原则；<span class="local-evidence" title="本地证据归档未随公开站点发布">Cursor 正文<small>本地证据</small></span>称拟于 2026-11-12 结束向 Cursor 提供模型，日期和合同解释是官方声明，不是已完成的执行结果。</li>
+<li><strong>OpenAI/Codex release：</strong> 5 条记录为 <code>0.152.0-alpha.7</code>、<code>.6</code>、<code>.5</code>、<code>.4</code> 和 <code>rust-v0.152.0-alpha.3</code>；5 条正文均 <code>limited</code>，本轮只支持版本节奏观察，不能写功能变化。</li>
+<li><strong>Claude Code：</strong> 5 条 release 中 <code>v2.1.252</code>、<code>v2.1.251</code>、<code>v2.1.248</code>、<code>v2.1.247</code> 的 body 可读，<code>v2.1.250</code> 为 <code>limited</code>。本日最新 <code>v2.1.252</code> 的修复集中在任务输出交换、权限设置持久化、Remote Control 降级恢复和超大失败输出；这些是 release body 可直接确认的实现变化，仍需目标组织做权限、代理和长会话回归。</li>
+<li><strong>官方页面：</strong> <code>openai-news</code> 通过 <code>opencli-read</code> 成功；<code>anthropic-news-page</code>、<code>claude-docs-release-notes</code> 没有可解析条目，<code>claude-blog</code> 只解析到页面卡片。页面列表是发现材料，不能代替每篇文章的正文归档。</li>
+</ul>
+<h3 id="llm-frontier-models">LLM / Frontier Models</h3>
+<ul>
+<li><span class="local-evidence" title="本地证据归档未随公开站点发布">Gemini Omni 1.1 Flash<small>本地证据</small></span>强调对视频生成的控制，<span class="local-evidence" title="本地证据归档未随公开站点发布">Gemini 双盲评测试点<small>本地证据</small></span>描述用 Confidential Space 和加密隔离减少 benchmark contamination；两文为官方材料但日期在 8 月 27 日，合作方、成本和技术报告仍待核验。</li>
+<li><span class="local-evidence" title="本地证据归档未随公开站点发布">Granite 4.2 构建说明<small>本地证据</small></span>是 Hugging Face 对模型构建的可读整理；<span class="local-evidence" title="本地证据归档未随公开站点发布">Hy4 Preview<small>本地证据</small></span>记录参数、上下文和 reasoning 选项。二者均是博客/二次材料，不替代模型卡、权重或独立基准。</li>
+<li>OpenAI Ads 正文把“让免费层继续可用”与上下文相关广告、衡量和个性化放在同一产品叙事中；广告与答案隔离是官方原则声明，广告收入和隐私效果仍需第三方验证。</li>
+</ul>
+<h3 id="ai-agent-agentic-workflow">AI Agent / Agentic Workflow</h3>
+<ul>
+<li>ChatGPT Work 的独立实测显示，云端任务可以跨会话保留文件、运行联网代码和无头 Chrome，并调用子 agent；这使“任务完成”从单轮回答扩展到可复用工作区，但也扩大了私有数据、网页内容和外发工具组合的攻击面。</li>
+<li><a href="https://github.com/THU-MAIC/OpenMAIC" target="_blank" rel="noopener noreferrer">OpenMAIC</a> README 描述从主题或材料生成幻灯片、测验、互动模拟和项目式学习，服务端会话可取消、恢复和引导；多模型、媒体、搜索、PostgreSQL 与共享部署都需要独立配置和权限验证。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><a href="https://github.com/K-Dense-AI/scientific-agent-skills" target="_blank" rel="noopener noreferrer">Scientific Agent Skills</a> 把生物、化学、临床、实验室和监管流程包装为可安装技能，README 宣称 163 个技能与 100+ 数据库，并支持版本 pin、结构检查和多种 agent host；技能可装包、联网和执行代码，必须逐个审查供应链与数据外发。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+</ul>
+<h3 id="ai-coding-developer-tools">AI Coding / Developer Tools</h3>
+<ul>
+<li>Claude Code <code>v2.1.252</code> 的 <span class="local-evidence" title="本地证据归档未随公开站点发布">release body<small>本地证据</small></span>把“工具已完成但连接退化”“项目设置文件缺失”“错误输出过大”等边界变成修复项；这比单纯增加命令更直接地影响长任务稳定性。</li>
+<li>Codex alpha.7 的 <span class="local-evidence" title="本地证据归档未随公开站点发布">Atom body<small>本地证据</small></span>过短，不能从版本号推断 CLI/TUI、sandbox、MCP 或 remote-control 变化。</li>
+<li><a href="https://github.com/tt-a1i/archify" target="_blank" rel="noopener noreferrer">Archify</a> README 描述 agent 先输出 typed JSON IR，再由 Node.js 确定性编译成 HTML/SVG 架构、流程、时序、数据流和 Before/Delta/After 对比；它强调不推断 runtime impact 或 merge safety，因此可视化 artifact 仍需与运行时测试分离。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><a href="https://github.com/checkstyle/checkstyle" target="_blank" rel="noopener noreferrer">Checkstyle</a> 是 Java 代码风格和最佳实践检查器，支持可配置规则、命令行、Ant、Maven 与 CI；它是静态门禁而非 AI agent 产品，实际规则集和误报要在目标项目验证。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+</ul>
+<h3 id="ai-governance-public-legitimacy">AI Governance / Public Legitimacy</h3>
+<ul>
+<li>OpenAI Ads 正文把广告标识、答案独立、私聊不可见和用户控制个性化作为信任原则；这是公司官方自述，不是独立审计结论。</li>
+<li>OpenAI/Cursor 正文把变更控制权、合同条款、未来模型责任和开发者过渡期放在同一治理叙事中；拟议 11 月 12 日关闭日期和对 SpaceX 的合规判断仍需等待后续执行证据。</li>
+<li>本日没有新的公共政策、法律、标准或高影响治理原文；ChatGPT Work 的 prompt injection 风险来自用户侧实测，应作为待验证安全问题而非官方治理结论。</li>
+</ul>
+<h3 id="ai-infrastructure-open-source">AI Infrastructure / Open Source</h3>
+<ul>
+<li><a href="https://github.com/Osmantic/ODS" target="_blank" rel="noopener noreferrer">ODS</a> 将 Ollama/llama.cpp、Open WebUI、n8n、ComfyUI、语音、代理、RAG、图像生成、鉴权、观测和诊断接成可在 Linux、Windows、Apple Silicon 上部署的本地 AI server；README 说明 Docker、端口、模型切换与云/混合模式边界，并要求把安装脚本、凭据和 Docker 暴露面作为高风险运维对象。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><a href="https://github.com/zhaoxuya520/reverse-skill" target="_blank" rel="noopener noreferrer">reverse-skill</a> 是面向逆向、授权渗透和安全研究的技能路由包，带 173 条路由回归、结构/供应链 pin 门禁和按需工具链自举；它涉及下载工具、执行脚本和高权限环境，必须确认授权、许可证、网络隔离和安装来源。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><a href="https://github.com/k1tbyte/Wand-Enhancer" target="_blank" rel="noopener noreferrer">WandEnhancer</a> 扩展本地 Wand 客户端配置、远程面板和自定义脚本；README 明确警告有人用假教程散播恶意程序或密码窃取器，不能从 Trending 上榜推断可安全安装。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+</ul>
+<h3 id="indie-hacking-solo-founder">Indie Hacking / Solo Founder</h3>
+<ul>
+<li><a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 marketing engineer 帖文</a>把 AI 辅助构建、增长和 FDE 合并成一种个人职业叙事；没有客户合同、交付周期或收入分母。</li>
+<li><a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">@jackfriks 的 OpenClaw/Postbridge 帖文</a>把跨社交平台排程发布包装为 agent plugin；涉及账号 token、平台条款、误发与撤回，不能把产品宣传当作已验证的增长效果。</li>
+<li><a href="https://x.com/gregisenberg/status/2094479349827125269" target="_blank" rel="noopener noreferrer">@gregisenberg 关于创作者收购上市公司</a>是商业观点，并非金融代理、交易执行或已完成收购证据。</li>
+</ul>
+<h3 id="product-growth-gtm">Product / Growth / GTM</h3>
+<ul>
+<li>OpenAI Ads 的官方正文给出广告管理器、自助投放、CPC/结果优化、Pixel/Conversions API 和地域扩展，说明 AI 产品的分发层正在成为独立商业面；收入运行率、广告回报和新客户比例都属于厂商或合作伙伴材料。</li>
+<li><a href="https://x.com/EXM7777/status/2094518374630097008" target="_blank" rel="noopener noreferrer">@EXM7777 的多模型清单</a>展示把 GPT、Claude、Codex 等按日常、规划、编码和研究分工；它是 <code>direct-x</code> 个人配置，不证明通用路由策略或成本优势。</li>
+<li><a href="https://x.com/mattpocockuk/status/2094500508224409852" target="_blank" rel="noopener noreferrer">@mattpocockuk 的 code review 帖文</a>把“少写代码、控制复杂度”作为减少 slop 的方法，仍缺少可复现实验和团队级指标。</li>
+</ul>
+<h3 id="ai-systems-automation">AI Systems / Automation</h3>
+<ul>
+<li><a href="https://x.com/EXM7777/status/2094531424280023371" target="_blank" rel="noopener noreferrer">PhotonHQ/iMessage 触达帖</a>把 Claude Code、Codex、Hermes 的会话从终端扩展到消息渠道；它可能改善异步监督，也把消息身份、凭据和外发权限带入 agent 边界。</li>
+<li><a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">OpenClaw 2 插件帖</a>描述按自然语言为多个社交平台排程发布；这是未经独立验证的 <code>direct-x</code> 产品线索，需检查 token 隔离、审批和撤回能力。</li>
+<li><span class="local-evidence" title="本地证据归档未随公开站点发布">ODS README<small>本地证据</small></span>把本地模型、工作流、代理、RAG 和观测组合成一套可运维服务；本地化不自动等于安全，默认端口、容器网络、更新和备份仍要实测。</li>
+</ul>
+<h3 id="forward-deployed-engineering-enterprise-ai-deployment">Forward Deployed Engineering / Enterprise AI Deployment</h3>
+<ul>
+<li><a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 `direct-x`</a>是本轮唯一可归入 FDE 主题的高分线索：他把嵌入团队、用 AI 交付方案的 marketing engineer 称作新的 FDE。它只有个人观点，缺少真实客户、实施经济学、上线/回滚分母，因此趋势状态保留为 <code>limited</code>。</li>
+<li>FDE Hub 的<span class="local-evidence" title="本地证据归档未随公开站点发布">历史正文<small>本地证据</small></span>和 Ramp 的<span class="local-evidence" title="本地证据归档未随公开站点发布">集成工厂案例<small>本地证据</small></span>均是可读的旧材料，说明现场 workaround 可以回流产品路线、agent 可在隔离模块中生成和测试连接器；它们不构成本日新的客户部署证据。</li>
+<li>本日没有新的企业级上线、测试/审查门禁、跨团队采用分母或客户 UAT 记录，不能把个人工作流线索升级为 enterprise delivery 结论。</li>
+</ul>
+<h3 id="x-twitter-推主主题摘要">X/Twitter 推主主题摘要</h3>
+<p>以下内容来自 <span class="local-evidence" title="本地证据归档未随公开站点发布">twitter-topic-brief.json<small>本地证据</small></span>，每条均为 <code>direct-x</code>；主题之间有重叠，覆盖最近 24–36 小时，不保证账号完整时间线。分数只用于排序，不代表可信度、采用率或效果。</p>
+<ul>
+<li><strong>LLM / Frontier Models：</strong> <a href="https://x.com/EXM7777/status/2094518374630097008" target="_blank" rel="noopener noreferrer">@EXM7777 9 月 1 日 04:11 的多模型清单</a>（<code>direct-x</code>）、<a href="https://x.com/Hesamation/status/2094508669874368517" target="_blank" rel="noopener noreferrer">@Hesamation 9 月 1 日 03:32 的 Grok Ultra 赠送转发</a>（<code>direct-x</code>）；前者是个人模型路由，后者是促销转发，均不替代官方规格。</li>
+<li><strong>AI Agent / Agentic Workflow：</strong> <a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 marketing engineer 观点</a>（<code>direct-x</code>）、<a href="https://x.com/EXM7777/status/2094531424280023371" target="_blank" rel="noopener noreferrer">@EXM7777 的 PhotonHQ 会话触达</a>（<code>direct-x</code>）、<a href="https://x.com/kloss_xyz/status/2094465800581345339" target="_blank" rel="noopener noreferrer">@kloss_xyz 转发的 Grok Bot 更新</a>（<code>direct-x</code>）；这是个人或产品宣传线索。</li>
+<li><strong>AI Coding / Developer Tools：</strong> <a href="https://x.com/mattpocockuk/status/2094500508224409852" target="_blank" rel="noopener noreferrer">@mattpocockuk 的减量与 code review</a>（<code>direct-x</code>）、<a href="https://x.com/EXM7777/status/2094531424280023371" target="_blank" rel="noopener noreferrer">@EXM7777 的 PhotonHQ</a>（<code>direct-x</code>）、<a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">@jackfriks 的 OpenClaw plugin</a>（<code>direct-x</code>）；不能写成普遍研发吞吐或安全结论。</li>
+<li><strong>AI Governance / Public Legitimacy：</strong> <a href="https://x.com/simonw/status/2094214737957691854" target="_blank" rel="noopener noreferrer">@simonw 的 ChatGPT Work 实测</a>（<code>direct-x</code>）是滚动覆盖中唯一较高分线索，提出 prompt injection 组合风险；这是用户侧安全观察，不等于官方治理结论。</li>
+<li><strong>AI Infrastructure / Open Source：</strong> <a href="https://x.com/Hesamation/status/2094073077097185753" target="_blank" rel="noopener noreferrer">@Hesamation 关于 Mac 与 AI 硬件的转发</a>（<code>direct-x</code>，滚动覆盖）包含未经核验的采购和 RL 说法，不应扩展为硬件路线或算力规模事实。</li>
+<li><strong>Indie Hacking / Solo Founder：</strong> <a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 marketing engineer 观点</a>（<code>direct-x</code>）、<a href="https://x.com/gregisenberg/status/2094479349827125269" target="_blank" rel="noopener noreferrer">@gregisenberg 关于创作者收购上市公司</a>（<code>direct-x</code>）、<a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">@jackfriks 的跨平台插件</a>（<code>direct-x</code>）；没有收入、留存、版权或交易分母。</li>
+<li><strong>Product / Growth / GTM：</strong> <a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 FDE/marketing engineer 观点</a>（<code>direct-x</code>）、<a href="https://x.com/mattpocockuk/status/2094500508224409852" target="_blank" rel="noopener noreferrer">@mattpocockuk 的减少 slop</a>（<code>direct-x</code>）、<a href="https://x.com/EXM7777/status/2094518374630097008" target="_blank" rel="noopener noreferrer">@EXM7777 的多模型清单</a>（<code>direct-x</code>）；只是个人产品与分发线索。</li>
+<li><strong>AI Systems / Automation：</strong> <a href="https://x.com/EXM7777/status/2094531424280023371" target="_blank" rel="noopener noreferrer">@EXM7777 的 PhotonHQ</a>（<code>direct-x</code>）、<a href="https://x.com/jackfriks/status/2094463152591098240" target="_blank" rel="noopener noreferrer">@jackfriks 的 OpenClaw plugin</a>（<code>direct-x</code>）、<a href="https://x.com/EXM7777/status/2094518374630097008" target="_blank" rel="noopener noreferrer">@EXM7777 的多模型清单</a>（<code>direct-x</code>）；没有生产可靠性或费用分母。</li>
+<li><strong>Forward Deployed Engineering / Enterprise AI Deployment：</strong> <a href="https://x.com/gregisenberg/status/2094518013068484826" target="_blank" rel="noopener noreferrer">@gregisenberg 的 marketing engineer 观点</a>（<code>direct-x</code>）；没有客户现场、交付经济学或 UAT 证据，仍是 <code>limited</code>。</li>
+</ul>
+<h3 id="github-trending-发现信号-10-个-readme-均已归档">GitHub Trending 发现信号（10 个 README 均已归档）</h3>
+<p>GitHub Trending 只用于发现，证据等级统一为 <code>secondary-source</code>；下面把 Trending description 与 README 合并成项目介绍，不把上榜、stars 或 forks 写成质量、发布或采用背书。</p>
+<ul>
+<li><strong>[THU-MAIC/OpenMAIC](https://github.com/THU-MAIC/OpenMAIC)：多 agent 互动课堂和课程构建工作台。</strong> README 描述从主题或材料生成幻灯片、测验、互动模拟和项目式学习；v1.0.0 Pro workbench 以服务端会话支持取消、恢复和引导，可接多模型、媒体、搜索、存储并导出 <code>.pptx</code>/HTML。材料上传、模型 key、共享部署和持久化后端需独立核验；<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[tt-a1i/archify](https://github.com/tt-a1i/archify)：把代码库或系统描述编译成可验证的架构 artifact。</strong> README 说明 agent 先产生 typed JSON IR，再由 Node.js 渲染/校验器确定性生成 HTML/SVG，支持 architecture、workflow、sequence、data-flow、lifecycle 和 Before/Delta/After 对比；README 明确不推断 runtime impact 或 merge safety，需把图形 artifact 与运行时测试分开。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills)：面向科学研究的 Agent Skills/Plugins 集合。</strong> README 覆盖组学、药物、临床、实验室、可视化和监管材料工作流，宣称 163 个技能、100+ 数据库，支持 <code>npx</code>/<code>gh skill</code>、版本 pin、技能测试和多种 host；技能可执行代码、装包、联网和改文件，必须逐个审查供应链、数据来源和密钥边界。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[k1tbyte/Wand-Enhancer](https://github.com/k1tbyte/Wand-Enhancer)：扩展 Wand 本地客户端配置和互操作性的工具。</strong> README 描述 UX 改进、远程 Web 面板与自定义脚本，并明确警告假教程、恶意安装包和密码窃取器；它不是 AI 产品，值得记录的原因是高风险软件下载与供应链边界，安装前应只用官方 GitHub 代码和发布说明。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[majd/ipatool](https://github.com/majd/ipatool)：搜索并下载 App Store 的 iOS/iPadOS/tvOS/visionOS `.ipa` 包。</strong> README 提供 Apple ID 鉴权、<code>search</code>、<code>purchase</code>、<code>list-purchases</code> 等命令，面向测试和归档；账号凭据、购买授权、应用许可和 Keychain 边界必须在隔离环境确认。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[jingyaogong/minimind](https://github.com/jingyaogong/minimind)：从零训练小型语言模型的教程和代码链。</strong> README 以约 64M 参数、低成本和约两小时训练为入门目标，覆盖 PyTorch 原生结构、Tokenizer、预训练、SFT、LoRA、DPO/PPO/GRPO/CISPO、Tool Use、Agentic RL、蒸馏和 OpenAI API 兼容服务，并可接 vLLM、Ollama 等推理引擎；成本和效果数字是项目自测，需按硬件、数据与版本复现。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[Osmantic/ODS](https://github.com/Osmantic/ODS)：把个人电脑变成私有 AI server。</strong> README 将本地模型推理、Open WebUI、控制面板、语音、代理、工作流、RAG、搜索、图像生成、鉴权和观测预接成 Linux/Windows/macOS Apple Silicon 安装栈，Docker 默认服务和端口有明确说明，云/混合 API 是可选模式；安装脚本、容器网络、默认凭据和升级回滚需先审计。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[checkstyle/checkstyle](https://github.com/checkstyle/checkstyle)：Java 代码规范静态检查器。</strong> README 支持 Google/Sun 风格、命令行、Ant、Maven 和 CI，解决规则门禁与最佳实践一致性问题；它不是 agent 专用项目，实际规则集、误报和版本兼容要在目标仓库验证。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)：逆向、授权渗透和安全研究技能路由包。</strong> README 描述 AI 路由、按需工具链自举和自我进化经验库，并提供 173 条路由回归、结构一致性与 supply-chain pin 门禁；其脚本和工具安装可能触及高权限与外网，必须确认授权、许可证、隔离和可回滚性。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+<li><strong>[affaan-m/ECC](https://github.com/affaan-m/ECC)：跨 Claude Code、Codex、OpenCode、Cursor 的 agent harness 组件集。</strong> README 把 skills、instincts、memory、security、research、hooks、MCP 和 operator workflow 组合成可安装框架，并在 ECC 2.1 展示 Plan Canvas 与 Unified Memory Vault；安装会修改客户端规则、技能和 MCP 配置，必须 pin 版本、审查脚本和区分个人配置与组织治理。<span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>。</li>
+</ul>
+<h2 id="来源证据表">来源证据表</h2>
+<div class="table-wrap" role="region" aria-label="数据表" tabindex="0"><table><thead><tr><th>来源组</th><th>本轮结果</th><th>证据与边界</th></tr></thead><tbody><tr><td>RSS/Atom</td><td>32 个源中 31 个成功；155 条 feed 记录；57 条命中/一手正文 57/57 <code>ok</code></td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">rss-items.json<small>本地证据</small></span> 与 <span class="local-evidence" title="本地证据归档未随公开站点发布">RSS 正文归档<small>本地证据</small></span>；失败源为 <code>dwarkesh-patel</code>，许多条目是源最近历史材料，不等于当天首次发布。</td></tr>
+<tr><td>GitHub release</td><td>7/7 通过 Atom；35 条记录；10 条一手 release 中 4 <code>ok</code>、6 <code>limited</code></td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">github-items.json<small>本地证据</small></span> 与 <span class="local-evidence" title="本地证据归档未随公开站点发布">release fulltext<small>本地证据</small></span>；Codex 本轮 5 条均 <code>limited</code>。</td></tr>
+<tr><td>GitHub Trending</td><td>1/1 源；10 个 repo；Trending description 10/10，README 10/10</td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">github-trending.json<small>本地证据</small></span> 与 <span class="local-evidence" title="本地证据归档未随公开站点发布">README 归档<small>本地证据</small></span>；统一为 <code>secondary-source</code> discovery signal。</td></tr>
+<tr><td>官方页面</td><td>4/4 成功；OpenAI News 使用 <code>opencli-read</code></td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">official-pages.json<small>本地证据</small></span> 与 <span class="local-evidence" title="本地证据归档未随公开站点发布">页面归档<small>本地证据</small></span>；页面列表不能替代单篇正文。</td></tr>
+<tr><td>X/Twitter</td><td>27/27 账号请求成功；449 条原始返回、136 条保留 <code>direct-x</code></td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">twitterapi-io-results.json<small>本地证据</small></span> 与 <span class="local-evidence" title="本地证据归档未随公开站点发布">主题摘要<small>本地证据</small></span>；四个账号返回 0 条，五个账号有 raw 但没有保留项，均为覆盖边界。</td></tr>
+<tr><td>官方链接候选</td><td>0 条</td><td><span class="local-evidence" title="本地证据归档未随公开站点发布">official-link-candidates.json<small>本地证据</small></span>；本轮没有达到抓取阈值的 priority X 官方域名候选。</td></tr></tbody></table></div>
+<h2 id="x-twitter-覆盖说明">X/Twitter 覆盖说明</h2>
+<p>本轮只使用 <code>twitterapi.io</code> 只读接口，所有保留帖子标记为 <code>direct-x</code>；没有使用官方 X API、Exa MCP、登录态 X 浏览器、账号密码或发帖/点赞/关注/私信端点。27 个账号请求均返回成功，但 <code>rryssf_</code>、<code>Yangyixxxx</code>、<code>zhaogua61654931</code>、<code>lidang</code> 返回 0 条原始记录；<code>karpathy</code>、<code>sama</code>、<code>OpenAI</code>、<code>AnthropicAI</code> 和 <code>_LuoFuli</code> 有 raw 返回但没有条目通过保留条件。136 条保留帖在主题之间有重叠，不能相加，也不构成完整时间线保证；转发、短句、图片或未展开链接只支持相应弱结论。<code>direct-x</code> 表示 API 直接返回的帖子证据，不表示帖子内容已经由独立官方材料验证。</p>
+<p>主题 brief 中分数较高但未逐条展开的线索也保留在审计范围：<a href="https://x.com/EXM7777/status/2094425738778964465" target="_blank" rel="noopener noreferrer">@EXM7777 的多模型工作台清单</a>、<a href="https://x.com/levelsio/status/2094428818026991837" target="_blank" rel="noopener noreferrer">@levelsio 关于 Claude 拒答与安全护栏的观察</a>、<a href="https://x.com/Hesamation/status/2094348295099302237" target="_blank" rel="noopener noreferrer">@Hesamation 转述 Claude Max 诉讼的帖子</a>、<a href="https://x.com/levelsio/status/2094373113819476183" target="_blank" rel="noopener noreferrer">@levelsio 关于 Cloudflare API 的帖子</a>、<a href="https://x.com/levelsio/status/2094426696036339724" target="_blank" rel="noopener noreferrer">@levelsio 关于邮件 agent 筛选的设想</a>、<a href="https://x.com/rileybrown/status/2094402802919346302" target="_blank" rel="noopener noreferrer">@rileybrown 对模型改进停滞的观察</a>、<a href="https://x.com/marclou/status/2094407890467737783" target="_blank" rel="noopener noreferrer">@marclou 的月度收入自述</a> 和 <a href="https://x.com/rileybrown/status/2094257128387092980" target="_blank" rel="noopener noreferrer">@rileybrown 寻找技能/API/记忆云存储的提问</a>。这些链接只支持“有人这样说过”的 <code>direct-x</code> 证据，不支持产品、安全、收入或效果结论。</p>
+<h2 id="候选审计与处置">候选审计与处置</h2>
+<p>初稿后运行 <code>scripts/candidate-audit.py</code> 生成 JSON 与 Markdown 审计；高信号部分优先处理 Claude Code v2.1.252、Codex alpha.7 的 limited 边界、OpenAI Ads、ChatGPT Work、10 个 Trending README、marketing engineer/FDE、code review、PhotonHQ 和 OpenClaw plugin 等 direct-x 线索。低分短帖、旧条目、重复转述与 limited release 可保留为候选审计中的 missed/覆盖边界，不升级成确定事实。</p>
+<h2 id="不确定性与待验证项">不确定性与待验证项</h2>
+<ul>
+<li>RSS 失败源为 <code>dwarkesh-patel</code>，已连续多次出现空回复；本轮其它命中正文均读取成功，但不少条目发布时间早于 9 月 1 日，成功抓取不等于当天首次发布。</li>
+<li>Codex <code>0.152.0-alpha.3</code> 至 <code>.7</code> 的一手 release body 均过短，不能从 alpha 版本号推断功能、稳定性或兼容性；Claude Code <code>v2.1.250</code> 同样为 <code>limited</code>。</li>
+<li>OpenAI Ads 和 Cursor 正文可读，但分别是 8 月 31 日和 8 月 28 日的官方声明；收入运行率、广告隐私原则、拟议关停日期、合同解释和开发者影响都需要后续财务、执行或产品证据。</li>
+<li>ChatGPT Work 的联网 code execution、headless Chrome、持久文件系统、Sites 和子 agent 来自 Simon Willison 的二次实测；私有数据、非可信网页和外发通道的组合风险仍需官方 threat model、权限边界和实际测试。</li>
+<li>Trending 项目涉及 Apple ID 与 <code>.ipa</code> 下载、MCP/agent 外部写入、网页抓取与凭据路由、模型训练和高权限安全工具；安装/运行前需审查许可证、上传路径、密钥隔离、计费、供应链和回滚策略。WandEnhancer README 的恶意教程警告尤其不能省略。</li>
+<li><code>twitterapi.io</code> 的零记录账号、未保留账号和 136 条 <code>direct-x</code> 都不能解释成完整时间线或账号无更新；主题 brief 分数用于排序，不是可信度、采用率或因果强度。marketing engineer 收入、Grok 促销、OpenClaw 跨平台发布和个人多模型配置均是待验证线索。</li>
+</ul>
+<h2 id="候选与当天产物">候选与当天产物</h2>
+<ul>
+<li>原始与派生状态：<span class="local-evidence" title="本地证据归档未随公开站点发布">manifest.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">signals.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">report-reading-list.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">run-summary.json<small>本地证据</small></span>。</li>
+<li>稳定来源：<span class="local-evidence" title="本地证据归档未随公开站点发布">rss-items.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">github-items.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">github-trending.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">official-pages.json<small>本地证据</small></span>。</li>
+<li>X/Twitter：<span class="local-evidence" title="本地证据归档未随公开站点发布">twitterapi-io-results.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">twitter-topic-brief.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">official-link-candidates.json<small>本地证据</small></span>。</li>
+<li>候选审计将在本报告定稿后写入 <span class="local-evidence" title="本地证据归档未随公开站点发布">2026-09-01-candidate-audit.json<small>本地证据</small></span> 和 <span class="local-evidence" title="本地证据归档未随公开站点发布">2026-09-01-candidate-audit.md<small>本地证据</small></span>；日期化 bundle 由严格校验通过后生成。</li>
+<li>长期趋势专题将在闭环后按 config 中的 9 个 enabled trend 检查；专题主体或 <code>no-new-signal</code> marker 的路径由 <span class="local-evidence" title="本地证据归档未随公开站点发布">trend 目录<small>本地证据</small></span> 和当天趋势报告记录。</li>
+</ul>
+<h2 id="边界与验证">边界与验证</h2>
+<ul>
+<li><strong>已确认：</strong> 稳定来源、只读 <code>twitterapi.io</code>、官方链接候选、X 主题摘要、<code>update-state.py</code>、<span class="local-evidence" title="本地证据归档未随公开站点发布">signals.json<small>本地证据</small></span>、<span class="local-evidence" title="本地证据归档未随公开站点发布">report-reading-list.json<small>本地证据</small></span> 和 <span class="local-evidence" title="本地证据归档未随公开站点发布">run-summary.json<small>本地证据</small></span> 已按 2026-09-01 写入；12 条阅读清单已按 <code>local_body_path</code> 处理，其中 3 条正文可读、9 条为结构化或边界证据。</li>
+<li><strong>待完成闭环：</strong> candidate audit marker 的最终计数、严格日报校验、日期化 bundle、9 个 enabled trend 的唯一 marker/Phase 1/Phase 2/check、dedicated main 发布和 Gmail 独立发送需在日报定稿后按顺序完成。</li>
+<li><strong>运行时可能变化：</strong> RSS/XML、官方页面、GitHub Trending、X 覆盖、远端 <code>origin/main</code> 和 Gmail 认证状态只以本轮命令输出及后续独立回读为准；报告 SHA 改动后必须重新运行 candidate audit 和 strict validator。</li>
+</ul></article>
+  </main>
+  <footer class="site-footer">
+    <div class="shell">
+      <span>Daily Source Intelligence · Evidence before interpretation.</span>
+      <a href="https://github.com/luobosibing2/daily-source-intelligence">GitHub repository ↗</a>
+    </div>
+  </footer>
+</body>
+</html>
