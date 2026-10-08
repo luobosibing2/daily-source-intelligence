@@ -207,6 +207,8 @@ class BuildTwitterTopicBriefTest(unittest.TestCase):
 
         self.assertEqual(item["matched_topics"], ["ai-agent", "ai-coding"])
         self.assertEqual(item["matched_keywords"], ["Claude Code", "MCP", "agent", "memory"])
+        self.assertEqual(item["account_topics"], [])
+        self.assertEqual(item["score"], 48)
 
     def test_short_ascii_keywords_do_not_match_inside_words(self):
         self.write_json(
@@ -249,7 +251,8 @@ class BuildTwitterTopicBriefTest(unittest.TestCase):
         payload = module.build_brief(self.date, root=self.root)
         item = self.item_by_tweet_id(payload, "short-keyword")
 
-        self.assertNotIn("ai-coding", item["matched_topics"])
+        self.assertEqual(item["matched_topics"], [])
+        self.assertEqual(item["account_topics"], [])
         self.assertNotIn("IDE", item["matched_keywords"])
 
     def test_failed_and_skipped_accounts_are_reported_as_coverage_limits(self):

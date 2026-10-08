@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import json
 import hashlib
 import os
@@ -7,10 +8,12 @@ import subprocess
 import sys
 import time
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import date, datetime
 from email.utils import parsedate_to_datetime
 from html import unescape
 from pathlib import Path
+from urllib.parse import urljoin, urlsplit
+from zoneinfo import ZoneInfo
 
 import yaml
 
@@ -19,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "sources.yaml"
 TOPICS_PATH = ROOT / "config" / "topics.yaml"
 RAW_ROOT = ROOT / "raw"
+BEIJING = ZoneInfo("Asia/Shanghai")
 
 MAX_ITEMS_PER_SOURCE = 5
 MAX_TRENDING_REPOS_PER_SOURCE = 10
@@ -270,7 +274,7 @@ def source_metadata(source):
     return metadata
 
 
-def fetch_readable_page(url, output_dir, stem, fetched=None):
+def fetch_readable_page(url, output_dir, stem, fetched=None, allow_opencli=True):
     result = {
         "fulltext_attempted": True,
         "fulltext_url": url,
@@ -301,6 +305,16 @@ def fetch_readable_page(url, output_dir, stem, fetched=None):
         curl_reason = "curl returned limited/challenge content" if html_looks_limited(fetched.get("body", "")) else "curl returned short or unreadable content"
     else:
         curl_reason = fetched.get("stderr") or f"curl exit {fetched.get('status')}"
+
+    if not allow_opencli:
+        result.update(
+            {
+                "fulltext_status": "limited" if html_path else "failed",
+                "fulltext_method": "curl",
+                "fulltext_error": f"{curl_reason}; browser fallback disabled for AIHOT X originals: public HTTP only.",
+            }
+        )
+        return result
 
     fallback = opencli_read_markdown(url)
     if fallback.get("ok"):
@@ -389,11 +403,25 @@ def rss_item_relevance(source, item, topics_by_id):
     }
 
 
-def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id):
+def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id, run_date=None):
     source_dir = output_dir / "rss-fulltext" / safe_slug(source.get("id", "rss-source"))
     enriched = []
     for item in items:
         item = dict(item)
+        if source.get("id") == "aihot-selected":
+            item["window_status"] = publication_window_status(item.get("published"), run_date or now_local().strftime("%Y-%m-%d"))
+            if item["window_status"] != "inside":
+                item.update(
+                    {
+                        "relevance_status": f"{item['window_status']}_window",
+                        "matched_topics": [],
+                        "matched_keywords": [],
+                        "fulltext_status": "skipped",
+                        "fulltext_reason": "AIHOT feed publication time is outside the Beijing run day or unknown; original fetch deferred.",
+                    }
+                )
+                enriched.append(item)
+                continue
         relevance = rss_item_relevance(source, item, topics_by_id)
         item.update({key: value for key, value in relevance.items() if key != "is_relevant"})
         item.update(source_metadata(source))
@@ -405,13 +433,18 @@ def enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id):
 
         url = item.get("url")
         if not url:
-            item["fulltext_status"] = "failed"
-            item["fulltext_error"] = "RSS item has no URL to fetch."
+            item["fulltext_status"] = "limited" if source.get("id") == "aihot-selected" else "failed"
+            item["fulltext_error"] = item.get("original_link_error") or "RSS item has no URL to fetch."
             enriched.append(item)
             continue
 
         stem = item_file_stem(source.get("id", "rss-source"), item.get("title", ""), url)
-        item.update(fetch_readable_page(url, source_dir, stem))
+        if source.get("id") == "aihot-selected":
+            host = (urlsplit(url).hostname or "").lower()
+            is_x_original = host in {"x.com", "twitter.com"} or host.endswith((".x.com", ".twitter.com"))
+            item.update(fetch_readable_page(url, source_dir, stem, allow_opencli=not is_x_original))
+        else:
+            item.update(fetch_readable_page(url, source_dir, stem))
         enriched.append(item)
     return enriched
 
@@ -477,6 +510,46 @@ def parse_feed_items(xml_text):
     return items
 
 
+def parse_aihot_feed_items(xml_text, feed_url):
+    channel = ET.fromstring(xml_text).find("channel")
+    if channel is None:
+        raise ValueError("AIHOT selected feed has no RSS channel.")
+    items = []
+    for node in channel.findall("item")[:50]:
+        description = first_text(node, ["description"])
+        original_url = ""
+        for match in re.finditer(r'<a\b[^>]*\bhref\s*=\s*([\'\"])(.*?)\1[^>]*>(.*?)</a>', description, flags=re.IGNORECASE | re.DOTALL):
+            if strip_html(match.group(3)) != "阅读原文":
+                continue
+            candidate = unescape(match.group(2)).strip()
+            try:
+                parts = urlsplit(candidate)
+                host = (parts.hostname or "").lower()
+            except ValueError:
+                continue
+            if parts.scheme.lower() in {"http", "https"} and host and host != "aihot.news" and not host.endswith(".aihot.news"):
+                original_url = candidate
+                break
+        item = {
+            "title": first_text(node, ["title"]),
+            "url": original_url,
+            "published": first_text(node, ["pubDate"]),
+            "published_basis": "aihot-feed-pubdate",
+            "summary": strip_html(description),
+            "aggregator_url": first_text(node, ["link"]),
+            "guid": first_text(node, ["guid"]),
+            "feed_url": feed_url,
+            "feed_author": first_text(node, ["author"]),
+            "feed_categories": [category.text.strip() for category in node.findall("category") if category.text],
+            "original_link_status": "ok" if original_url else "limited",
+            "evidence_level": "secondary-source",
+        }
+        if not original_url:
+            item["original_link_error"] = "AIHOT description has no valid external 阅读原文 link; station summary is not original fulltext."
+        items.append(item)
+    return items
+
+
 def summarize_github_entry(item):
     title = item.get("title", "")
     summary = item.get("summary", "")
@@ -487,7 +560,7 @@ def summarize_github_entry(item):
     return f"Release {title}"
 
 
-def collect_rss(rss_sources, output_dir, topics_by_id):
+def collect_rss(rss_sources, output_dir, topics_by_id, run_date=None):
     results = []
     for source in rss_sources:
         fetched = curl_text(source["url"])
@@ -503,8 +576,20 @@ def collect_rss(rss_sources, output_dir, topics_by_id):
             )
             continue
         try:
-            items = parse_feed_items(fetched["body"])
-            items = enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id)
+            feed_metadata = {}
+            if source["id"] == "aihot-selected":
+                snapshot = output_dir / "rss-feeds" / "aihot-selected.xml"
+                snapshot.parent.mkdir(parents=True, exist_ok=True)
+                snapshot.write_text(fetched["body"], encoding="utf-8")
+                feed_metadata = {
+                    "feed_snapshot_path": str(snapshot.relative_to(ROOT)),
+                    "feed_sha256": hashlib.sha256(fetched["body"].encode("utf-8")).hexdigest(),
+                    "evidence_level": "secondary-source",
+                }
+                items = parse_aihot_feed_items(fetched["body"], source["url"])
+            else:
+                items = parse_feed_items(fetched["body"])
+            items = enrich_rss_items_with_fulltext(source, items, output_dir, topics_by_id, run_date=run_date)
             results.append(
                 {
                     "source_id": source["id"],
@@ -512,6 +597,7 @@ def collect_rss(rss_sources, output_dir, topics_by_id):
                     "url": source["url"],
                     "status": "ok",
                     "items": items,
+                    **feed_metadata,
                     **source_metadata(source),
                 }
             )
@@ -882,10 +968,180 @@ def parse_claude_blog_items(html_text):
     return items
 
 
-def collect_official_pages(official_sources, output_dir):
+def parse_anthropic_engineering_items(html_text):
+    decoded = (html_text or "").replace('\\"', '"')
+    embedded_dates = {}
+    embedded_pattern = re.compile(
+        r'"publishedOn"\s*:\s*"(?P<published>[^"]+)"\s*,\s*'
+        r'"slug"\s*:\s*\{[^{}]{0,300}?"current"\s*:\s*"(?P<slug>[^"]+)"',
+        re.DOTALL,
+    )
+    for match in embedded_pattern.finditer(decoded):
+        embedded_dates[match.group("slug").strip().rstrip("/")] = match.group("published").strip()
+
+    items = []
+    seen = set()
+    article_pattern = re.compile(
+        r'<article\b(?=[^>]*class=["\'][^"\']*ArticleList[^"\']*__article[^"\']*["\'])[^>]*>'
+        r"(?P<body>.*?)</article>",
+        re.IGNORECASE | re.DOTALL,
+    )
+    for article_match in article_pattern.finditer(html_text or ""):
+        body = article_match.group("body")
+        href_match = re.search(
+            r'<a\b[^>]*href=["\'](?P<href>(?:https://www\.anthropic\.com)?/engineering/[^"\'?#]+)["\']',
+            body,
+            re.IGNORECASE,
+        )
+        if not href_match:
+            continue
+        href = href_match.group("href").strip().rstrip("/")
+        url = urljoin("https://www.anthropic.com/engineering", href)
+        if url in seen:
+            continue
+
+        title_match = re.search(r"<h[1-4]\b[^>]*>(?P<title>.*?)</h[1-4]>", body, re.IGNORECASE | re.DOTALL)
+        title = strip_html(title_match.group("title")) if title_match else ""
+        if not title:
+            continue
+
+        published_match = re.search(
+            r'<(?:div|span|time)\b[^>]*class=["\'][^"\']*(?:__date|\bdate\b)[^"\']*["\'][^>]*>'
+            r"(?P<published>.*?)</(?:div|span|time)>",
+            body,
+            re.IGNORECASE | re.DOTALL,
+        )
+        published = strip_html(published_match.group("published")) if published_match else ""
+        if not published:
+            slug = href.rsplit("/", 1)[-1]
+            published = embedded_dates.get(slug, "")
+
+        seen.add(url)
+        items.append(
+            {
+                "title": title,
+                "url": url,
+                "published": published,
+            }
+        )
+    return items
+
+
+def published_date(value):
+    text = str(value or "").strip()
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d", "%b %d, %Y", "%B %d, %Y"):
+        try:
+            return datetime.strptime(text, fmt).date()
+        except ValueError:
+            pass
+
+    normalized = text[:-1] + "+00:00" if text.endswith("Z") else text
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        try:
+            parsed = parsedate_to_datetime(text)
+        except (TypeError, ValueError, OverflowError):
+            return None
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(BEIJING)
+    return parsed.date()
+
+
+def publication_window_status(value, run_date):
+    parsed = published_date(value)
+    if parsed is None:
+        return "unknown"
+    return "inside" if parsed == date.fromisoformat(run_date) else "outside"
+
+
+def collect_anthropic_engineering(source, output_dir, run_date, fetched):
+    source_dir = output_dir / "official-page-text" / safe_slug(source.get("id", "anthropic-engineering"))
+    index_stem = item_file_stem(source["id"], source["name"], source["url"])
+    index_limited = html_looks_limited(fetched.get("body", ""))
+    if not fetched.get("ok") or index_limited:
+        fallback = fetch_readable_page(source["url"], source_dir, f"{index_stem}.index", fetched=fetched)
+        has_snapshot = bool(fallback.get("raw_html_path") or fallback.get("fulltext_path"))
+        record = {
+            "source_id": source["id"],
+            "source_name": source["name"],
+            "url": source["url"],
+            "status": "limited" if has_snapshot else "failed",
+            "index_status": "limited" if has_snapshot else "failed",
+            "index_card_count": 0,
+            "items": [],
+            "article_fulltext_counts": {"ok": 0, "limited": 0, "failed": 0},
+            **source_metadata(source),
+            **fallback,
+        }
+        if fallback.get("raw_html_path"):
+            record["index_snapshot_path"] = fallback["raw_html_path"]
+        if fallback.get("fulltext_path"):
+            record.setdefault("index_snapshot_path", fallback["fulltext_path"])
+            record["index_readable_path"] = fallback["fulltext_path"]
+            record["fetch_method"] = fallback.get("fulltext_method")
+        if not fetched.get("ok"):
+            record["error"] = fetched.get("stderr") or f"curl exit {fetched.get('status')}"
+            record["reason"] = "Engineering index curl fetch failed; readable fallback may be archived, but article cards require raw index HTML."
+        else:
+            record["reason"] = "Engineering index returned limited/challenge HTML; readable fallback may be archived, but article cards were not available."
+        return record
+
+    index_snapshot_path = write_archive_text(source_dir / f"{index_stem}.index.html", fetched.get("body", ""))
+    parsed_items = parse_anthropic_engineering_items(fetched.get("body", ""))
+    record = {
+        "source_id": source["id"],
+        "source_name": source["name"],
+        "url": source["url"],
+        "status": "ok" if parsed_items else "limited",
+        "index_status": "ok" if parsed_items else "limited",
+        "index_card_count": len(parsed_items),
+        "index_snapshot_path": index_snapshot_path,
+        "fetch_method": "curl",
+        "title": parse_html_title(fetched.get("body", "")),
+        "bytes": len(fetched.get("body", "").encode("utf-8")),
+        "items": [],
+        **source_metadata(source),
+    }
+    if not parsed_items:
+        record["reason"] = "Engineering index HTML fetched, but no valid article cards were parsed."
+        record["article_fulltext_counts"] = {"ok": 0, "limited": 0, "failed": 0}
+        return record
+
+    for parsed_item in parsed_items:
+        item = dict(parsed_item)
+        item["window_status"] = publication_window_status(item.get("published"), run_date)
+        if item["window_status"] == "outside":
+            continue
+        if item["window_status"] == "unknown":
+            item["fulltext_status"] = "skipped"
+            item["fulltext_reason"] = (
+                "Article publication date is unknown; fulltext fetch deferred until the daily window can be established."
+            )
+            record["items"].append(item)
+            continue
+
+        stem = item_file_stem(source["id"], item["title"], item["url"])
+        item.update(fetch_readable_page(item["url"], source_dir, stem))
+        record["items"].append(item)
+
+    record["article_fulltext_counts"] = {
+        status: sum(1 for item in record["items"] if item.get("fulltext_status") == status)
+        for status in ("ok", "limited", "failed")
+    }
+    return record
+
+
+def collect_official_pages(official_sources, output_dir, run_date=None):
+    run_date = run_date or output_dir.name
     results = []
     for source in official_sources:
         fetched = curl_text(source["url"])
+        if source["id"] == "anthropic-engineering":
+            results.append(collect_anthropic_engineering(source, output_dir, run_date, fetched))
+            continue
         if not fetched["ok"]:
             stem = item_file_stem(source["id"], source["name"], source["url"])
             fallback = fetch_readable_page(source["url"], output_dir / "official-page-text", stem, fetched=fetched)
@@ -986,17 +1242,72 @@ def load_sources():
     )
 
 
-def main():
-    run_date = os.environ.get("RUN_DATE") or now_local().strftime("%Y-%m-%d")
+def merge_selected_sources(path, payload, selected_ids):
+    if not selected_ids or not path.exists():
+        return payload
+    previous = json.loads(path.read_text(encoding="utf-8"))
+    current_by_id = {item.get("source_id"): item for item in payload.get("sources", [])}
+    merged = [
+        item
+        for item in previous.get("sources", [])
+        if item.get("source_id") not in selected_ids
+    ]
+    merged.extend(current_by_id.values())
+    payload["sources"] = merged
+    return payload
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Collect configured stable DSI sources.")
+    parser.add_argument("--date", default=os.environ.get("RUN_DATE") or now_local().strftime("%Y-%m-%d"))
+    parser.add_argument(
+        "--channel",
+        action="append",
+        choices=["rss", "github-releases", "github-trending", "official-pages"],
+        help="collect only this channel; repeat for multiple channels",
+    )
+    parser.add_argument("--source", action="append", default=[], help="source id within the selected channel")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+    run_date = args.date
+    channels = set(args.channel or ["rss", "github-releases", "github-trending", "official-pages"])
     output_dir = RAW_ROOT / run_date
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     rss_sources, github_sources, trending_sources, official_sources = load_sources()
+    configured = {
+        "rss": rss_sources,
+        "github-releases": github_sources,
+        "github-trending": trending_sources,
+        "official-pages": official_sources,
+    }
+    selected_ids = set(args.source)
+    if selected_ids:
+        if len(channels) != 1:
+            parser.error("--source requires exactly one concrete --channel")
+        available = {item.get("id") for item in configured[next(iter(channels))]}
+        missing = sorted(selected_ids - available)
+        if missing:
+            parser.error(f"unknown or disabled source(s): {', '.join(missing)}")
+        for channel in configured:
+            configured[channel] = [item for item in configured[channel] if item.get("id") in selected_ids]
+    if args.dry_run:
+        print(json.dumps({
+            "event": "stable_collection_plan",
+            "run_date": run_date,
+            "channels": sorted(channels),
+            "sources": sorted(selected_ids),
+        }, ensure_ascii=False, indent=2))
+        return 0
+
+    output_dir.mkdir(parents=True, exist_ok=True)
     topics_by_id = load_topics()
-    rss_results = collect_rss(rss_sources, output_dir, topics_by_id)
-    github_api_status, github_results = collect_github(github_sources, output_dir)
-    trending_results = collect_github_trending(trending_sources, output_dir)
-    official_results = collect_official_pages(official_sources, output_dir)
+    rss_results = collect_rss(configured["rss"], output_dir, topics_by_id, run_date=run_date) if "rss" in channels else []
+    if "github-releases" in channels:
+        github_api_status, github_results = collect_github(configured["github-releases"], output_dir)
+    else:
+        github_api_status, github_results = {}, []
+    trending_results = collect_github_trending(configured["github-trending"], output_dir) if "github-trending" in channels else []
+    official_results = collect_official_pages(configured["official-pages"], output_dir, run_date=run_date) if "official-pages" in channels else []
     rss_fulltext = rss_fulltext_summary(rss_results)
     github_release_fulltext = github_release_fulltext_summary(github_results)
 
@@ -1022,10 +1333,19 @@ def main():
         "sources": trending_results,
     }
 
-    (output_dir / "rss-items.json").write_text(json.dumps(rss_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "github-items.json").write_text(json.dumps(github_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "github-trending.json").write_text(json.dumps(trending_payload, ensure_ascii=False, indent=2) + "\n")
-    (output_dir / "official-pages.json").write_text(json.dumps(official_payload, ensure_ascii=False, indent=2) + "\n")
+    output_payloads = {
+        "rss": (output_dir / "rss-items.json", rss_payload),
+        "github-releases": (output_dir / "github-items.json", github_payload),
+        "github-trending": (output_dir / "github-trending.json", trending_payload),
+        "official-pages": (output_dir / "official-pages.json", official_payload),
+    }
+    for channel in channels:
+        path, payload = output_payloads[channel]
+        payload = merge_selected_sources(path, payload, selected_ids)
+        if selected_ids:
+            payload["partial_update"] = True
+            payload["selected_source_ids"] = sorted(selected_ids)
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
     summary = {
         "run_date": run_date,

@@ -9,6 +9,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from dsi_signals import build_reading_list, build_signals
 
 
 def now_local():
@@ -28,19 +33,6 @@ def write_json(path, payload):
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def relative_to_root(root, path):
-    if not path:
-        return ""
-    root = Path(root)
-    path = Path(path)
-    if path.is_absolute():
-        try:
-            path = path.relative_to(root)
-        except ValueError:
-            return path.as_posix()
-    return path.as_posix()
-
-
 def compact_text(value, limit=180):
     text = " ".join(str(value or "").split())
     if len(text) <= limit:
@@ -48,213 +40,9 @@ def compact_text(value, limit=180):
     return text[: limit - 1].rstrip() + "..."
 
 
-def body_path_if_readable(root, fulltext_status, path):
-    relative = relative_to_root(root, path)
-    if fulltext_status == "ok" and relative and (Path(root) / relative).exists():
-        return relative
-    return ""
-
-
-def seen_before_run_date(item, run_date):
-    first_seen = str(item.get("first_seen") or "")[:10]
-    return not first_seen or first_seen < run_date
-
-
-def load_seen_before_run_date(root, run_date):
-    payload = read_json(Path(root) / "state" / "seen.json", {"items": []})
-    ids = set()
-    urls = set()
-    for item in payload.get("items", []) or []:
-        if not seen_before_run_date(item, run_date):
-            continue
-        item_id = str(item.get("id") or "").strip()
-        url = str(item.get("url") or "").strip()
-        if item_id:
-            ids.add(item_id)
-        if url:
-            urls.add(url)
-            ids.add(f"url:{url}")
-    return {"ids": ids, "urls": urls}
-
-
-def already_seen(seen, *, ids=(), urls=()):
-    for item_id in ids:
-        if item_id and item_id in seen["ids"]:
-            return True
-    for url in urls:
-        if url and (url in seen["urls"] or f"url:{url}" in seen["ids"]):
-            return True
-    return False
-
-
-def reading_entry(
-    *,
-    root,
-    source_type,
-    topic,
-    priority,
-    evidence_level,
-    title,
-    url,
-    local_body_path,
-    fulltext_status,
-    why_read,
-):
-    return {
-        "source_type": source_type,
-        "topic": topic,
-        "priority": int(priority or 0),
-        "evidence_level": evidence_level or "",
-        "title": compact_text(title),
-        "url": url or "",
-        "local_body_path": relative_to_root(root, local_body_path),
-        "fulltext_status": fulltext_status or "",
-        "why_read": why_read or "",
-    }
-
-
 def build_report_reading_list(run_date, root=ROOT):
-    root = Path(root)
-    raw_dir = root / "raw" / run_date
-    entries = []
-    seen = load_seen_before_run_date(root, run_date)
-
-    rss = read_json(raw_dir / "rss-items.json", {"sources": []})
-    for source in rss.get("sources", []) or []:
-        for item in source.get("items", []) or []:
-            if item.get("relevance_status") not in {"matched", "always_read"}:
-                continue
-            url = item.get("url")
-            if already_seen(seen, ids=[f"url:{url}" if url else ""], urls=[url]):
-                continue
-            status = item.get("fulltext_status") or ""
-            body_path = body_path_if_readable(root, status, item.get("fulltext_path"))
-            why = "read matched RSS fulltext body" if body_path else "boundary row: matched RSS item without readable fulltext body"
-            entries.append(
-                reading_entry(
-                    root=root,
-                    source_type="rss-fulltext",
-                    topic=",".join(item.get("matched_topics") or source.get("topics") or []),
-                    priority=70 if item.get("relevance_status") == "always_read" else 50,
-                    evidence_level="official-source" if item.get("intelligence_department") else "secondary-source",
-                    title=item.get("title") or item.get("url"),
-                    url=item.get("url"),
-                    local_body_path=body_path,
-                    fulltext_status=status,
-                    why_read=why,
-                )
-            )
-
-    official = read_json(raw_dir / "official-link-candidates.json", {"candidates": []})
-    for candidate in official.get("candidates", []) or []:
-        expanded_url = candidate.get("expanded_url")
-        tweet_url = candidate.get("tweet_url")
-        tweet_id = candidate.get("tweet_id")
-        if already_seen(
-            seen,
-            ids=[
-                f"url:{expanded_url}" if expanded_url else "",
-                f"url:{tweet_url}" if tweet_url else "",
-                f"tweet:{tweet_id}" if tweet_id else "",
-            ],
-            urls=[expanded_url, tweet_url],
-        ):
-            continue
-        status = candidate.get("fulltext_status") or ""
-        body_path = body_path_if_readable(root, status, candidate.get("fulltext_path"))
-        entries.append(
-            reading_entry(
-                root=root,
-                source_type="official-link-candidate",
-                topic="official-link-candidate",
-                priority=candidate.get("score") or 60,
-                evidence_level=candidate.get("evidence_level") or "direct-x",
-                title=candidate.get("expanded_url") or candidate.get("tweet_url") or candidate.get("tweet_id"),
-                url=candidate.get("expanded_url") or candidate.get("tweet_url"),
-                local_body_path=body_path,
-                fulltext_status=status,
-                why_read="read official link candidate body" if body_path else "boundary row: official link candidate without readable fulltext body",
-            )
-        )
-
-    trending = read_json(raw_dir / "github-trending.json", {"sources": []})
-    for source in trending.get("sources", []) or []:
-        for item in source.get("items", []) or []:
-            repo = item.get("repo")
-            url = item.get("url")
-            if already_seen(seen, ids=[f"github-trending:{repo}" if repo else "", f"url:{url}" if url else ""], urls=[url]):
-                continue
-            status = item.get("readme_status") or ""
-            body_path = body_path_if_readable(root, "ok" if status == "ok" else status, item.get("readme_path"))
-            entries.append(
-                reading_entry(
-                    root=root,
-                    source_type="github-trending-readme",
-                    topic="github-trending",
-                    priority=35,
-                    evidence_level="secondary-source",
-                    title=item.get("readme_title") or item.get("repo"),
-                    url=item.get("url"),
-                    local_body_path=body_path,
-                    fulltext_status=status,
-                    why_read="read GitHub Trending README body" if body_path else "boundary row: GitHub Trending repo without readable README",
-                )
-            )
-
-    github = read_json(raw_dir / "github-items.json", {"sources": []})
-    for source in github.get("sources", []) or []:
-        for item in source.get("items", []) or []:
-            if item.get("relevance_status") != "always_read" and not item.get("fulltext_path"):
-                continue
-            url = item.get("url")
-            if already_seen(seen, ids=[f"url:{url}" if url else ""], urls=[url]):
-                continue
-            status = item.get("fulltext_status") or ""
-            body_path = body_path_if_readable(root, status, item.get("fulltext_path"))
-            entries.append(
-                reading_entry(
-                    root=root,
-                    source_type="github-release-body",
-                    topic=",".join(source.get("topics") or []),
-                    priority=65 if item.get("relevance_status") == "always_read" else 45,
-                    evidence_level="official-source",
-                    title=item.get("title") or item.get("url"),
-                    url=item.get("url"),
-                    local_body_path=body_path,
-                    fulltext_status=status,
-                    why_read="read release Atom body" if body_path else "boundary row: release entry without readable body",
-                )
-            )
-
-    topic_brief = read_json(raw_dir / "twitter-topic-brief.json", {"topics": []})
-    for topic in topic_brief.get("topics", []) or []:
-        for item in topic.get("items", []) or []:
-            tweet_id = item.get("tweet_id")
-            url = item.get("url")
-            if already_seen(seen, ids=[f"tweet:{tweet_id}" if tweet_id else "", f"url:{url}" if url else ""], urls=[url]):
-                continue
-            entries.append(
-                reading_entry(
-                    root=root,
-                    source_type="topic-direct-x",
-                    topic=topic.get("id") or topic.get("label") or "",
-                    priority=item.get("score") or 0,
-                    evidence_level=item.get("evidence_level") or "direct-x",
-                    title=item.get("text_excerpt") or item.get("tweet_id"),
-                    url=item.get("url"),
-                    local_body_path="",
-                    fulltext_status="n/a",
-                    why_read="read structured priority X topic item; direct evidence is in twitter-topic-brief.json",
-                )
-            )
-
-    entries.sort(key=lambda item: (-item["priority"], item["source_type"], item["title"]))
-    return {
-        "schema_version": 1,
-        "run_date": run_date,
-        "generated_at": now_local(),
-        "entries": entries,
-    }
+    signals = build_signals(run_date, root=Path(root))
+    return build_reading_list(signals, generated_at=now_local())
 
 
 def build_run_summary(run_date, root=ROOT, reading_list=None, command_results=None):
@@ -270,6 +58,7 @@ def build_run_summary(run_date, root=ROOT, reading_list=None, command_results=No
         "schema_version": 1,
         "run_date": run_date,
         "generated_at": now_local(),
+        "signals": f"raw/{run_date}/signals.json" if (raw_dir / "signals.json").exists() else "",
         "reading_list": f"raw/{run_date}/report-reading-list.json",
         "manifest": f"raw/{run_date}/manifest.json" if (raw_dir / "manifest.json").exists() else "",
         "candidate_audit": f"reviews/{run_date}-candidate-audit.md" if (root / "reviews" / f"{run_date}-candidate-audit.md").exists() else "",
@@ -309,6 +98,7 @@ def run_pipeline(run_date, root=ROOT, run_collection=True):
     results = []
     if run_collection:
         results.append(run_command(root, ["python3", "scripts/collect-stable-sources.py"], env=env))
+        results.append(run_command(root, ["python3", "scripts/collect-podcasts.py", "--date", run_date], env=env))
         results.append(run_command(root, ["python3", "scripts/collect-twitterapi-io.py"], env=env))
     results.append(run_command(root, ["python3", "scripts/official-link-candidates.py", "--date", run_date, "--root", str(root)], env=env))
     results.append(run_command(root, ["python3", "scripts/build-twitter-topic-brief.py", "--date", run_date, "--root", str(root)], env=env))
@@ -318,7 +108,9 @@ def run_pipeline(run_date, root=ROOT, run_collection=True):
     if report_path.exists():
         results.append(run_command(root, ["python3", "scripts/candidate-audit.py", "--date", run_date, "--root", str(root)], env=env))
 
-    reading_list = build_report_reading_list(run_date, root=root)
+    signals = build_signals(run_date, root=root)
+    write_json(root / "raw" / run_date / "signals.json", signals)
+    reading_list = build_reading_list(signals, generated_at=now_local())
     write_json(root / "raw" / run_date / "report-reading-list.json", reading_list)
     summary = build_run_summary(run_date, root=root, reading_list=reading_list, command_results=results)
     write_json(root / "raw" / run_date / "run-summary.json", summary)

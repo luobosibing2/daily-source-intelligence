@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -28,6 +29,11 @@ def read_text(path):
 def write_text(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
+
+
+def write_json(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def compact_text(text, limit=90):
@@ -138,6 +144,84 @@ def rss_rows(root, run_date, report_text, seen=None):
                     "fulltext_status": item.get("fulltext_status"),
                 }
             )
+    return rows
+
+
+def official_page_article_rows(root, run_date, report_text, seen=None):
+    seen = seen or {"ids": set(), "urls": set()}
+    payload = read_json(root / "raw" / run_date / "official-pages.json", {"sources": []})
+    rows = []
+    for source in payload.get("sources", []) or []:
+        if source.get("source_id") != "anthropic-engineering":
+            continue
+        for item in source.get("items", []) or []:
+            if item.get("window_status") == "outside":
+                continue
+            url = item.get("url")
+            if already_seen(seen, ids=[f"url:{url}" if url else ""], urls=[url]):
+                continue
+            values = [url, item.get("title"), item.get("fulltext_path")]
+            window = item.get("window_status") or "unknown"
+            rows.append(
+                {
+                    "category": "official-page-article",
+                    "status": "covered" if is_covered(values, report_text) else "missed",
+                    "signal": item.get("title") or url,
+                    "source": url,
+                    "reason": f"anthropic-engineering; window:{window}",
+                    "score": "",
+                    "fulltext_status": item.get("fulltext_status") or "unknown",
+                }
+            )
+    return rows
+
+
+def podcast_rows(root, run_date, report_text, seen=None):
+    seen = seen or {"ids": set(), "urls": set()}
+    payload = read_json(root / "raw" / run_date / "podcast-items.json", {"episodes": []})
+    rows = []
+    for episode in payload.get("episodes", []) or []:
+        show_id = str(episode.get("show_id") or "").strip()
+        guid = str(episode.get("guid") or "").strip()
+        if (
+            not show_id
+            or not guid
+            or episode.get("allowed") is False
+            or episode.get("episode_status") in {"unconfigured", "invalid"}
+            or episode.get("admission_status") in {"unconfigured", "invalid"}
+            or episode.get("window_status") != "inside"
+        ):
+            continue
+        episode_id = f"podcast:{show_id}:{guid}"
+        canonical_url = episode.get("canonical_url") or episode.get("official_url") or ""
+        if already_seen(
+            seen,
+            ids=[episode_id, f"url:{canonical_url}" if canonical_url else ""],
+            urls=[canonical_url],
+        ):
+            continue
+        transcript_path = episode.get("transcript_path") or ""
+        values = [guid, canonical_url, episode.get("title"), transcript_path]
+        rows.append(
+            {
+                "category": "podcast-transcript",
+                "status": "covered" if is_covered(values, report_text) else "missed",
+                "episode_id": episode_id,
+                "signal": episode.get("title") or guid,
+                "source": (
+                    canonical_url
+                    or payload.get("feed_url")
+                    or payload.get("upstream_url")
+                    or f"raw/{run_date}/podcast-items.json"
+                ),
+                "reason": (
+                    f"show:{show_id}; guid:{guid}; "
+                    f"link:{episode.get('link_status') or 'unknown'}"
+                ),
+                "score": "",
+                "fulltext_status": episode.get("transcript_status") or "unknown",
+            }
+        )
     return rows
 
 
@@ -313,13 +397,27 @@ def build_audit(run_date, root=ROOT):
     seen = load_seen_before_run_date(root, run_date)
     rows = candidate_rows(root, run_date, report_text, seen=seen)
     existing_tweet_ids = {tweet_id_from_row(row) for row in rows if tweet_id_from_row(row)}
+    rows.extend(official_page_article_rows(root, run_date, report_text, seen=seen))
+    rows.extend(podcast_rows(root, run_date, report_text, seen=seen))
     rows.extend(rss_rows(root, run_date, report_text, seen=seen))
     topic_rows = topic_direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen)
     rows.extend(topic_rows)
     existing_tweet_ids.update(tweet_id_from_row(row) for row in topic_rows if tweet_id_from_row(row))
     rows.extend(twitter_topic_summary_link_rows(root, run_date, report_text))
     rows.extend(direct_x_rows(root, run_date, report_text, existing_tweet_ids, seen=seen))
+    for row in rows:
+        if row.get("category") == "podcast-transcript":
+            identity = f"podcast-transcript|{row.get('episode_id') or ''}"
+        else:
+            identity = "|".join(
+                str(row.get(key) or "")
+                for key in ("category", "tweet_id", "source", "signal")
+            )
+        row["candidate_id"] = f"candidate:{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:20]}"
+        row["disposition"] = "covered_in_report" if row["status"] == "covered" else ""
+        row["disposition_note"] = ""
     counts = {
+        "total": len(rows),
         "covered": sum(1 for row in rows if row["status"] == "covered"),
         "missed": sum(1 for row in rows if row["status"] == "missed"),
     }
@@ -328,6 +426,7 @@ def build_audit(run_date, root=ROOT):
         "run_date": run_date,
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "daily_report": str(report_path.relative_to(root)),
+        "daily_report_sha256": hashlib.sha256(report_text.encode("utf-8")).hexdigest(),
         "counts": counts,
         "rows": rows,
     }
@@ -370,9 +469,19 @@ def render_markdown(audit):
 
 
 def write_audit(run_date, root=ROOT):
+    root = Path(root)
     audit = build_audit(run_date, root=root)
-    output_path = Path(root) / "reviews" / f"{run_date}-candidate-audit.md"
+    json_path = root / "reviews" / f"{run_date}-candidate-audit.json"
+    previous = read_json(json_path, {"rows": []})
+    previous_by_id = {row.get("candidate_id"): row for row in previous.get("rows", []) if row.get("candidate_id")}
+    for row in audit["rows"]:
+        old = previous_by_id.get(row["candidate_id"], {})
+        if old.get("disposition"):
+            row["disposition"] = old["disposition"]
+            row["disposition_note"] = old.get("disposition_note") or ""
+    output_path = root / "reviews" / f"{run_date}-candidate-audit.md"
     write_text(output_path, render_markdown(audit))
+    write_json(json_path, audit)
     return audit
 
 

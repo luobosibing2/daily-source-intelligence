@@ -91,6 +91,158 @@ class CandidateAuditTest(unittest.TestCase):
 
         self.assertEqual(payload["rows"][0]["status"], "covered")
 
+    def test_anthropic_engineering_articles_are_audited_with_stable_ids(self):
+        covered_url = "https://www.anthropic.com/engineering/covered"
+        missed_url = "https://www.anthropic.com/engineering/missed"
+        self.write_text(f"docs/{self.date}-daily-intel.md", f"# Daily\n\n- Covered: {covered_url}\n")
+        self.write_json(
+            f"raw/{self.date}/official-pages.json",
+            {
+                "sources": [
+                    {
+                        "source_id": "anthropic-engineering",
+                        "items": [
+                            {
+                                "title": "Covered article",
+                                "url": covered_url,
+                                "window_status": "inside",
+                                "fulltext_status": "ok",
+                                "fulltext_path": f"raw/{self.date}/official-page-articles/covered.md",
+                            },
+                            {
+                                "title": "Missed article",
+                                "url": missed_url,
+                                "window_status": "unknown",
+                                "fulltext_status": "skipped",
+                            },
+                        ],
+                    }
+                ]
+            },
+        )
+
+        module = load_script("candidate-audit.py")
+        first = module.build_audit(self.date, root=self.root)
+        second = module.build_audit(self.date, root=self.root)
+        articles = [row for row in first["rows"] if row["category"] == "official-page-article"]
+
+        self.assertEqual([row["status"] for row in articles], ["covered", "missed"])
+        self.assertEqual([row["candidate_id"] for row in first["rows"]], [row["candidate_id"] for row in second["rows"]])
+        self.assertEqual(articles[1]["fulltext_status"], "skipped")
+
+    def test_anthropic_engineering_article_seen_before_run_is_not_audited(self):
+        url = "https://www.anthropic.com/engineering/already-seen"
+        self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n")
+        self.write_json(
+            "state/seen.json",
+            {"items": [{"id": f"url:{url}", "url": url, "first_seen": "2026-05-25"}]},
+        )
+        self.write_json(
+            f"raw/{self.date}/official-pages.json",
+            {
+                "sources": [
+                    {
+                        "source_id": "anthropic-engineering",
+                        "items": [{"title": "Already seen", "url": url, "window_status": "inside"}],
+                    }
+                ]
+            },
+        )
+
+        module = load_script("candidate-audit.py")
+        payload = module.build_audit(self.date, root=self.root)
+
+        self.assertEqual(payload["rows"], [])
+
+    def test_podcast_candidates_use_guid_identity_and_report_evidence_anchors(self):
+        transcript_path = f"raw/{self.date}/podcasts/ai-i/guid-1.md"
+        canonical_url = "https://example.com/episodes/guid-1"
+        self.write_text(
+            f"docs/{self.date}-daily-intel.md",
+            f"# Daily\n\n- Covered by transcript: {transcript_path}\n",
+        )
+        self.write_json(
+            f"raw/{self.date}/podcast-items.json",
+            {
+                "source_id": "follow-builders-podcasts",
+                "upstream_url": "https://raw.githubusercontent.com/example/feed-podcasts.json",
+                "episodes": [
+                    {
+                        "show_id": "ai-i-by-every",
+                        "guid": "guid-1",
+                        "episode_id": "podcast:ai-i-by-every:guid-1",
+                        "title": "Covered episode",
+                        "window_status": "inside",
+                        "canonical_url": canonical_url,
+                        "transcript_status": "ok",
+                        "transcript_path": transcript_path,
+                    },
+                    {
+                        "show_id": "latent-space",
+                        "guid": "guid-2",
+                        "title": "Missed episode",
+                        "window_status": "inside",
+                        "transcript_status": "limited",
+                    },
+                    {
+                        "show_id": "latent-space",
+                        "guid": "guid-outside",
+                        "title": "Outside episode",
+                        "window_status": "outside",
+                        "transcript_status": "ok",
+                    },
+                ],
+            },
+        )
+
+        module = load_script("candidate-audit.py")
+        first = module.build_audit(self.date, root=self.root)
+        second = module.build_audit(self.date, root=self.root)
+        podcasts = [row for row in first["rows"] if row["category"] == "podcast-transcript"]
+
+        self.assertEqual([row["status"] for row in podcasts], ["covered", "missed"])
+        self.assertEqual(podcasts[0]["episode_id"], "podcast:ai-i-by-every:guid-1")
+        self.assertEqual(podcasts[1]["fulltext_status"], "limited")
+        self.assertEqual(
+            [row["candidate_id"] for row in podcasts],
+            [row["candidate_id"] for row in second["rows"] if row["category"] == "podcast-transcript"],
+        )
+
+    def test_write_audit_writes_json_sha_and_preserves_disposition(self):
+        report = self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n\n- Other signal.\n")
+        self.write_json(
+            f"raw/{self.date}/official-link-candidates.json",
+            {
+                "candidates": [
+                    {
+                        "tweet_id": "1",
+                        "tweet_url": "https://x.com/a/status/1",
+                        "expanded_url": "https://example.com/post",
+                        "score": 40,
+                    }
+                ]
+            },
+        )
+        module = load_script("candidate-audit.py")
+
+        first = module.write_audit(self.date, root=self.root)
+        row = first["rows"][0]
+        json_path = self.root / "reviews" / f"{self.date}-candidate-audit.json"
+        stored = json.loads(json_path.read_text(encoding="utf-8"))
+        stored["rows"][0]["disposition"] = "deferred"
+        stored["rows"][0]["disposition_note"] = "not material today"
+        json_path.write_text(json.dumps(stored), encoding="utf-8")
+
+        second = module.write_audit(self.date, root=self.root)
+
+        self.assertEqual(second["counts"]["total"], len(second["rows"]))
+        self.assertEqual(second["rows"][0]["candidate_id"], row["candidate_id"])
+        self.assertEqual(second["rows"][0]["disposition"], "deferred")
+        self.assertEqual(
+            second["daily_report_sha256"],
+            __import__("hashlib").sha256(report.read_text(encoding="utf-8").encode("utf-8")).hexdigest(),
+        )
+
     def test_topic_direct_x_not_in_daily_report_is_missed(self):
         self.write_text(f"docs/{self.date}-daily-intel.md", "# Daily\n\n- Other signal.\n")
         self.write_json(

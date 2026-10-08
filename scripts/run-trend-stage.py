@@ -306,8 +306,10 @@ def first_markdown_heading(root, relative_path):
     return Path(relative_path).stem
 
 
-def infer_evidence_level(source_path, archive_path):
-    joined = f"{source_path} {archive_path}".lower()
+def infer_evidence_level(source_path, archive_path, source_type=""):
+    joined = f"{source_type} {source_path} {archive_path}".lower()
+    if "podcast" in joined:
+        return "secondary-source"
     if "twitterapi" in joined or "/x/" in joined or "direct-x" in joined:
         return "direct-x"
     if "official" in joined or "openai" in joined or "anthropic" in joined or "claude" in joined:
@@ -347,7 +349,15 @@ def candidate_from_entry(root, run_date, trend, manifest, entry):
     ]
     digest = content_hash(root, archive_path, source_path, fallback_parts=fallback)
     source_title = first_markdown_heading(root, archive_path) or Path(source_path).stem or status
+    evidence_level = infer_evidence_level(source_path, archive_path, entry.get("source_type"))
+    is_podcast = "podcast" in f"{entry.get('source_type', '')} {source_path} {archive_path}".lower()
     boundary_note = entry.get("reason") or entry.get("note") or ""
+    if is_podcast:
+        podcast_boundary = (
+            "follow-builders aggregator transcript; not audio-verified; preserve speaker/timestamp "
+            "attribution and canonical-link status from the source artifact."
+        )
+        boundary_note = f"{boundary_note} {podcast_boundary}".strip()
     if status in {"limited", "needs-fulltext", "skipped", "failed"} and not boundary_note:
         boundary_note = f"`entry.status` 为 `{status}`，需要在报告中保留证据边界。"
     candidate_id = short_id("trend-candidate", run_date, trend_id, source_path, archive_path, status)
@@ -359,7 +369,7 @@ def candidate_from_entry(root, run_date, trend, manifest, entry):
         "archive_path": archive_path,
         "source_content_hash": digest,
         "candidate_status": status,
-        "evidence_level": infer_evidence_level(source_path, archive_path),
+        "evidence_level": evidence_level,
         "signal_summary": compact_text(source_title),
         "trend_meaning": compact_text(
             f"从 {source_title} 看到 {trend['label']} 新信号：如果证据仍然有效，应更新该专题的状态判断。"
