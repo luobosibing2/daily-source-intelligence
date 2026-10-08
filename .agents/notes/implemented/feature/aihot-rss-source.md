@@ -6,6 +6,7 @@ AIHOT 提供官方 RSS 和匿名 REST API，无需账号或 API Key。DSI 采用
 - Lifecycle: `implemented`
 - Owner: Daily Source Intelligence maintainers
 - 验证日期：2026-10-08，北京时间。
+- 来源接入提交：`fff96d5`；主分支代码合并：`71963d5`（2026-10-08）。
 - 日常采集使用 `develop` 中的来源配置和现有每日入口，无需新增调度任务。
 
 ## 可用入口与选择依据
@@ -49,6 +50,14 @@ curl --compressed 'https://aihot.news/api/v1/items?mode=selected&window=24h&by=p
 
 依据为 [OpenAPI](https://aihot.news/openapi-v1.json)及[本地 JSON 原文](../../../../raw/2026-10-08/aihot-source-research/openapi-v1.json)、[实际 API 响应](../../../../raw/2026-10-08/aihot-source-research/selected-24h.json)和[API 接入页原文](../../../../raw/2026-10-08/aihot-source-research/agent-api.html)。
 
+## 主分支与自动化
+
+AIHOT 接入与它依赖的统一 CLI、signals 和既有采集链已合入本地 `main`。整合采用经过验证的 `develop` 功能代码，保留原 `main` 的全部 306 个日报及展示文件、17 个非 README 原始材料，以及已跟踪的 state；未提交的主工作区修改不参与晋升。
+
+现有 `Daily Source Intelligence` 自动化（ID `daily-source-intelligence`）保持 `ACTIVE`，运行目录仍为 `/Users/chengyizhou/code/research-docs/daily-source-intelligence`，沿用本记录中的统一每日入口及 `develop` 工作目录。自动化已显式加入 `aihot-selected` 采集、聚合归属、原文读取、时间窗口、X 公开读取和失败边界规则。运行时间、模型、自动归档和其他原有设置保持不变。后续运行按启用来源配置采集 AIHOT，不依赖本次验证 worktree。
+
+原始证据与单源验证归档仍在上述主工作目录的本地 raw 中，未加入公开主分支；本记录的本地 raw 链接按该工作目录解析。
+
 ## 边界与验证
 
 官方入口可访问及样本字段结构有明确原始响应支撑。本次精选快照有 3 条处于 2026-10-08 北京时间日窗、46 条窗口外、1 条时间未知；它只证明本轮返回情况，不证明来源完整性、日后稳定性或摘要事实正确。
@@ -56,5 +65,7 @@ curl --compressed 'https://aihot.news/api/v1/items?mode=selected&window=24h&by=p
 公开采集用于本地研究；聚合摘要保留来源归属，重要判断回到原文核对。完整 raw 不进入公开日报 bundle。站点的[公开使用规则](https://aihot.news/terms)及[本地原文](../../../../raw/2026-10-08/aihot-source-research/terms.html)区分个人及内部使用与公开镜像、批量再分发等用途；本次接入未进行公开再分发。
 
 57 项定向测试通过，覆盖 AIHOT/普通 RSS 解析、北京时间边界、正文读取与 fallback、canonical 去重、独立官方证据合并、provenance、统一 CLI、流水线、state 和 candidate audit；Python 编译检查与 `git diff --check` 通过。源码判断可定位到[AIHOT 解析](../../../../scripts/collect-stable-sources.py#L513)、[日窗与原文读取](../../../../scripts/collect-stable-sources.py#L406)和[signals 合并与出处](../../../../scripts/dsi_signals.py#L225)。
+
+主分支整合后，全量 `python3 -m unittest discover -s tests` 共 110 项测试通过；统一入口的 AIHOT 定向 dry-run 和暂存区 diff 检查通过。合并前后逐 blob 核对日报、展示文件、state 和既有 raw，确认保留原主分支内容。
 
 实际执行上述统一入口的定向采集后：来源状态 `ok`；50 条中 3 条日窗内、46 条窗口外、1 条时间未知；2 条命中主题，两篇原文均以公开 `curl` 读取，生成 2 项可读清单且保留 `secondary-source`。原始 feed SHA 与归档文件一致，X 原文没有触发浏览器 fallback。相关产物为[RSS 记录](../../../../raw/2026-10-08/aihot-source-research/live-smoke/raw/2026-10-08/rss-items.json)、[原始 feed](../../../../raw/2026-10-08/aihot-source-research/live-smoke/raw/2026-10-08/rss-feeds/aihot-selected.xml)、[signals](../../../../raw/2026-10-08/aihot-source-research/live-smoke/raw/2026-10-08/signals.json)、[阅读清单](../../../../raw/2026-10-08/aihot-source-research/live-smoke/raw/2026-10-08/report-reading-list.json)和[运行摘要](../../../../raw/2026-10-08/aihot-source-research/live-smoke/raw/2026-10-08/run-summary.json)。产物里的相对路径以 `live-smoke/` 为根。这是单源接入验证；未运行当天全来源日报、趋势归档或公开发布，归档不替代日常 raw 或主工作区 state。
