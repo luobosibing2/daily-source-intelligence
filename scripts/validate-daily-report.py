@@ -90,6 +90,14 @@ def validate(run_date, root=ROOT, strict=False):
             f"audit covered={actual_counts['covered']} missed={actual_counts['missed']}"
         )
 
+    contradictory = [
+        row.get("candidate_id") or row.get("signal")
+        for row in rows
+        if row.get("status") == "missed" and row.get("disposition") == "covered_in_report"
+    ]
+    if contradictory:
+        errors.append("missed candidates cannot use covered_in_report: " + ", ".join(contradictory))
+
     unresolved = [
         row.get("candidate_id") or row.get("signal")
         for row in rows
