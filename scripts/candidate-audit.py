@@ -476,7 +476,7 @@ def write_audit(run_date, root=ROOT):
     previous_by_id = {row.get("candidate_id"): row for row in previous.get("rows", []) if row.get("candidate_id")}
     for row in audit["rows"]:
         old = previous_by_id.get(row["candidate_id"], {})
-        if old.get("disposition"):
+        if old.get("disposition") and old["disposition"] != "covered_in_report":
             row["disposition"] = old["disposition"]
             row["disposition_note"] = old.get("disposition_note") or ""
     output_path = root / "reviews" / f"{run_date}-candidate-audit.md"

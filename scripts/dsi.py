@@ -105,6 +105,9 @@ def collection_fingerprint(root, run_date, channels, sources):
             "topics": sha256_path(Path(root) / "config" / "topics.yaml"),
         },
     }
+    if "x" in channels:
+        # Invalidate legacy X successes that may contain stale or missing results.
+        payload["x_collection_contract_version"] = 2
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
 
 
@@ -120,16 +123,17 @@ def resume_hit(root, run_date, channels, fingerprint):
     return (
         collection.get("status") == "ok"
         and collection.get("input_sha256") == fingerprint
-        and expected
+        and bool(expected)
+        and all(expected.values())
         and expected == output_hashes(root, run_date, channels)
     )
 
 
-def record_collection(root, run_date, channels, fingerprint):
+def record_collection(root, run_date, channels, fingerprint, status="ok"):
     path = Path(root) / "raw" / run_date / "run-state.json"
     state = read_json(path, {"schema_version": 1, "run_date": run_date})
     state["collection"] = {
-        "status": "ok",
+        "status": status,
         "input_sha256": fingerprint,
         "outputs": output_hashes(root, run_date, channels),
         "completed_at": datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -257,10 +261,11 @@ def run_collection(args):
         for source_id in selected.get("x", []):
             command.extend(["--source", source_id])
         codes.append(run_command(root, command, env=env))
-    if all(code == 0 for code in codes):
-        record_collection(root, args.date, channels, fingerprint)
-    prepare_code = prepare(root, args.date, resume=args.resume)
-    return next((code for code in codes if code), prepare_code)
+    failure_code = next((code for code in codes if code), 0)
+    record_collection(root, args.date, channels, fingerprint, status="failed" if failure_code else "ok")
+    if failure_code:
+        return failure_code
+    return prepare(root, args.date, resume=args.resume)
 
 
 def check(root, run_date):
