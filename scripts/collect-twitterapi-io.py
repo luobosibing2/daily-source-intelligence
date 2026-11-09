@@ -32,18 +32,38 @@ def load_local_env():
             os.environ[key] = value
 
 
-def fail(message, output_path=None):
+def fail(message, output_path, accounts, run_date, selected_ids):
+    results = [
+        {
+            "account_id": account["id"],
+            "handle": account["handle"],
+            "status": "skipped",
+            "reason": message,
+            "tweets": [],
+        }
+        for account in accounts
+    ]
+    if selected_ids and output_path.exists():
+        previous = json.loads(output_path.read_text(encoding="utf-8"))
+        results = [
+            item for item in previous.get("accounts", [])
+            if item.get("account_id") not in selected_ids
+        ] + results
     payload = {
         "schema_version": 1,
         "provider": "twitterapi.io",
         "status": "skipped",
         "reason": message,
-        "accounts": [],
+        "run_date": run_date,
+        "collected_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "accounts": results,
     }
-    if output_path:
-        output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+    if selected_ids:
+        payload["partial_update"] = True
+        payload["selected_source_ids"] = sorted(selected_ids)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0
+    return 1
 
 
 def get_api_key():
@@ -268,7 +288,7 @@ def main(argv=None):
     if not api_key:
         return fail(
             "TWITTERAPI_IO_KEY is not set and macOS Keychain fallback did not return a key",
-            None if selected_ids else output_path,
+            output_path, accounts, run_date, selected_ids,
         )
 
     now = datetime.now(timezone.utc)
