@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "run_date": "2026-11-14",
-  "generated_at": "2026-11-14T05:47:10+08:00",
+  "generated_at": "2026-11-14T06:13:23+08:00",
   "report": {
     "path": "docs/2026-11-14-daily-intel.md",
-    "sha256": "8ed8fcbd49d0033adf32e1b763d217fb2ff91e5f2fdc41c756aaec3dcb4d1b08"
+    "sha256": "8958c4d4db9115e983dbcbf9add0914e133f2020f9dce5ff5801d293e5d58f2d"
   },
   "signals": {
     "path": "raw/2026-11-14/signals.json",
@@ -21,7 +21,7 @@
       "covered": 15,
       "missed": 99
     },
-    "report_sha256": "8ed8fcbd49d0033adf32e1b763d217fb2ff91e5f2fdc41c756aaec3dcb4d1b08"
+    "report_sha256": "8958c4d4db9115e983dbcbf9add0914e133f2020f9dce5ff5801d293e5d58f2d"
   },
-  "trend_report": ""
+  "trend_report": "trend/reports/2026-11-14-trend-report.md"
 }

@@ -102,7 +102,7 @@ follow-builders 本轮实际提供 **1 集**，GUID `c9a0c39e-de2a-11f1-9237-d39
 - [RSS 条目](../raw/2026-11-14/rss-items.json) · [GitHub release](../raw/2026-11-14/github-items.json) · [GitHub Trending](../raw/2026-11-14/github-trending.json) · [官方页面](../raw/2026-11-14/official-pages.json)
 - [X/Twitter API 结果](../raw/2026-11-14/twitterapi-io-results.json) · [X/Twitter 主题简报](../raw/2026-11-14/twitter-topic-brief.json) · [优先链接候选](../raw/2026-11-14/official-link-candidates.json)
 - 播客：[结构化记录](../raw/2026-11-14/podcast-items.json) · [上游 feed 快照](../raw/2026-11-14/podcasts/follow-builders/feed-podcasts.json) · [窗口外 transcript](../raw/2026-11-14/podcasts/follow-builders/transcripts/powering-ai-driven-drug-discovery-with-president-of-isomorphic-labs-max-jaderber-2ac097442ec4.md)
-- 候选审计将在日报生成后写入：[JSON](../reviews/2026-11-14-candidate-audit.json) · [Markdown](../reviews/2026-11-14-candidate-audit.md)
+- 候选审计：[JSON](../reviews/2026-11-14-candidate-audit.json) · [Markdown](../reviews/2026-11-14-candidate-audit.md)
 
 ## 边界与验证
 
