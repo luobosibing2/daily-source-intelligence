@@ -484,6 +484,50 @@ class CandidateAuditTest(unittest.TestCase):
 
         self.assertEqual(payload["rows"], [])
 
+    def test_removed_coverage_is_unresolved_after_reaudit_and_strict_validation(self):
+        url = "https://example.com/official-post"
+        podcast_url = "https://example.com/episode"
+        article_url = "https://www.anthropic.com/engineering/post"
+        self.write_json(f"raw/{self.date}/official-link-candidates.json", {
+            "candidates": [{"tweet_id": "123456789", "expanded_url": url, "score": 40}],
+        })
+        self.write_json(f"raw/{self.date}/podcast-items.json", {"episodes": [{
+            "show_id": "show", "guid": "episode-guid", "title": "Episode", "window_status": "inside",
+            "canonical_url": podcast_url, "transcript_status": "ok",
+        }]})
+        self.write_json(f"raw/{self.date}/official-pages.json", {"sources": [{
+            "source_id": "anthropic-engineering", "items": [{
+                "title": "Article", "url": article_url, "window_status": "inside",
+            }],
+        }]})
+        report = self.write_text(f"docs/{self.date}-daily-intel.md",
+            f"# Daily\n{url}\n{podcast_url}\n{article_url}\n<!-- dsi-candidate-audit: covered=3 missed=0 -->\n")
+        module = load_script("candidate-audit.py")
+        validator = load_script("validate-daily-report.py")
+        covered = module.write_audit(self.date, root=self.root)
+        self.assertEqual(covered["counts"], {"total": 3, "covered": 3, "missed": 0})
+        self.assertTrue(all(row["disposition"] == "covered_in_report" for row in covered["rows"]))
+        self.assertTrue(validator.validate(self.date, root=self.root, strict=True)["ok"])
+
+        report.write_text("# Daily\n<!-- dsi-candidate-audit: covered=0 missed=3 -->\n")
+        missed = module.write_audit(self.date, root=self.root)
+        self.assertEqual(missed["counts"], {"total": 3, "covered": 0, "missed": 3})
+        self.assertEqual([row["candidate_id"] for row in missed["rows"]], [row["candidate_id"] for row in covered["rows"]])
+        self.assertTrue(all(row["disposition"] == "" for row in missed["rows"]))
+        result = validator.validate(self.date, root=self.root, strict=True)
+        self.assertFalse(result["ok"])
+        self.assertEqual(len(result["errors"]), 3)
+
+        # Genuine manual dispositions and notes survive subsequent audits and close the report.
+        for row in missed["rows"]:
+            row["disposition"] = "read_not_relevant"
+            row["disposition_note"] = "Read; outside today's focus."
+        self.write_json(f"reviews/{self.date}-candidate-audit.json", missed)
+        resolved = module.write_audit(self.date, root=self.root)
+        self.assertTrue(all(row["disposition"] == "read_not_relevant" for row in resolved["rows"]))
+        self.assertTrue(all(row["disposition_note"] == "Read; outside today's focus." for row in resolved["rows"]))
+        self.assertTrue(validator.validate(self.date, root=self.root, strict=True)["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()
