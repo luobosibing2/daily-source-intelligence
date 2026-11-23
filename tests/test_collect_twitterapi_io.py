@@ -119,6 +119,53 @@ twitterapi_io:
         self.assertEqual(api_key, "secret")
         self.assertEqual(query, {"userName": ["ExampleAI"], "includeReplies": ["false"]})
 
+    def test_missing_key_records_skipped_accounts_without_reusing_selected_tweets(self):
+        for targeted in (False, True):
+            for existing in (False, True):
+                with self.subTest(targeted=targeted, existing=existing), tempfile.TemporaryDirectory() as tmp:
+                    module = load_script()
+                    root = Path(tmp)
+                    date = "2099-01-01"
+                    output = root / "raw" / date / "twitterapi-io-results.json"
+                    accounts = [
+                        {"id": "selected", "handle": "Selected"},
+                        {"id": "other", "handle": "Other"},
+                    ]
+                    other = {"account_id": "other", "handle": "Other", "status": "ok", "tweets": [{"id": "keep"}]}
+                    if existing:
+                        output.parent.mkdir(parents=True)
+                        output.write_text(json.dumps({"status": "ok", "accounts": [
+                            {"account_id": "selected", "handle": "Selected", "status": "ok", "tweets": [{"id": "stale"}]},
+                            other,
+                        ]}))
+                    args = ["--date", date] + (["--source", "selected"] if targeted else [])
+                    with (
+                        mock.patch.object(module, "RAW_ROOT", root / "raw"),
+                        mock.patch.object(module, "parse_accounts", return_value=accounts),
+                        mock.patch.object(module, "get_api_key", return_value=None),
+                        mock.patch.object(module, "collect_account") as collect,
+                        contextlib.redirect_stdout(io.StringIO()),
+                    ):
+                        code = module.main(args)
+                    self.assertNotEqual(code, 0)
+                    collect.assert_not_called()
+                    payload = json.loads(output.read_text())
+                    self.assertEqual(payload["status"], "skipped")
+                    self.assertEqual(payload["run_date"], date)
+                    by_id = {row["account_id"]: row for row in payload["accounts"]}
+                    selected = by_id["selected"]
+                    self.assertEqual(selected["status"], "skipped")
+                    self.assertEqual(selected["tweets"], [])
+                    self.assertIn("TWITTERAPI_IO_KEY", selected["reason"])
+                    if targeted:
+                        self.assertEqual(payload["selected_source_ids"], ["selected"])
+                        if existing:
+                            self.assertEqual(by_id["other"], other)
+                        else:
+                            self.assertNotIn("other", by_id)
+                    else:
+                        self.assertEqual(by_id["other"]["status"], "skipped")
+
 
 if __name__ == "__main__":
     unittest.main()

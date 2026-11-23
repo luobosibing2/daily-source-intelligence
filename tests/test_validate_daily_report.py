@@ -118,6 +118,19 @@ class ValidateDailyReportTest(unittest.TestCase):
         audit_path.write_text(json.dumps(audit), encoding="utf-8")
         self.assertTrue(self.module.validate(self.date, root=self.root, strict=True)["ok"])
 
+    def test_missed_rows_cannot_claim_covered_in_report_even_with_a_note(self):
+        for category in ("official-link-candidate", "official-page-article", "podcast-transcript", "rss"):
+            with self.subTest(category=category):
+                self.seed(report_counts=(0, 1), audit_counts=(0, 1), disposition="covered_in_report")
+                path = self.root / "reviews" / f"{self.date}-candidate-audit.json"
+                audit = json.loads(path.read_text())
+                audit["rows"][0]["category"] = category
+                audit["rows"][0]["disposition_note"] = "Previously covered."
+                path.write_text(json.dumps(audit))
+                result = self.module.validate(self.date, root=self.root, strict=True)
+                self.assertFalse(result["ok"])
+                self.assertIn("missed candidates cannot use covered_in_report", "\n".join(result["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()

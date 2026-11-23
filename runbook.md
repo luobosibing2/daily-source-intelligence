@@ -20,7 +20,7 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
 
 该入口会从原始归档派生 `raw/YYYY-MM-DD/signals.json`、`report-reading-list.json` 与 `run-summary.json`。`signals.json` 统一执行北京时间日窗口、canonical URL 去重、tweet/repo/podcast GUID 去重、多主题合并和评分解释，但不是新的证据真相源；原始归档仍是权威证据。`run-summary.json` 只用于流程状态与路径索引，日报写作仍必须按 `report-reading-list.json` 读取其中列出的正文、播客 transcript、官方页面文章、README、release body、official-link fulltext 和 direct-X evidence。
 
-按来源重跑示例：`python3 scripts/dsi.py run --date YYYY-MM-DD --channel rss --source rss:openai-blog --dry-run`。`--dry-run` 不联网、不创建文件；`--resume` 只有在配置指纹和目标输出哈希都一致时才跳过采集。
+按来源重跑示例：`python3 scripts/dsi.py run --date YYYY-MM-DD --channel rss --source rss:openai-blog --dry-run`。`--dry-run` 不联网、不创建文件；`--resume` 只有在采集状态为 `ok`、配置指纹一致、目标输出文件存在且哈希一致时才跳过采集。含 X 的旧成功缓存因缺 key 假成功问题失效一次；升级后首次 `--resume` 会重新执行所选采集（有 key 时会产生正常读取请求），无 X 的缓存不受此版本变更影响。
 
 1. 读取配置
    - 读取 `config/watch.md` 理解关注方向和高信号定义。
@@ -55,12 +55,12 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
    - 运行 `python3 scripts/official-link-candidates.py --date YYYY-MM-DD`，从 priority X account 的 tweet 中提取官方域名链接。若 tweet 分数达到 `official_link_candidates.min_score`，或命中强 governance/public-authority 关键词，则尝试抓取 expanded URL 正文，写入 `raw/YYYY-MM-DD/official-link-candidates.json` 与 `raw/YYYY-MM-DD/official-link-candidates/`。
    - official-link candidate 只作为待验证候选；抓取成功后可升级为 official-source/direct-x 组合证据，抓取 `limited`/`failed` 时必须在日报“不确定性与待验证项”里说明，不能把 X card metadata 当成已读官方原文。
    - 运行 [`scripts/build-twitter-topic-brief.py`](scripts/build-twitter-topic-brief.py) `--date YYYY-MM-DD`，从当天 `twitterapi-io-results.json` 生成 `raw/YYYY-MM-DD/twitter-topic-brief.json`。该文件按 [`config/topics.yaml`](config/topics.yaml) 的日报主题归类启用账号的推文；配置了 `x_accounts[].topics` 的账号以其作为默认主题，未配置默认 topics 的账号只依赖 tweet 文本/card 关键词命中。`priority=true` 只提供现有 priority bonus，不替代内容匹配。
-   - 如果环境变量和 Keychain 都没有 key，写入 skipped 状态；这不代表账号没有更新。
+   - 如果环境变量和 Keychain 都没有 key，写入 skipped 状态并返回非零退出码；这不代表账号没有更新。定向 `--source` 会用 skipped 记录替换所选账号的旧结果，清空其 tweets，保留未选账号。统一 `dsi.py run` 在采集器返回非零时记录 `collection=failed`，停止自动 prepare，`--resume` 会重试采集。
 
 4. 不使用 Exa MCP
    - 本 workflow 不使用 Exa MCP 作为补漏层。
    - 如果 `twitterapi.io` credential 缺失、API 失败或账号覆盖失败，只记录 skipped/failed 状态，不用 Exa 搜索替代。
-   - 如果稳定来源和 `twitterapi.io` 都失败，当天日报仍要生成，并把失败源、失败原因和缺失覆盖范围写清楚。
+   - 如果稳定来源和 `twitterapi.io` 都失败，当天日报仍要生成，并把失败源、失败原因和缺失覆盖范围写清楚。统一 `run` 已停止自动 prepare 时，先复核当日 raw 的 skipped/failed 记录和覆盖边界，再显式执行 `dsi.py prepare --date YYYY-MM-DD` 生成受限输入，并按后续流程写日报；不要把采集失败标记为成功。
 
 5. 归档 raw
    - 当天目录：`raw/YYYY-MM-DD/`
@@ -124,7 +124,7 @@ python3 scripts/dsi.py run --date YYYY-MM-DD
      - 如涉及金融、浏览器绕检测、凭据路由、自动执行、交易、隐私或安全敏感面，必须额外写风险和待验证点。
    - 项目归纳必须把 Trending description 和 README 原文/摘录合成一段自然语言总结。不要写成 `Trending description:` / `README 归纳:` 这种字段式拆分，不要把两份来源割裂成两段，也不要用 `agent-native / workflow / harness / infra` 等术语堆成一句话就结束。
    - 若 README 缺失，不能写机制总结，只能写“待读 README 的候选项目”，并说明缺失原因和下一步最小验证路径。
-   - 日报初稿完成后运行 [`scripts/candidate-audit.py`](scripts/candidate-audit.py#L1) `--date YYYY-MM-DD`，同时写入 Markdown 与 `reviews/YYYY-MM-DD-candidate-audit.json`。JSON 记录日报 SHA、稳定 candidate id、计数和处置状态；重跑会保留已有人工 disposition。日报中应写稳定 marker：`<!-- dsi-candidate-audit: covered=N missed=M -->`。
+   - 日报初稿完成后运行 [`scripts/candidate-audit.py`](scripts/candidate-audit.py#L1) `--date YYYY-MM-DD`，同时写入 Markdown 与 `reviews/YYYY-MM-DD-candidate-audit.json`。JSON 记录日报 SHA、稳定 candidate id、计数和处置状态；重跑会保留已有人工 disposition 和 note，但自动生成的 `covered_in_report` 根据当前报告重新计算，候选变为 missed 时清空；validator 拒绝 `missed` 与 `covered_in_report` 同时存在。相关修复与回归见 [PR9 P1 决策](.agents/notes/implemented/bug-fix/pr9-collection-and-audit.md)。日报中应写稳定 marker：`<!-- dsi-candidate-audit: covered=N missed=M -->`。
    - 运行 [`scripts/validate-daily-report.py`](scripts/validate-daily-report.py#L1) `--date YYYY-MM-DD --strict`，核对日报 SHA、报告/审计计数、审计行计数、本地链接，以及 missed official-link candidate / `Anthropic Engineering` official-page article / podcast transcript 是否已有处置。播客可用 `read_not_relevant`、`duplicate` 或 `insufficient_evidence` 解释未进入正文；没有覆盖也没有处置时 strict validation 失败。
    - 校验通过后，[`scripts/build-daily-bundle.py`](scripts/build-daily-bundle.py#L1) 派生 `docs/YYYY-MM-DD-daily-intel.index.json`、日期化 HTML 与 `docs/index.html`；Markdown 日报仍是可读内容真相源，JSON/HTML 保存它的 SHA，不得反向覆盖 Markdown。
 
